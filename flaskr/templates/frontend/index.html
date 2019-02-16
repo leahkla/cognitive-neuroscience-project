@@ -1,40 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Video annotation</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script type=text/javascript src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-</head>
-<body>
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">VideoAnnotation</a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li><a href="/">Home</a></li>
-    </ul>
-  </div>
-</nav>
 
-<div style="margin: 20px;">
+<head>
+  <meta charset="UTF-8">
+  <title>Video annotation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
+  <script type="text/javascript" src="js/jquery.youtubevideo.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+  <script type="text/javascript" src="js/videoLightning.js"></script>
+</head>
+
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">VideoAnnotation</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/">Home</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div style="margin: 20px;">
     <h1>Video annotation</h1>
+  </div>
+
+  <p>
+    <label for="amount">Volume:</label>
+    <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+  </p>
+<div align="center">
+  <div id="player" style="display: inline-block"></div>
+  <div id="slider-vertical" style="display: inline-block;height:200px;"></div>
 </div>
 
-<p>
-  <label for="amount">Volume:</label>
-  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-</p>
+    <script>
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
 
-<div id="slider-vertical" style="height:200px;"></div>
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '507',
+          width: '832',
+          videoId: 'xFGORjQUEPA',
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
 
+      // 4. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        event.target.playVideo();
+      }
+
+      // 5. The API calls this function when the player's state changes.
+      //    The function indicates that when playing a video (state=1),
+      //    the player should play for six seconds and then stop.
+      var done = false;
+      function onPlayerStateChange(event) {
+        //if (event.data == YT.PlayerState.PLAYING && !done) {
+        //  setTimeout(stopVideo, 6000);
+        //  done = true;
+        //}
+      }
+      function stopVideo() {
+        player.stopVideo();
+      }
+      function getTimeStamp() {
+          player.getTimeStamp();
+      }
+    </script>
 </body>
 
 </html>
