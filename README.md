@@ -12,4 +12,4 @@ flask run
 ```
 More information about installing flask application [here](http://flask.pocoo.org/docs/dev/tutorial/packaging)
 
-You need also Mongodb installed and running in default port, to use DatabaseClient.py file. You can install mongodb [here](https://docs.mongodb.com/manual/administration/install-community/)
+You need also Mongodb installed and running in default port, to use DatabaseClient.py file. You can install mongodb [here](https://docs.mongodb.com/manual/administration/install-community/). Remember to have it *running*! 
