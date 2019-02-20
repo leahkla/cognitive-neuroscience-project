@@ -54,7 +54,7 @@
       //    after the API code downloads.
       var player;
       function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
+        window.player = new YT.Player('player', {
           height: '507',
           width: '832',
           videoId: 'xFGORjQUEPA',
@@ -81,9 +81,25 @@
       function stopVideo() {
         player.stopVideo();
       }
-      function getTimeStamp() {
-          player.getTimeStamp();
+      window.getTimeStamp = function(){
+          p = window.player;
+          return p.getTimeStamp();
       }
+
+      $(function () {
+      $("#slider-vertical").slider({
+        orientation: "vertical",
+        range: "min",
+        min: 0,
+        max: 100,
+        value: 60,
+        slide: function (event, ui) {
+          $("#amount").val(ui.value);
+          alert(window.getTimeStamp());
+         }
+       });
+        $("#amount").val($("#slider-vertical").slider("value"));
+       });
     </script>
 </body>
 
