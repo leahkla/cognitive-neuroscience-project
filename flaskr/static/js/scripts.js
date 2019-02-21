@@ -10,7 +10,7 @@ $(function () {
       $("#amount").val(ui.value);
     },
     stop: function(event) {
-      $("#current-time").val(event, ui);
+      console.log(player.getCurrentTime());
     }
   });
   $("#amount").val($("#slider-vertical").slider("value"));
