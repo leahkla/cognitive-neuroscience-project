@@ -19,7 +19,6 @@ def index():
 def save():
     t = request.form.get('timestamp')
     v = request.form.get('value')
-    print(v)
     videoname = request.form.get('videoname')
     d.insert_post({"timestamp":t, "value": v, "videoname": videoname})
     return "Saving completed"
