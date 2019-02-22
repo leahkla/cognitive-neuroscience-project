@@ -58,7 +58,7 @@ def chart():
     ]
 
     #script, div = components(p)
-    return render_template("index2.html")
+    return render_template("/tempaltes/index2.html")
 
 
 
