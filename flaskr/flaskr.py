@@ -15,12 +15,23 @@ d = DatabaseClient()
 def index():
     return render_template('frontend/index.html')
 
-@app.route('/save')
+@app.route('/save', methods=['POST'])
 def save():
-    d.insert_post_with_removal({"timestamp":"aika", "value": 0.5})
+    t = request.form.get('timestamp')
+    v = request.form.get('value')
+    print(v)
+    videoname = request.form.get('videoname')
+    d.insert_post({"timestamp":t, "value": v, "videoname": videoname})
+    return "Saving completed"
+
+@app.route('/collect_data')
+def collect_data():
     posts = d.collect_posts()
+    collected = []
     for p in posts:
-        return str(p)
+        del p['_id']
+        collected.append(p)
+    return json.dumps({"objects": collected})
 
 
 @app.route('/<path:path>')

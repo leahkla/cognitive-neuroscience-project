@@ -1,5 +1,13 @@
+function sendData(tstamp, v, vname){
+        $.post( "/save", { timestamp: tstamp, value: v, videoname: vname})
+            .done(function( data ) {
+                console.log(data);
+            });
+}
+
 $(function () {
   var timestamp;
+  var slider_value;
   $("#slider-vertical").slider({
     orientation: "vertical",
     range: "min",
@@ -8,9 +16,11 @@ $(function () {
     value: 60,
     slide: function (event, ui) {
       $("#amount").val(ui.value);
+      slider_value = ui.value;
     },
     stop: function(event) {
       console.log(player.getCurrentTime());
+      sendData(player.getCurrentTime(), slider_value, "Cat video");
     }
   });
   $("#amount").val($("#slider-vertical").slider("value"));
