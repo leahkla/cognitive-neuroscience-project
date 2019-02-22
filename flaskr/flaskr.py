@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure, show, output_file
+from bokeh.embed import components
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 
