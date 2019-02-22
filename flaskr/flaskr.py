@@ -29,7 +29,8 @@ def collect_data():
     posts = d.collect_posts()
     collected = []
     for p in posts:
-        del p['_id']
+        if p['_id']:
+            del p['_id']
         collected.append(p)
     return json.dumps({"objects": collected})
 
