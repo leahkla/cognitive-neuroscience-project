@@ -57,8 +57,8 @@ def chart():
     ('Rating of valence', '@y')
     ]
 
-    #script, div = components(p)
-    return render_template("/templates/index2.html")
+    script, div = components(p)
+    return render_template("frontend/index2.html", the_div=div, the_script=script)
 
 
 
