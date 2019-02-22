@@ -33,6 +33,11 @@ def collect_data():
         collected.append(p)
     return json.dumps({"objects": collected})
 
+@app.route('/delete_all')
+def delete_data():
+    d.delete_many({})
+    return "All items deleted :)"
+
 
 @app.route('/<path:path>')
 def static_file(path):
