@@ -1,7 +1,7 @@
 import os
 import json
 import pandas as pd
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure, show, output_file
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
@@ -53,8 +53,7 @@ def chart():
 
     p.select_one(HoverTool).tooltips = [
     ('timestamp', '@x'),
-    ('Rating of valence', '@y'),
-    ('videoname', '@videoname')
+    ('Rating of valence', '@y')
     ]
 
     script, div = components(p)
