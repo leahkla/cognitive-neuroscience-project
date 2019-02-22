@@ -20,10 +20,7 @@ def index():
 
 @app.route('/save', methods=['POST'])
 def save():
-    t = request.form.get('timestamp')
-    v = request.form.get('value')
-    videoname = request.form.get('videoname')
-    d.insert_post({"timestamp":t, "value": v, "videoname": videoname})
+    d.insert_post({"timestamp":request.form.get('timestamp'), "value": request.form.get('value'), "videoname": request.form.get('videoname')})
     return "Saving completed"
 
 @app.route('/researcher_view', methods=['GET'])
@@ -74,6 +71,11 @@ def collect_data():
             del p['_id']
         collected.append(p)
     return json.dumps({"objects": collected})
+
+@app.route('/delete_all')
+def delete_data():
+    d.delete_many({})
+    return "All items deleted :)"
 
 
 @app.route('/<path:path>')
