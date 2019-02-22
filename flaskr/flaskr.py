@@ -17,10 +17,7 @@ def index():
 
 @app.route('/save', methods=['POST'])
 def save():
-    t = request.form.get('timestamp')
-    v = request.form.get('value')
-    videoname = request.form.get('videoname')
-    d.insert_post({"timestamp":t, "value": v, "videoname": videoname})
+    d.insert_post({"timestamp":request.form.get('timestamp'), "value": request.form.get('value'), "videoname": request.form.get('videoname')})
     return "Saving completed"
 
 @app.route('/collect_data')
