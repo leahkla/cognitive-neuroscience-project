@@ -58,7 +58,7 @@ def chart():
     ]
 
     script, div = components(p)
-    return render_template("line_chart.html", title="Line Chart", the_div=div, the_script=script)
+    return render_template("index2.html", title="Line Chart", the_div=div, the_script=script)
 
 
 
