@@ -1,6 +1,5 @@
 appdirs==1.4.3
 astroid==2.1.0
-btrfsutil==1.1.0
 CacheControl==0.12.5
 catfish==1.4.7
 chardet==3.0.4
