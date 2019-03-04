@@ -59,27 +59,10 @@ def submit_username():
 
 @app.route('/researcher_view', methods=['GET'])
 def chart():
-    # mock data:
-    """ data2 = {"objects": [{"timestamp": "1", "value": "-0.5", "videoname": "dog video"},
-                    {"timestamp": "3.5", "value": "1", "videoname": "cat video"},
-                    {"timestamp": "5", "value": "-1", "videoname": "rat video"},
-                    {"timestamp": "6.5", "value": "0.7", "videoname": "capybara video"},
-                    {"timestamp": "10.2", "value": "0.25", "videoname": "parrot video"},
-                    {"timestamp": "20.5", "value": "0.57", "videoname": "lizard video"},
-                    {"timestamp": "22.8", "value": "0.91", "videoname": "another cat video"}]}
-    """
-    # commented original calling-json-function:"""
-    #print(collect_mongodbobjects())
     data2 = collect_mongodbobjects()
-    #for document in data2:
-    #    pprint(document)
-    # d.collect_posts() returns a cursor object which is not serializable"""
-    #jsonData2 = json.loads(json.dumps(data2))#
     jsonData2 = json.loads(data2)
-    #print(jsonData2)
     df = pd.DataFrame(jsonData2)
     data_valence = df.objects.apply(lambda x: pd.Series(x))
-    #data_valence = df.apply(lambda x: pd.Series(x))
 
     TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
     p = figure(title="Valence ratings by timestamp", y_axis_type="linear", x_range=(0, 23), y_range=(0, 100), plot_height = 400,
@@ -105,13 +88,7 @@ def chart():
 
 @app.route('/collect_data')
 def collect_data():
-    posts = d.collect_posts()
-    collected = []
-    for p in posts:
-        if p['_id']:
-            del p['_id']
-        collected.append(p)
-    return json.dumps({"objects": collected})
+    return collect_mongodbobjects()
 
 @app.route('/delete_all')
 def delete_data():
