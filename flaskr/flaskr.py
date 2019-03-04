@@ -45,7 +45,6 @@ def save():
 
 @app.route('/submit_username', methods=['POST'])
 def submit_username():
-    print(request.form.get('username'))
     session['username'] = request.form.get('username')
     return redirect(url_for('index'))
 
