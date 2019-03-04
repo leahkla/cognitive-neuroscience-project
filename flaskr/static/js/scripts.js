@@ -20,7 +20,7 @@ $(function () {
     },
     stop: function(event) {
       console.log(player.getCurrentTime());
-      sendData(player.getCurrentTime(), slider_value, "Cat video");
+      sendData(player.getCurrentTime(), slider_value, player.getVideoUrl());
     }
   });
   $("#amount").val($("#slider-vertical").slider("value"));
