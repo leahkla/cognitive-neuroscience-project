@@ -1,9 +1,12 @@
 import os
 import json
 import pandas as pd
+from pandas import DataFrame
+from pprint import pprint
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure, show, output_file
 from bokeh.embed import components
+from bson.json_util import dumps
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
 
@@ -34,11 +37,25 @@ def chart():
                     {"timestamp": "10.2", "value": "0.25", "videoname": "parrot video"},
                     {"timestamp": "20.5", "value": "0.57", "videoname": "lizard video"},
                     {"timestamp": "22.8", "value": "0.91", "videoname": "another cat video"}]}
+    """
     # commented original calling-json-function:
-    #data = d.collect_posts()
-    jsonData2 = json.loads(json.dumps(data2)) # type == dict
+    data2 = d.collect_posts()
+    collected = []
+    for p in data2:
+        if p['_id']:
+            del p['_id']
+        collected.append(p)
+    return json.dumps({"objects": collected})
+
+
+    #for document in data2:
+    #    pprint(document)
+    # d.collect_posts() returns a cursor object which is not serializable"""
+    jsonData2 = json.loads(json.dumps(data2))#
+    print(jsonData2)
     df = pd.DataFrame(jsonData2)
     data_valence = df.objects.apply(lambda x: pd.Series(x))
+    #data_valence = df.apply(lambda x: pd.Series(x))
 
     TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
     p = figure(title="Valence ratings by timestamp", y_axis_type="linear", x_range=(0, 23), y_range=(-1, 1), plot_height = 400,
