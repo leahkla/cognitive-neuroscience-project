@@ -8,14 +8,19 @@ from bokeh.plotting import figure, show, output_file
 from bokeh.embed import components
 from bson.json_util import dumps
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash
+     render_template, flash, session
+from flask_session import Session
 
 from DatabaseClient import DatabaseClient
 
-app = Flask(__name__) # create the application instance :)
-app.config.from_object(__name__) # load config from this file , flaskr.py
 
-app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+#SESSION_TYPE = 'redis'
+#app.config.from_object(__name__)
+app = Flask(__name__)
+app.config['SESSION_TYPE'] = 'memcached'
+app.config['SECRET_KEY'] = 'super secret key'
+sess = Session()
+
 d = DatabaseClient()
 
 def collect_mongodbobjects():
@@ -29,12 +34,28 @@ def collect_mongodbobjects():
 
 @app.route('/')
 def index():
-    return render_template('frontend/index.html')
+    if session.get('username'):
+        return render_template('frontend/index.html')
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/login')
+def login():
+    return render_template('frontend/login.html')
 
 @app.route('/save', methods=['POST'])
 def save():
-    d.insert_post({"timestamp":request.form.get('timestamp'), "value": request.form.get('value'), "videoname": request.form.get('videoname')})
-    return "Saving completed"
+    if not session.get('username'):
+        return "Error: username not set"
+    else:
+        d.insert_post({"timestamp":request.form.get('timestamp'), "value": request.form.get('value'), "videoname": request.form.get('videoname'), "username": session['username']})
+        return "Saving completed"
+
+
+@app.route('/submit_username', methods=['POST'])
+def submit_username():
+    session['username'] = request.form.get('username')
+    return redirect(url_for('index'))
 
 @app.route('/researcher_view', methods=['GET'])
 def chart():
