@@ -1,8 +1,8 @@
-function sendData(tstamp, v, vname){
-        $.post( "/save", { timestamp: tstamp, value: v, videoname: vname})
-            .done(function( data ) {
-                console.log(data);
-            });
+function sendData(tstamp, v, vname) {
+  $.post("/save", { timestamp: tstamp, value: v, videoname: vname })
+    .done(function (data) {
+      console.log(data);
+    });
 }
 
 $(function () {
@@ -18,17 +18,22 @@ $(function () {
       $("#amount").val(ui.value);
       slider_value = ui.value;
     },
-    stop: function(event) {
-      console.log(player.getCurrentTime());
-      sendData(player.getCurrentTime(), slider_value, player.getVideoUrl());
+    stop: function (event) {
+      player.getCurrentTime().then(responseVal => {
+        player.getVideoUrl().then(responseUrl => {
+          console.log(responseVal);
+          console.log(responseUrl);
+          sendData(responseVal, slider_value, responseUrl);
+        });
+      });
     }
   });
   $("#amount").val($("#slider-vertical").slider("value"));
   //$("#timestamp").val($("#slider-vertical").slider("timestamp"));
-/* 
-  $("#time").val($("#slider-vertical")).slider("time"));
-    range: "min",
-    stop: function( event, ui ) {player.getTimeStamp());}
-  
-  }); */
+  /* 
+    $("#time").val($("#slider-vertical")).slider("time"));
+      range: "min",
+      stop: function( event, ui ) {player.getTimeStamp());}
+    
+    }); */
 });
