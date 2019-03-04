@@ -9,7 +9,7 @@ from bokeh.embed import components
 from bson.json_util import dumps
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, session
-from flask_session import Session
+from flask_session.__init__ import Session
 
 from DatabaseClient import DatabaseClient
 
