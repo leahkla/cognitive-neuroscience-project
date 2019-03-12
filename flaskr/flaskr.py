@@ -7,6 +7,13 @@ from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure, show, output_file
 from bokeh.embed import components
 from bson.json_util import dumps
+#import bokeh.plotting as bk
+
+from scipy.interpolate import CubicSpline
+from scipy.interpolate import spline
+from scipy.interpolate import interp1d
+
+import numpy as np
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash, session
 from flask_session.__init__ import Session
@@ -65,11 +72,25 @@ def chart():
     data_valence = df.objects.apply(lambda x: pd.Series(x))
 
     TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
+
     p = figure(title="Valence ratings by timestamp", y_axis_type="linear", x_range=(0, 23), y_range=(0, 100), plot_height = 400,
            tools = TOOLS, plot_width = 900)
     p.xaxis.axis_label = 'Timestamp (seconds)'
     p.yaxis.axis_label = 'Valence rating'
-    p.line(data_valence.timestamp, data_valence.value,line_color="purple", line_width = 3)
+
+    x = data_valence.timestamp
+    y = data_valence.value
+    #spl = CubicSpline(x, y)
+    # When adding above CubicSpline, following error is produced:
+
+    # TypeError: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
+    # so there might be some requirement in CubicSpline source code to
+    # have all x values certain type
+    
+    #y_smooth = spl(data_valence.value)
+    #y_smooth = spline(data_valence.timestamp, data_valence.value)
+    p.line(x, y ,line_color="purple", line_width = 3)
+    #p.line(data_valence.timestamp, y_smooth,line_color="purple", line_width = 3)
 
     source = ColumnDataSource(data={
     'timestamp': data_valence.timestamp,
