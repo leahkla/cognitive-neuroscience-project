@@ -81,5 +81,5 @@ README.rst
 # Visual Studio stuff
 .vscode/
 
-# Database stuff
+# Apple filesystem stuff
 .DS_Store
