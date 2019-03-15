@@ -18,3 +18,5 @@ You need also Mongodb installed and running in default port, to use DatabaseClie
 
 - Saving timestamp when sliding
 - Collecting data from the database with separate endpoint
+
+
