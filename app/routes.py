@@ -5,6 +5,9 @@ This file contains the routes, i.e. the functions to be executed when a page
 
 import json
 import pandas as pd
+
+from flask import request, redirect, url_for, render_template, session
+
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
@@ -13,15 +16,17 @@ from bokeh.embed import components
 # from scipy.interpolate import spline
 # from scipy.interpolate import interp1d
 
-from flask import request, redirect, url_for, render_template, session
-
-from .database_client import DatabaseClient
-
 from app import app
+from .database_client import DatabaseClient
 
 d = DatabaseClient()
 
+
 def collect_mongodbobjects():
+    """
+    Fetch all data that is stored in the MongoDB database.
+    :return: json of all the db entries
+    """
     posts = d.collect_posts()
     collected = []
     for p in posts:
@@ -34,6 +39,10 @@ def collect_mongodbobjects():
 @app.route('/index')
 @app.route('/')
 def index():
+    """
+    Display the main page.
+    :return: Main webpage
+    """
     if session.get('username'):
         return render_template('frontend/index.html')
     else:
@@ -42,11 +51,19 @@ def index():
 
 @app.route('/login')
 def login():
+    """
+    Display the login form.
+    :return: Login webpage
+    """
     return render_template('frontend/login.html')
 
 
 @app.route('/save', methods=['POST'])
 def save():
+    """
+    Save a valence value and respective video timestamp to the database.
+    :return: Feedback string
+    """
     if not session.get('username'):
         return "Error: username not set"
     else:
@@ -59,12 +76,20 @@ def save():
 
 @app.route('/submit_username', methods=['POST'])
 def submit_username():
+    """
+    Save a username for the current session.
+    :return: Redirect to /index
+    """
     session['username'] = request.form.get('username')
     return redirect(url_for('index'))
 
 
 @app.route('/researcher_view', methods=['GET'])
 def chart():
+    """
+    Display the web page for the researcher view
+    :return: Researcher view webpage
+    """
     data2 = collect_mongodbobjects()
     jsonData2 = json.loads(data2)
     df = pd.DataFrame(jsonData2)
@@ -109,15 +134,28 @@ def chart():
 
 @app.route('/collect_data')
 def collect_data():
+    """
+    Function to print all data that is stored in the MongoDB database.
+    :return: Webpage displaying currently stored data
+    """
     return collect_mongodbobjects()
 
 
 @app.route('/delete_all')
 def delete_data():
+    """
+    Delete all data that is stored in the MongoDB database.
+    :return: User feedback string
+    """
     d.delete_many({})
     return "All items deleted :)"
 
 
 @app.route('/<path:path>')
 def static_file(path):
+    """
+    Dunno what this does.
+    :param path: ?
+    :return: ?
+    """
     return app.send_static_file(path)

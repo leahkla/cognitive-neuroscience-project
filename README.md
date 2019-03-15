@@ -1,5 +1,5 @@
 # Video Annotation Tool
-This is a web tool to create a server and web app for measuring emotional reactions to videos.
+This is a web app for measuring and analysing emotional reactions to videos.
 
 While watching videos, people can indicate their emotional valence. In a seperate view for researchers, the answers people give can be analysed.
 

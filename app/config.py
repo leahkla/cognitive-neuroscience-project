@@ -7,7 +7,7 @@ import os
 
 class Config(object):
     """
-    The configuration parameters for the flask app
+    The configuration parameters for the flask app.
     """
     SESSION_TYPE = 'memcached'
     # Check if there is an environment variable set with a secret key:
