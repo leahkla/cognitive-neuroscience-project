@@ -80,3 +80,6 @@ README.rst
 
 # Visual Studio stuff
 .vscode/
+
+# Database stuff
+.DS_Store
