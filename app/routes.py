@@ -18,23 +18,10 @@ from bokeh.embed import components
 
 from app import app
 from .database_client import DatabaseClient
+from .helper_functions import collect_mongodbobjects
+
 
 d = DatabaseClient()
-
-
-def collect_mongodbobjects():
-    """
-    Fetch all data that is stored in the MongoDB database.
-    :return: json of all the db entries
-    """
-    posts = d.collect_posts()
-    collected = []
-    for p in posts:
-        if p['_id']:
-            del p['_id']
-        collected.append(p)
-    return json.dumps({"objects": collected})
-
 
 @app.route('/index')
 @app.route('/')
@@ -90,7 +77,7 @@ def chart():
     Display the web page for the researcher view
     :return: Researcher view webpage
     """
-    data2 = collect_mongodbobjects()
+    data2 = collect_mongodbobjects(d)
     jsonData2 = json.loads(data2)
     df = pd.DataFrame(jsonData2)
     data_valence = df.objects.apply(lambda x: pd.Series(x))
@@ -138,7 +125,7 @@ def collect_data():
     Function to print all data that is stored in the MongoDB database.
     :return: Webpage displaying currently stored data
     """
-    return collect_mongodbobjects()
+    return collect_mongodbobjects(d)
 
 
 @app.route('/delete_all')

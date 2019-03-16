@@ -33,6 +33,8 @@ $ export FLASK_APP=video_annotator.py
 $ flask run
 ```
 ----------------
+In development mode, if changes are made to the source code while the app is running, they are automatically and immediately applied to the running app.
+
 If you want to run the app in development mode, run this before starting the app:
 
 ```
