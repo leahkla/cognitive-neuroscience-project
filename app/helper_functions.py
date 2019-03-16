@@ -1,6 +1,7 @@
 """"
-This file contains functions that are needed in routes.py to display the
-webpages but do not have a decorator binding them to a particular webpage.
+This file contains functions that are needed in the routes.py files to
+display the webpages, but do not have a decorator binding them to a
+particular webpage.
 """
 
 import json

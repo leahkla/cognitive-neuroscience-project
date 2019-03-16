@@ -6,7 +6,7 @@ from pymongo import MongoClient
 
 class DatabaseClient:
     """
-    Object containing the connection to the MongoDB database.
+    Class specifying the connection to the MongoDB database.
     """
 
     def __init__(self):
