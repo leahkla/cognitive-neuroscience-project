@@ -6,6 +6,8 @@ It has only the webpages belonging to control functions of our app,
 i.e. those belonging to the control blueprint.
 """
 
+from operator import itemgetter
+
 from flask import request, redirect, url_for, render_template, session, flash
 
 from app.functionalities import collect_mongodbobjects, check_access_right
@@ -69,10 +71,11 @@ def save():
     if not session.get('username'):
         return "Error: username not set"
     else:
-        d.insert_post({"timestamp": request.form.get('timestamp'),
+        d.insert_post({"videoname": request.form.get('videoname'),
+                       "username": session['username'],
                        "value": request.form.get('value'),
-                       "videoname": request.form.get('videoname'),
-                       "username": session['username']})
+                       "timestamp": request.form.get('timestamp')
+                       })
         return "Saving completed"
 
 
@@ -86,8 +89,8 @@ def static_file(path):
     return bp.send_static_file(path)
 
 
-@bp.route('/raw_data')
-def raw_data():
+@bp.route('/data')
+def data():
     """
     Function to print all data that is stored in the MongoDB database.
 
@@ -97,14 +100,18 @@ def raw_data():
     check_access_right(forbidden='user', redirect_url='control.index')
     data = collect_mongodbobjects(d)
     # The names of the data fields:
-    headers=data[0].keys()
+    if data:
+        headers = data[0].keys()
+    else:
+        headers=''
     # Make list of values out of the dictionary:
     data = [list(e.values()) for e in data]
-    return render_template('control/raw_data.html', data=data, headers=headers)
+    data=sorted(data)
+    return render_template('control/data.html', data=data, headers=headers)
 
 
 @bp.route('/delete_all')
-def delete_data():
+def delete_all():
     """
     Delete all data that is stored in the MongoDB database.
 
@@ -114,4 +121,4 @@ def delete_data():
     check_access_right(forbidden='user', redirect_url='control.index')
     d.delete_many({})
     flash('All data deleted!')
-    return redirect(url_for('control.raw_data'))
+    return redirect(url_for('control.data'))
