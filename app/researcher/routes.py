@@ -15,7 +15,7 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 
 from app.researcher import bp
-from app.functionalities import collect_mongodbobjects, check_access
+from app.functionalities import collect_mongodbobjects, check_access_right
 from app import d
 
 
@@ -31,9 +31,14 @@ def chart():
     This webpage is only for the role researcher.
     :return: Researcher view webpage
     """
-    check_access(forbidden='user', redirect_url='control.index')
+    check_access_right(forbidden='user', redirect_url='control.index')
 
     data2 = collect_mongodbobjects(d)
+
+    # Added the following line because collect_mongodbobjects now returns a list
+    data2 = json.dumps({"objects": data2})
+    # But now data2 is again in the json format :)
+
     jsonData2 = json.loads(data2)
     df = pd.DataFrame(jsonData2)
     data_valence = df.objects.apply(lambda x: pd.Series(x))

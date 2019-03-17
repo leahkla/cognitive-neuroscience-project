@@ -1,6 +1,6 @@
 """
 This file contains the routes, i.e. the functions to be executed when a page
-(like "/login") is accessed in the browser.
+(like "/choose_role") is accessed in the browser.
 
 It has only the webpages belonging to control functions of our app,
 i.e. those belonging to the control blueprint.
@@ -8,7 +8,7 @@ i.e. those belonging to the control blueprint.
 
 from flask import request, redirect, url_for, render_template, session, flash
 
-from app.functionalities import collect_mongodbobjects, check_access
+from app.functionalities import collect_mongodbobjects, check_access_right
 from app.control import bp
 from app import d
 
@@ -28,16 +28,16 @@ def index():
         # Role is 'researcher'
         return render_template('researcher.chart')
     else:
-        return redirect(url_for("control.login"))
+        return redirect(url_for("control.choose_role"))
 
 
-@bp.route('/login')
-def login():
+@bp.route('/choose_role')
+def choose_role():
     """
-    Display the login form.
-    :return: Login webpage
+    Display the choose_role form.
+    :return: Role choosing webpage
     """
-    return render_template('control/login.html')
+    return render_template('control/choose_role.html')
 
 
 @bp.route('/submit_username', methods=['POST'])
@@ -51,7 +51,7 @@ def submit_username():
     if (not username) and (role != "researcher"):
         # Role is not researcher, but username is not provided
         flash('Please provide a username.')
-        return redirect(url_for('control.login'))
+        return redirect(url_for('control.choose_role'))
     session['role'] = role
     if role == 'researcher':
         # If role is researcher, username does not need to be stored
@@ -86,16 +86,21 @@ def static_file(path):
     return bp.send_static_file(path)
 
 
-@bp.route('/collect_data')
-def collect_data():
+@bp.route('/raw_data')
+def raw_data():
     """
     Function to print all data that is stored in the MongoDB database.
 
     Operation is not allowed for role user.
     :return: Webpage displaying currently stored data
     """
-    check_access(forbidden='user', redirect_url='control.index')
-    return collect_mongodbobjects(d)
+    check_access_right(forbidden='user', redirect_url='control.index')
+    data = collect_mongodbobjects(d)
+    # The names of the data fields:
+    headers=data[0].keys()
+    # Make list of values out of the dictionary:
+    data = [list(e.values()) for e in data]
+    return render_template('control/raw_data.html', data=data, headers=headers)
 
 
 @bp.route('/delete_all')
@@ -106,6 +111,7 @@ def delete_data():
     Operation is not allowed for role user.
     :return: User feedback string
     """
-    check_access(forbidden='user', redirect_url='control.index')
+    check_access_right(forbidden='user', redirect_url='control.index')
     d.delete_many({})
-    return redirect(url_for('control.collect_data'))
+    flash('All data deleted!')
+    return redirect(url_for('control.raw_data'))

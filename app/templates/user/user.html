@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}<title>Video annotation - User</title>{% endblock %}
+
 {% block head_extension %}
 <script type="text/javascript"
         src="https://player.vimeo.com/api/player.js"></script>
@@ -8,20 +10,16 @@
 {% endblock %}
 
 
-{% block navbar %}
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">VideoAnnotation</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li>
-                <a href="/">Home</a>
-            </li>
-        </ul>
+{% block navbar_extension %}
+<div class="collapse navbar-collapse justify-content-end"
+     id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.choose_role') }}">Change role</a>
     </div>
-</nav>
+</div>
 {% endblock %}
+
 
 {% block main_body %}
 
@@ -50,7 +48,6 @@
     var player = new Vimeo.Player('player');
     player.on('play', function () {
       console.log('The video is playing, yay!');
-
     });
 </script>
 

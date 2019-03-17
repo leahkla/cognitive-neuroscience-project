@@ -9,7 +9,7 @@ i.e. those belonging to the user interface.
 from flask import render_template
 
 from app.user import bp
-from app.functionalities import check_access
+from app.functionalities import check_access_right
 
 
 @bp.route('/user')
@@ -20,5 +20,5 @@ def user():
     This is not accessible for somebody with the role researcher.
     :return: Main webpage
     """
-    check_access(forbidden='researcher', redirect_url='researcher.chart')
+    check_access_right(forbidden='researcher', redirect_url='researcher.chart')
     return render_template('user/user.html')

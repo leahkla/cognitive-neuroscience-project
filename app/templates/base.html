@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Video annotation</title>
+    {% block title %}<title>Video annotation</title>{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
@@ -21,10 +21,18 @@
 
 <body>
 
-<!-- The navigation bar for the site, needs to be provided by templates that
-inherit from base. -->
-{% block navbar %}
-{% endblock %}
+<!-- The navigation bar for the site, elements need to be provided by
+templates that inherit from base. -->
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+    <button class="navbar-toggler navbar-toggler-right" type="button"
+            data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-brand">Video Annotation Tool</div>
+    {% block navbar_extension %}{% endblock %}
+</nav>
 
 <!-- This block will show flashed messages. The code is in a block, because
 this means templates inheriting from base can overwrite it if required.
@@ -33,6 +41,7 @@ In theory the button here is closeable by the user, and an x could be displayed
 by using "&times;" between the opening and closing tag of <button>. But
 somehow this does not work with template inheritance in Jinja. If the
 displayed page was a standalone template. -->
+<p></p>
 {% block messages %}
 <div class="container">
     {% for message in get_flashed_messages() %}
