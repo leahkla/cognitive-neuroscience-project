@@ -25,14 +25,15 @@ def collect_mongodbobjects(db_client):
     return json.dumps({"objects": collected})
 
 
-def check_access(forbidden, redirect_url, msg=''):
+def check_access(forbidden, redirect_url, msg='default'):
     """
     Check if access to a given page is allowed with the current role (the one
     saved in session['role']).
     N.B. Use werkzeug for redirect, the flask redirect function does not work here.
     :param forbidden: The role that is forbidden
     :param redirect_url: The URL to redirect to, e.g. 'control.login'
-    :param msg: Message, if there is a message to be flushed. Defaults to ''.
+    :param msg: Message, if there is a message to be flushed. Defaults to
+    'default'.
     :return: Redicrects to other page if access not allowed
     """
     if session['role'] != forbidden:
@@ -41,5 +42,8 @@ def check_access(forbidden, redirect_url, msg=''):
     else:
         # Access denied, redirect.
         if msg:
+            if msg == 'default':
+                msg = "You can't access that page with your role (current " \
+                      "role:" + str(session['role']) + ")."
             flash(msg)
         raise RequestRedirect(url_for(redirect_url))

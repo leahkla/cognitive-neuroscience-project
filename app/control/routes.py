@@ -94,8 +94,7 @@ def collect_data():
     Operation is not allowed for role user.
     :return: Webpage displaying currently stored data
     """
-    check_access(forbidden='user', redirect_url='control.index',
-                 msg='Not allowed!')
+    check_access(forbidden='user', redirect_url='control.index')
     return collect_mongodbobjects(d)
 
 
@@ -107,7 +106,6 @@ def delete_data():
     Operation is not allowed for role user.
     :return: User feedback string
     """
-    check_access(forbidden='user', redirect_url='control.index',
-                 msg='Not allowed!')
+    check_access(forbidden='user', redirect_url='control.index')
     d.delete_many({})
     return redirect(url_for('control.collect_data'))

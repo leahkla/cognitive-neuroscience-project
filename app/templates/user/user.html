@@ -1,59 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <title>Video annotation</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script type="text/javascript" src="https://player.vimeo.com/api/player.js"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-</head>
+{% block head_extension %}
+<script type="text/javascript"
+        src="https://player.vimeo.com/api/player.js"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+{% endblock %}
 
-<body>
-  <nav class="navbar navbar-default">
+
+{% block navbar %}
+<nav class="navbar navbar-default">
     <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">VideoAnnotation</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="/">Home</a>
-        </li>
-      </ul>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">VideoAnnotation</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li>
+                <a href="/">Home</a>
+            </li>
+        </ul>
     </div>
-  </nav>
+</nav>
+{% endblock %}
 
-  <div style="margin: 20px;">
+{% block main_body %}
+
+<div style="margin: 20px;">
     <h1>Video annotation</h1>
-  </div>
+</div>
 
-  <p>
+<p>
     <label for="amount">Volume:</label>
-    <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-  </p>
-  <p>
+    <input type="text" id="amount" readonly
+           style="border:0; color:#f6931f; font-weight:bold;">
+</p>
+<p>
     <label for="timestamp">Timestamp:</label>
-    <input type="text" id="timestamp" readonly style="border:0; color:#f6931f; font-weight:bold;">
-  </p>
-  <div align="center">
-    <div data-vimeo-url="https://vimeo.com/65107797" data-vimeo-width="800" id="player" style="display: inline-block"></div>
+    <input type="text" id="timestamp" readonly
+           style="border:0; color:#f6931f; font-weight:bold;">
+</p>
+<div align="center">
+    <div data-vimeo-url="https://vimeo.com/65107797" data-vimeo-width="800"
+         id="player" style="display: inline-block"></div>
     <div id="slider-vertical" style="display: inline-block;height:200px;"></div>
-  </div>
-  
+</div>
 
-  <script>
+
+<script>
     var player = new Vimeo.Player('player');
     player.on('play', function () {
       console.log('The video is playing, yay!');
 
     });
-  </script>
-</body>
+</script>
 
-</html>
+{% endblock %}

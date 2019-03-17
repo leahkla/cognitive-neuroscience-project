@@ -31,8 +31,7 @@ def chart():
     This webpage is only for the role researcher.
     :return: Researcher view webpage
     """
-    check_access(forbidden='user', redirect_url='control.index',
-                 msg="Not allowed")
+    check_access(forbidden='user', redirect_url='control.index')
 
     data2 = collect_mongodbobjects(d)
     jsonData2 = json.loads(data2)

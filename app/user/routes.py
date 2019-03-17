@@ -20,6 +20,5 @@ def user():
     This is not accessible for somebody with the role researcher.
     :return: Main webpage
     """
-    check_access(forbidden='researcher', redirect_url='researcher.chart',
-                 msg='Not allowed!')
+    check_access(forbidden='researcher', redirect_url='researcher.chart')
     return render_template('user/user.html')
