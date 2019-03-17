@@ -15,14 +15,15 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 
 from app.researcher import bp
-from app.helper_functions import collect_mongodbobjects
+from app.functionalities import collect_mongodbobjects
 from app import d
+
 
 # from scipy.interpolate import CubicSpline
 # from scipy.interpolate import spline
 # from scipy.interpolate import interp1d
 
-@bp.route('/researcher_view', methods=['GET'])
+@bp.route('/chart', methods=['GET'])
 def chart():
     """
     Display the web page for the researcher view
@@ -66,5 +67,5 @@ def chart():
     ]
 
     script, div = components(p)
-    return render_template("frontend/researcher_view.html", the_div=div,
+    return render_template("researcher/researcher.html", the_div=div,
                            the_script=script)

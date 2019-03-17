@@ -2,15 +2,28 @@
 This file contains the routes, i.e. the functions to be executed when a page
 (like "/login") is accessed in the browser.
 
-It has only the webpages belonging to control functions or our app,
+It has only the webpages belonging to control functions of our app,
 i.e. those belonging to the control blueprint.
 """
 
-from flask import request, redirect, url_for, render_template, session
+from flask import request, redirect, url_for, render_template, session, flash
 
-from app.helper_functions import collect_mongodbobjects
+from app.functionalities import collect_mongodbobjects
 from app.control import bp
 from app import d
+
+
+@bp.route('/')
+def index():
+    """
+    Ask user to provide user name or redirect him to the user page if user
+    name is already available.
+    :return: Main webpage
+    """
+    if session.get('username'):
+        return render_template('user/user.html')
+    else:
+        return redirect(url_for("control.login"))
 
 
 @bp.route('/login')
@@ -19,7 +32,7 @@ def login():
     Display the login form.
     :return: Login webpage
     """
-    return render_template('frontend/login.html')
+    return render_template('control/login.html')
 
 
 @bp.route('/submit_username', methods=['POST'])
@@ -28,8 +41,19 @@ def submit_username():
     Save a username for the current session.
     :return: Redirect to /index
     """
-    session['username'] = request.form.get('username')
-    return redirect(url_for('user.index'))
+    username = request.form.get('username')
+    role = request.form.get('role')
+    # Check if username was provided:
+    if (not username) and (role != "researcher"):
+        flash('Please provide a username.')
+        return redirect(url_for('control.login'))
+    session['role'] = role
+    # If the role is researcher don't even store the username, just redirect to
+    # the researcher url:
+    if role == 'researcher':
+        return redirect(url_for('researcher.chart'))
+    session['username'] = username
+    return redirect(url_for('user.user'))
 
 
 @bp.route('/save', methods=['POST'])

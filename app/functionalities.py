@@ -1,13 +1,11 @@
 """"
-This file contains functions that are needed in the routes.py files to
+This file contains functions that are needed in several routes.py files to
 display the webpages, but do not have a decorator binding them to a
 particular webpage.
 """
 
 import json
 
-
-######### Database ##########
 
 def collect_mongodbobjects(db_client):
     """
@@ -22,7 +20,3 @@ def collect_mongodbobjects(db_client):
             del p['_id']
         collected.append(p)
     return json.dumps({"objects": collected})
-
-####### Visualisation #######
-
-# no functions in here as of yet
