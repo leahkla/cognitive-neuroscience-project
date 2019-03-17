@@ -43,6 +43,16 @@
 
 <form action="/submit_username" method="post">
     <div class="container">
+        <form class="form-group-row">
+            <label for="selectRole" class="col-1 col-form-label">Role</label>
+            <select class="custom-select"
+                    id="selectRole" name="role">
+                <option selected value="user">User</option>
+                <option value="researcher">Researcher</option>
+                <option value="test">Test/Both</option>
+            </select>
+        </form>
+        <p></p>
         <div class="form-group row">
             <label for="inputUser" class="col-1 col-form-label">Username</label>
             <div class="col-sm-2">
@@ -55,15 +65,6 @@
                 If you are a researcher, you can leave this blank.
             </p>
         </div>
-        <form class="form-group-row">
-            <label for="selectRole" class="col-1 col-form-label">Role</label>
-            <select class="custom-select"
-                    id="selectRole" name="role">
-                <option selected value="user">User</option>
-                <option value="researcher">Researcher</option>
-                <option value="test">Test/Both</option>
-            </select>
-        </form>
         <p></p>
         <div class="form-group-row">
             <div class="col-sm-2">

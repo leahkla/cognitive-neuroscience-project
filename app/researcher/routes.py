@@ -15,7 +15,7 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 
 from app.researcher import bp
-from app.functionalities import collect_mongodbobjects
+from app.functionalities import collect_mongodbobjects, check_access
 from app import d
 
 
@@ -26,9 +26,14 @@ from app import d
 @bp.route('/chart', methods=['GET'])
 def chart():
     """
-    Display the web page for the researcher view
+    Display the web page for the researcher view.
+
+    This webpage is only for the role researcher.
     :return: Researcher view webpage
     """
+    check_access(forbidden='user', redirect_url='control.index',
+                 msg="Not allowed")
+
     data2 = collect_mongodbobjects(d)
     jsonData2 = json.loads(data2)
     df = pd.DataFrame(jsonData2)

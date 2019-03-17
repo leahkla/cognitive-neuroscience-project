@@ -8,7 +8,7 @@ i.e. those belonging to the control blueprint.
 
 from flask import request, redirect, url_for, render_template, session, flash
 
-from app.functionalities import collect_mongodbobjects
+from app.functionalities import collect_mongodbobjects, check_access
 from app.control import bp
 from app import d
 
@@ -20,8 +20,13 @@ def index():
     name is already available.
     :return: Main webpage
     """
-    if session.get('username'):
+    if ((session.get('role') == 'user') or (
+            session.get('role') == 'test')) and session.get('username'):
+        # Role is 'user' or 'test' and username is provided
         return render_template('user/user.html')
+    if session.get('role') == 'researcher':
+        # Role is 'researcher'
+        return render_template('researcher.chart')
     else:
         return redirect(url_for("control.login"))
 
@@ -43,14 +48,13 @@ def submit_username():
     """
     username = request.form.get('username')
     role = request.form.get('role')
-    # Check if username was provided:
     if (not username) and (role != "researcher"):
+        # Role is not researcher, but username is not provided
         flash('Please provide a username.')
         return redirect(url_for('control.login'))
     session['role'] = role
-    # If the role is researcher don't even store the username, just redirect to
-    # the researcher url:
     if role == 'researcher':
+        # If role is researcher, username does not need to be stored
         return redirect(url_for('researcher.chart'))
     session['username'] = username
     return redirect(url_for('user.user'))
@@ -86,8 +90,12 @@ def static_file(path):
 def collect_data():
     """
     Function to print all data that is stored in the MongoDB database.
+
+    Operation is not allowed for role user.
     :return: Webpage displaying currently stored data
     """
+    check_access(forbidden='user', redirect_url='control.index',
+                 msg='Not allowed!')
     return collect_mongodbobjects(d)
 
 
@@ -95,7 +103,11 @@ def collect_data():
 def delete_data():
     """
     Delete all data that is stored in the MongoDB database.
+
+    Operation is not allowed for role user.
     :return: User feedback string
     """
+    check_access(forbidden='user', redirect_url='control.index',
+                 msg='Not allowed!')
     d.delete_many({})
-    return "All items deleted :)"
+    return redirect(url_for('control.collect_data'))
