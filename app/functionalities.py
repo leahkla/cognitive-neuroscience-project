@@ -33,6 +33,9 @@ def check_access_right(forbidden, redirect_url, msg='default'):
     'default'.
     :return: Redicrects to other page if access not allowed
     """
+    if 'role' not in session.keys():
+        # If the user has no role yet redirect to choose one.
+        raise RequestRedirect(url_for('control.choose_role'))
     if session['role'] != forbidden:
         # Access approved!
         return None

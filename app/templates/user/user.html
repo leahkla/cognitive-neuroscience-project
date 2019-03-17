@@ -21,26 +21,40 @@
 {% endblock %}
 
 
+{% set vimeoId = '65107797' %}
+
 {% block main_body %}
 
-<div style="margin: 20px;">
-    <h1>Video annotation</h1>
+<div class="container text-muted">
+    Please watch the video and, at the same time, move the slider according to
+    how good or bad you feel.
+    <p></p>
 </div>
 
-<p>
-    <label for="amount">Volume:</label>
-    <input type="text" id="amount" readonly
-           style="border:0; color:#f6931f; font-weight:bold;">
-</p>
-<p>
-    <label for="timestamp">Timestamp:</label>
-    <input type="text" id="timestamp" readonly
-           style="border:0; color:#f6931f; font-weight:bold;">
-</p>
-<div align="center">
-    <div data-vimeo-url="https://vimeo.com/65107797" data-vimeo-width="800"
-         id="player" style="display: inline-block"></div>
-    <div id="slider-vertical" style="display: inline-block;height:200px;"></div>
+<div class="container">
+    <div class="row align-items-center">
+        <div>
+            <div data-vimeo-id="{{ vimeoId }}"
+                 data-vimeo-width="800"
+                 id="player"></div>
+        </div>
+        <div>
+            <form style="width:220%;transform:rotate(270deg)"
+                  action="/save" method="post">
+                <input type="range" class="custom-range"
+                       id="formControlRange" min="0" max="100" step="1"
+                       value="50" name="value"
+                       ondrag="slider_value.innerHTML = this.value;"
+                       onchange="player.getCurrentTime().then(timestamp =>
+                                {sendData(timestamp, this.value, {{ vimeoId }})});
+                                slider_value.innerHTML = this.value;">
+            </form>
+        </div>
+        <div id="slider_value" class="align-self-end"
+             style="position:relative;bottom:30px">50
+        </div>
+
+    </div>
 </div>
 
 

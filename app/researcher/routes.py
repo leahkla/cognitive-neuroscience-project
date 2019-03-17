@@ -68,7 +68,7 @@ def chart():
     source = ColumnDataSource(data={
         'timestamp': data_valence.timestamp,
         'value': data_valence.value,
-        'videoname': data_valence.videoname})
+        'videoid': data_valence.videoid})
 
     p.select_one(HoverTool).tooltips = [
         ('timestamp', '@x'),

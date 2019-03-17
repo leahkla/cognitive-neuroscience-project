@@ -68,7 +68,7 @@ def save():
     if not session.get('username'):
         return "Error: username not set"
     else:
-        d.insert_post({"videoname": request.form.get('videoname'),
+        d.insert_post({"videoid": request.form.get('videoid'),
                        "username": session['username'],
                        "timestamp": request.form.get('timestamp'),
                        "value": request.form.get('value')
