@@ -5,9 +5,6 @@ This file contains the routes, i.e. the functions to be executed when a page
 It has only the webpages belonging to control functions of our app,
 i.e. those belonging to the control blueprint.
 """
-
-from operator import itemgetter
-
 from flask import request, redirect, url_for, render_template, session, flash
 
 from app.functionalities import collect_mongodbobjects, check_access_right
@@ -73,8 +70,8 @@ def save():
     else:
         d.insert_post({"videoname": request.form.get('videoname'),
                        "username": session['username'],
-                       "value": request.form.get('value'),
-                       "timestamp": request.form.get('timestamp')
+                       "timestamp": request.form.get('timestamp'),
+                       "value": request.form.get('value')
                        })
         return "Saving completed"
 
@@ -103,10 +100,10 @@ def data():
     if data:
         headers = data[0].keys()
     else:
-        headers=''
+        headers = ''
     # Make list of values out of the dictionary:
     data = [list(e.values()) for e in data]
-    data=sorted(data)
+    data = sorted(data)
     return render_template('control/data.html', data=data, headers=headers)
 
 
