@@ -30,10 +30,10 @@ $(function () {
   });
   $("#amount").val($("#slider-vertical").slider("value"));
   //$("#timestamp").val($("#slider-vertical").slider("timestamp"));
-  /* 
+  /*
     $("#time").val($("#slider-vertical")).slider("time"));
       range: "min",
       stop: function( event, ui ) {player.getTimeStamp());}
-    
+
     }); */
 });
