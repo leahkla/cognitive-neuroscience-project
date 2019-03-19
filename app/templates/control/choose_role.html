@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Video annotation - Choose Role</title>{% endblock %}
+
+{% block main_body %}
+
+<form action="/submit_username" method="post">
+    <div class="container">
+        <form class="form-group-row">
+            <label for="selectRole" class="col-1 col-form-label">Role</label>
+            <select class="custom-select" style="width:95pt"
+                    id="selectRole" name="role">
+                <option selected value="user">User</option>
+                <option value="researcher">Researcher</option>
+                <option value="test">Test/Both</option>
+            </select>
+        </form>
+        <p></p>
+        <div class="form-group row">
+            <label for="inputUser" class="col-1 col-form-label">Username</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="inputUser"
+                       placeholder="Username" name="username"
+                       value="{{ request.form.username }}"
+                       aria-describedby="note">
+            </div>
+            <p id="note" class="form-text text-muted">
+                If you are a researcher, you can leave this blank.
+            </p>
+        </div>
+        <p></p>
+        <div class="form-group-row">
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary">Proceed</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+{% endblock %}

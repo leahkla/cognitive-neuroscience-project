@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Video annotation - User</title>{% endblock %}
+
+{% block head_extension %}
+<script type="text/javascript"
+        src="https://player.vimeo.com/api/player.js"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+{% endblock %}
+
+
+{% block navbar_extension %}
+<div class="collapse navbar-collapse justify-content-end"
+     id="navbarMain">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.choose_role') }}">Change role</a>
+    </div>
+</div>
+{% endblock %}
+
+
+{% set vimeoId = '65107797' %}
+
+{% block main_body %}
+
+<div class="container text-muted">
+    Please watch the video and, at the same time, and move the slider up or down
+    when it makes you feel good or bad.
+    <p></p>
+</div>
+
+<div class="container">
+    <div class="row align-items-center">
+        <div>
+            <div data-vimeo-id="{{ vimeoId }}"
+                 data-vimeo-width="800"
+                 id="player"></div>
+        </div>
+        <div>
+            <form style="width:220%;transform:rotate(270deg)"
+                  action="/save" method="post">
+                <input type="range" class="custom-range"
+                       id="formControlRange" min="0" max="100" step="1"
+                       value="50" name="value"
+                       ondrag="slider_value.innerHTML = this.value;"
+                       onchange="player.getCurrentTime().then(timestamp =>
+                                {sendData(timestamp, this.value, {{ vimeoId }})});
+                                slider_value.innerHTML = this.value;">
+            </form>
+        </div>
+        <div id="slider_value" class="align-self-end"
+             style="position:relative;bottom:30px">50
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    var player = new Vimeo.Player('player');
+    player.on('play', function () {
+      console.log('The video is playing, yay!');
+    });
+</script>
+
+{% endblock %}

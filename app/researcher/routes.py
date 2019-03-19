@@ -15,20 +15,30 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 
 from app.researcher import bp
-from app.helper_functions import collect_mongodbobjects
+from app.functionalities import collect_mongodbobjects, check_access_right
 from app import d
+
 
 # from scipy.interpolate import CubicSpline
 # from scipy.interpolate import spline
 # from scipy.interpolate import interp1d
 
-@bp.route('/researcher_view', methods=['GET'])
+@bp.route('/chart', methods=['GET'])
 def chart():
     """
-    Display the web page for the researcher view
+    Display the web page for the researcher view.
+
+    This webpage is only for the role researcher.
     :return: Researcher view webpage
     """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
     data2 = collect_mongodbobjects(d)
+
+    # Added the following line because collect_mongodbobjects now returns a list
+    data2 = json.dumps({"objects": data2})
+    # But now data2 is again in the json format :)
+
     jsonData2 = json.loads(data2)
     df = pd.DataFrame(jsonData2)
     data_valence = df.objects.apply(lambda x: pd.Series(x))
@@ -58,7 +68,7 @@ def chart():
     source = ColumnDataSource(data={
         'timestamp': data_valence.timestamp,
         'value': data_valence.value,
-        'videoname': data_valence.videoname})
+        'videoid': data_valence.videoid})
 
     p.select_one(HoverTool).tooltips = [
         ('timestamp', '@x'),
@@ -66,5 +76,5 @@ def chart():
     ]
 
     script, div = components(p)
-    return render_template("frontend/researcher_view.html", the_div=div,
+    return render_template("researcher/researcher.html", the_div=div,
                            the_script=script)

@@ -1,5 +1,5 @@
 """
-This file contains the interface object for the MongoDB database.
+This file contains the interface class for the MongoDB database.
 """
 
 from pymongo import MongoClient

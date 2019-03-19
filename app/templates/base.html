@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    {% block title %}<title>Video annotation</title>{% endblock %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+    <link rel="stylesheet"
+          href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    {% block head_extension %}{% endblock %}
+</head>
+
+<body>
+
+<!-- The navigation bar for the site, elements need to be provided by
+templates that inherit from base. -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarMain"
+            aria-controls="navbarMain" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-brand">Video Annotation Tool</div>
+    {% block navbar_extension %}{% endblock %}
+</nav>
+
+<!-- This block will show flashed messages. The code is in a block, because
+this means templates inheriting from base can overwrite it if required. -->
+<p></p>
+{% block messages %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+<!-- The main body of the site (i.e. what comes below the navigation bar),
+needs to be provided by templates that inherit from base. -->
+{% block main_body %}
+{% endblock %}
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

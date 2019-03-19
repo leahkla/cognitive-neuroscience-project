@@ -1,25 +1,42 @@
 """
 This file contains the routes, i.e. the functions to be executed when a page
-(like "/login") is accessed in the browser.
+(like "/choose_role") is accessed in the browser.
 
-It has only the webpages belonging to control functions or our app,
+It has only the webpages belonging to control functions of our app,
 i.e. those belonging to the control blueprint.
 """
+from flask import request, redirect, url_for, render_template, session, flash
 
-from flask import request, redirect, url_for, render_template, session
-
-from app.helper_functions import collect_mongodbobjects
+from app.functionalities import collect_mongodbobjects, check_access_right
 from app.control import bp
 from app import d
 
 
-@bp.route('/login')
-def login():
+@bp.route('/')
+def index():
     """
-    Display the login form.
-    :return: Login webpage
+    Ask user to provide user name or redirect him to the user page if user
+    name is already available.
+    :return: Main webpage
     """
-    return render_template('frontend/login.html')
+    if ((session.get('role') == 'user') or (
+            session.get('role') == 'test')) and session.get('username'):
+        # Role is 'user' or 'test' and username is provided
+        return render_template('user/user.html')
+    if session.get('role') == 'researcher':
+        # Role is 'researcher'
+        return render_template('researcher.chart')
+    else:
+        return redirect(url_for("control.choose_role"))
+
+
+@bp.route('/choose_role')
+def choose_role():
+    """
+    Display the choose_role form.
+    :return: Role choosing webpage
+    """
+    return render_template('control/choose_role.html')
 
 
 @bp.route('/submit_username', methods=['POST'])
@@ -28,8 +45,18 @@ def submit_username():
     Save a username for the current session.
     :return: Redirect to /index
     """
-    session['username'] = request.form.get('username')
-    return redirect(url_for('user.index'))
+    username = request.form.get('username')
+    role = request.form.get('role')
+    if (not username) and (role != "researcher"):
+        # Role is not researcher, but username is not provided
+        flash('Please provide a username.')
+        return redirect(url_for('control.choose_role'))
+    session['role'] = role
+    if role == 'researcher':
+        # If role is researcher, username does not need to be stored
+        return redirect(url_for('researcher.chart'))
+    session['username'] = username
+    return redirect(url_for('user.user'))
 
 
 @bp.route('/save', methods=['POST'])
@@ -41,10 +68,11 @@ def save():
     if not session.get('username'):
         return "Error: username not set"
     else:
-        d.insert_post({"timestamp": request.form.get('timestamp'),
-                       "value": request.form.get('value'),
-                       "videoname": request.form.get('videoname'),
-                       "username": session['username']})
+        d.insert_post({"videoid": request.form.get('videoid'),
+                       "username": session['username'],
+                       "timestamp": request.form.get('timestamp'),
+                       "value": request.form.get('value')
+                       })
         return "Saving completed"
 
 
@@ -58,20 +86,36 @@ def static_file(path):
     return bp.send_static_file(path)
 
 
-@bp.route('/collect_data')
-def collect_data():
+@bp.route('/data')
+def data():
     """
     Function to print all data that is stored in the MongoDB database.
+
+    Operation is not allowed for role user.
     :return: Webpage displaying currently stored data
     """
-    return collect_mongodbobjects(d)
+    check_access_right(forbidden='user', redirect_url='control.index')
+    data = collect_mongodbobjects(d)
+    # The names of the data fields:
+    if data:
+        headers = data[0].keys()
+    else:
+        headers = ''
+    # Make list of values out of the dictionary:
+    data = [list(e.values()) for e in data]
+    data = sorted(data)
+    return render_template('control/data.html', data=data, headers=headers)
 
 
 @bp.route('/delete_all')
-def delete_data():
+def delete_all():
     """
     Delete all data that is stored in the MongoDB database.
+
+    Operation is not allowed for role user.
     :return: User feedback string
     """
+    check_access_right(forbidden='user', redirect_url='control.index')
     d.delete_many({})
-    return "All items deleted :)"
+    flash('All data deleted!')
+    return redirect(url_for('control.data'))
