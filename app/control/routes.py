@@ -22,10 +22,10 @@ def index():
     if ((session.get('role') == 'user') or (
             session.get('role') == 'test')) and session.get('username'):
         # Role is 'user' or 'test' and username is provided
-        return render_template('user/user.html')
+        return redirect(url_for('user.user'))
     if session.get('role') == 'researcher':
         # Role is 'researcher'
-        return render_template('researcher.chart')
+        return redirect(url_for('researcher.chart'))
     else:
         return redirect(url_for("control.choose_role"))
 

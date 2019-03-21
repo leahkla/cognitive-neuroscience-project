@@ -8,18 +8,23 @@ i.e. those belonging to the researcher interface.
 
 import json
 import pandas as pd
-from flask import render_template
+from flask import render_template, flash
+import numpy as np
 
-from bokeh.models import ColumnDataSource, HoverTool
+from bokeh.models import HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
+from bokeh.palettes import Spectral6
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right
 from app import d
 
+# PChipInterpolator finds monotonic interpolations, which we need to make
+# sure that our interpolated values don't go below 0 or above 100.
+from scipy.interpolate import PchipInterpolator
 
-# from scipy.interpolate import CubicSpline
+
 # from scipy.interpolate import spline
 # from scipy.interpolate import interp1d
 
@@ -33,48 +38,71 @@ def chart():
     """
     check_access_right(forbidden='user', redirect_url='control.index')
 
-    data2 = collect_mongodbobjects(d)
+    # Get the data:
+    data = collect_mongodbobjects(d)
+    df = pd.DataFrame(data)
+    df['timestamp'] = pd.to_numeric(df['timestamp'])
+    df['value'] = pd.to_numeric(df['value'])
+    df.sort_values(by=['timestamp'], inplace=True)
 
-    # Added the following line because collect_mongodbobjects now returns a list
-    data2 = json.dumps({"objects": data2})
-    # But now data2 is again in the json format :)
+    # Group by username and extract timestamps and values for each user
+    grouped_data = df.groupby('username')
+    data_by_user = [user for _, user in grouped_data]
+    ts = [np.array(t) for t in
+          (data_by_user[i]['timestamp'].apply(lambda x: float(x)) for i in
+           range(len(data_by_user)))]
+    vals = [np.array(val) for val in
+            (data_by_user[i]['value'].apply(lambda x: float(x)) for i in
+             range(len(data_by_user)))]
 
-    jsonData2 = json.loads(data2)
-    df = pd.DataFrame(jsonData2)
-    data_valence = df.objects.apply(lambda x: pd.Series(x))
+    # Make sure all data starts and ends at the same time for each user, if the
+    # data doesn't suggest otherwise start and end value are 50.
+    max_t = max([max(t) for t in ts])
+    for i in range(len(ts)):
+        if min(ts[i]) != 0:
+            ts[i] = np.append([0], ts[i])
+            vals[i] = np.append([50], vals[i])
+        if max(ts[i]) != max_t:
+            ts[i] = np.append(ts[i], [max_t])
+            vals[i] = np.append(vals[i], [50])
+        # Round last timestamp up (for smoother display):
+        ts[i] = np.append(ts[i][:-1], int(ts[i][-1])+1)
 
+    # Create the interpolation
+    xs = np.arange(0, int(max_t) + 1.5, 1)
+    interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
+    user_timeseries = [[xs, interpolator(xs)] for interpolator in interpolators]
+
+    # Create the Bokeh plot
     TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
-
     p = figure(title="Valence ratings by timestamp", y_axis_type="linear",
-               x_range=(0, 23), y_range=(0, 100), plot_height=400,
-               tools=TOOLS, plot_width=900)
+               plot_height=500,
+               tools=TOOLS, active_scroll='wheel_zoom', plot_width=900)
     p.xaxis.axis_label = 'Timestamp (seconds)'
     p.yaxis.axis_label = 'Valence rating'
 
-    x = data_valence.timestamp
-    y = data_valence.value
-    # spl = CubicSpline(x, y)
-    # When adding above CubicSpline, following error is produced:
-
-    # TypeError: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''
-    # so there might be some requirement in CubicSpline source code to
-    # have all x values certain type
-
-    # y_smooth = spl(data_valence.value)
-    # y_smooth = spline(data_valence.timestamp, data_valence.value)
-    p.line(x, y, line_color="purple", line_width=3)
-    # p.line(data_valence.timestamp, y_smooth,line_color="purple", line_width = 3)
-
-    source = ColumnDataSource(data={
-        'timestamp': data_valence.timestamp,
-        'value': data_valence.value,
-        'videoid': data_valence.videoid})
+    for i, tseries in enumerate(user_timeseries):
+        p.line(tseries[0], tseries[1], line_color=Spectral6[i%6],
+               line_width=3, name=data_by_user[i]['username'].iloc[0])
+    for i in range(len(ts)):
+        for j in range(len(ts[i])):
+            p.circle(ts[i][j], vals[i][j], fill_color=Spectral6[i%6],
+                     line_color='black', radius=0.7)
 
     p.select_one(HoverTool).tooltips = [
-        ('timestamp', '@x'),
-        ('Rating of valence', '@y')
+        ('Time', '@x'),
+        ('Valence', '@y'),
+        ('User', '$name')
+
     ]
 
     script, div = components(p)
     return render_template("researcher/researcher.html", the_div=div,
                            the_script=script)
+
+
+@bp.route('/correlations', methods=['GET'])
+def correlations():
+    check_access_right(forbidden='user', redirect_url='control.index')
+
+    return render_template("researcher/correlations.html")

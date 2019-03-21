@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Video annotation - Researcher</title>{% endblock %}
+
+{% block navbar_extension %}
+
+<div class="collapse navbar-collapse justify-content-end"
+     id="navbarMain">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link" href="{{ url_for('control.data') }}">Raw</a>
+        <a class="nav-item nav-link active"
+           href="{{ url_for('researcher.correlations') }}">Correlations <span
+                class="sr-only">
+            (current)</span></a>
+        <a class="nav-item nav-link" href="{{ url_for('researcher.chart') }}">Chart</a>
+        <div class="nav-link nav-item">|</div>
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.choose_role') }}">Change role</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block main_body %}
+
+<div class="container">
+    Not implemented yet.
+</div>
+
+{% endblock %}
