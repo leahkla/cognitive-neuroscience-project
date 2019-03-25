@@ -14,7 +14,7 @@ import numpy as np
 from bokeh.models import HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
-from bokeh.palettes import Spectral6
+from bokeh.palettes import Spectral6 #@UnresolvedImport
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right
