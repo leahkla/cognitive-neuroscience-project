@@ -25,7 +25,12 @@ def create_app(conf=Config):
 
     csp = {
         'force_https': 'True'
-        'default-src': '*.bokeh*'
+        'default-src': [
+            '\'self\'',
+            '*bokeh*',
+            '*.trusted.com'
+        ],
+        'script-src': '*'
     }
 
     Talisman(app, content_security_policy=csp)
