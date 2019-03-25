@@ -28,7 +28,9 @@ def create_app(conf=Config):
         'default-src': [
             '\'self\'',
             '*bokeh*',
-            '*.trusted.com'
+            '*.trusted.com',
+            '*.bootstrap.cdn.com/*',
+            '*.jquery.com/*'
         ],
         'media-src': '*',
         'img-src': '*',
