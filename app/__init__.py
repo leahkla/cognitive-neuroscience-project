@@ -24,14 +24,14 @@ def create_app(conf=Config):
     app = Flask(__name__)
 
     csp = {
-        'force_https': 'True',
         'default-src': [
             '\'self\'',
-            '*bokeh*',
+            '*.pydata.org/*',
             '*.trusted.com',
             '*.bootstrapcdn.com/*',
-            '*.jquery.com/*'
-        ],
+            '*.jquery.com/*',
+            '*.herokuapp.com/*'
+        ], 
         'media-src': '*',
         'img-src': '*',
         'script-src': '*',
