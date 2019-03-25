@@ -29,12 +29,13 @@ def create_app(conf=Config):
             '\'self\'',
             '*bokeh*',
             '*.trusted.com',
-            '*.bootstrap.cdn.com/*',
+            '*.bootstrapcdn.com/*',
             '*.jquery.com/*'
         ],
         'media-src': '*',
         'img-src': '*',
-        'script-src': '*'
+        'script-src': '*',
+        'style-src': '*'
     }
 
     Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
