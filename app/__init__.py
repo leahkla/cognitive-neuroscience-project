@@ -5,7 +5,7 @@ This  file contains the flask factory function which will create an app.
 from flask import Flask, session
 from app.config import Config
 from app.database_client import DatabaseClient
-from flask_talisman import Talisman
+
 # Initialise the database client:
 d = DatabaseClient()
 
@@ -22,23 +22,7 @@ def create_app(conf=Config):
     """
     # Initialise the flask app:
     app = Flask(__name__)
-    """ 
-    csp = {
-        'default-src': [
-            '\'self\'',
-            '*.pydata.org/*',
-            '*.trusted.com',
-            '*.bootstrapcdn.com/*',
-            '*.jquery.com/*',
-            '*.herokuapp.com/*'
-        ], 
-        'media-src': '*',
-        'img-src': '*',
-        'script-src': '*',
-        'style-src': '*'
-    }
-    Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
-    """
+
     # Load app configuration from the conf class:
     app.config.from_object(conf)
 
