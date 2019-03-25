@@ -22,7 +22,7 @@ def create_app(conf=Config):
     """
     # Initialise the flask app:
     app = Flask(__name__)
-
+""" 
     csp = {
         'default-src': [
             '\'self\'',
@@ -37,8 +37,8 @@ def create_app(conf=Config):
         'script-src': '*',
         'style-src': '*'
     }
-
     Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
+"""
     # Load app configuration from the conf class:
     app.config.from_object(conf)
 
