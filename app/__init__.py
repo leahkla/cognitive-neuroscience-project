@@ -22,7 +22,13 @@ def create_app(conf=Config):
     """
     # Initialise the flask app:
     app = Flask(__name__)
-    Talisman(app)
+
+    csp = {
+        'force_https': 'True'
+        'default-src': '*.bokeh*'
+    }
+
+    Talisman(app, content_security_policy=csp)
     # Load app configuration from the conf class:
     app.config.from_object(conf)
 
