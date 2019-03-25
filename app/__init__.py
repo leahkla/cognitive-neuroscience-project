@@ -5,7 +5,7 @@ This  file contains the flask factory function which will create an app.
 from flask import Flask, session
 from app.config import Config
 from app.database_client import DatabaseClient
-from flask_sslify import SSLify
+from flask_talisman import Talisman
 # Initialise the database client:
 d = DatabaseClient()
 
@@ -22,7 +22,7 @@ def create_app(conf=Config):
     """
     # Initialise the flask app:
     app = Flask(__name__)
-    sslify = SSLify(app)
+    Talisman(app)
     # Load app configuration from the conf class:
     app.config.from_object(conf)
 
