@@ -24,7 +24,7 @@ def create_app(conf=Config):
     app = Flask(__name__)
 
     csp = {
-        'force_https': 'True'
+        'force_https': 'True',
         'default-src': [
             '\'self\'',
             '*bokeh*',
