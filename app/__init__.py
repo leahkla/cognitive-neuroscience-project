@@ -30,10 +30,12 @@ def create_app(conf=Config):
             '*bokeh*',
             '*.trusted.com'
         ],
+        'media-src': '*',
+        'img-src': '*',
         'script-src': '*'
     }
 
-    Talisman(app, content_security_policy=csp)
+    Talisman(app, content_security_policy=csp, content_security_policy_nonce_in=['script-src'])
     # Load app configuration from the conf class:
     app.config.from_object(conf)
 
