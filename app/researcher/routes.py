@@ -24,6 +24,10 @@ from app import d
 # sure that our interpolated values don't go below 0 or above 100.
 from scipy.interpolate import PchipInterpolator
 
+from tslearn.clustering import TimeSeriesKMeans
+from tslearn.datasets import CachedDatasets
+from tslearn.preprocessing import TimeSeriesScalerMeanVariance, TimeSeriesResampler
+
 
 # from scipy.interpolate import spline
 # from scipy.interpolate import interp1d
@@ -105,4 +109,65 @@ def chart():
 def correlations():
     check_access_right(forbidden='user', redirect_url='control.index')
 
-    return render_template("researcher/correlations.html")
+    data = collect_mongodbobjects(d)
+    df = pd.DataFrame(data)
+    df['timestamp'] = pd.to_numeric(df['timestamp'])
+    df['value'] = pd.to_numeric(df['value'])
+    df.sort_values(by=['timestamp'], inplace=True)
+
+    # Group by username and extract timestamps and values for each user
+    grouped_data = df.groupby('username')
+    data_by_user = [user for _, user in grouped_data]
+    ts = [np.array(t) for t in
+          (data_by_user[i]['timestamp'].apply(lambda x: float(x)) for i in
+           range(len(data_by_user)))]
+    vals = [np.array(val) for val in
+            (data_by_user[i]['value'].apply(lambda x: float(x)) for i in
+             range(len(data_by_user)))]
+
+    # Make sure all data starts and ends at the same time for each user, if the
+    # data doesn't suggest otherwise start and end value are 50.
+    max_t = max([max(t) for t in ts])
+    for i in range(len(ts)):
+        if min(ts[i]) != 0:
+            ts[i] = np.append([0], ts[i])
+            vals[i] = np.append([50], vals[i])
+        if max(ts[i]) != max_t:
+            ts[i] = np.append(ts[i], [max_t])
+            vals[i] = np.append(vals[i], [50])
+        # Round last timestamp up (for smoother display):
+        ts[i] = np.append(ts[i][:-1], int(ts[i][-1]) + 1)
+
+    # Create the interpolation
+    xs = np.arange(0, int(max_t) + 1.5, 1)
+    interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
+    user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
+
+    seed = 0
+    np.random.seed(seed)
+
+    n_clusters = 3
+    if n_clusters > np.array(user_timeseries).shape[0]:
+        n_clusters = np.array(user_timeseries).shape[0]
+    # Euclidean k-means
+    print("Euclidean k-means")
+    km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True, random_state=seed)
+    y_pred = km.fit_predict(user_timeseries)
+
+    # add a line renderer
+    all_plots = ""
+    all_scripts = ""
+
+    for yi in range(n_clusters):
+        title = "Cluster " + str(yi + 1)
+        p = figure(plot_width=300, plot_height=300, title=title)
+        for xx in range(0, len(y_pred)):
+            if y_pred[xx] == yi:
+                p.line(range(0, len(user_timeseries[xx][0])), user_timeseries[xx][0], line_width=0.3)
+        values = km.cluster_centers_[yi].ravel()
+        p.line(range(0, len(values)), values, line_width=2)
+        script, div = components(p)
+        all_scripts += script
+        all_plots += div
+
+    return render_template("researcher/correlations.html", the_div=all_plots, the_script=all_scripts)

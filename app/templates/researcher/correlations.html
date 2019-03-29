@@ -23,7 +23,15 @@
 {% block main_body %}
 
 <div class="container">
-    Not implemented yet.
+    <h3>Observation clusters</h3>
+    <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css"
+          rel="stylesheet" type="text/css">
+    <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css"
+          rel="stylesheet" type="text/css">
+    {{ the_div|safe }}
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.js"></script>
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.js"></script>
+    {{ the_script|safe }}
 </div>
 
 {% endblock %}
