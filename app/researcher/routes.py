@@ -15,6 +15,7 @@ from bokeh.models import HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.palettes import Spectral6
+from bokeh.layouts import row
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, get_interpolators
@@ -126,6 +127,7 @@ def correlations():
     # add a line renderer
     all_plots = ""
     all_scripts = ""
+    plots = []
 
     for yi in range(n_clusters):
         title = "Cluster " + str(yi + 1)
@@ -135,8 +137,7 @@ def correlations():
                 p.line(range(0, len(user_timeseries[xx][0])), user_timeseries[xx][0], line_width=0.3)
         values = km.cluster_centers_[yi].ravel()
         p.line(range(0, len(values)), values, line_width=2)
-        script, div = components(p)
-        all_scripts += script
-        all_plots += div
+        plots.append(p)
+    script, div = components(row(plots))
 
-    return render_template("researcher/correlations.html", the_div=all_plots, the_script=all_scripts)
+    return render_template("researcher/correlations.html", the_div=div, the_script=script)
