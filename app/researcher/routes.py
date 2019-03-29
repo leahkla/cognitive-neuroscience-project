@@ -120,7 +120,6 @@ def correlations():
     if n_clusters > np.array(user_timeseries).shape[0]:
         n_clusters = np.array(user_timeseries).shape[0]
     # Euclidean k-means
-    print("Euclidean k-means")
     km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True, random_state=seed)
     y_pred = km.fit_predict(user_timeseries)
 
