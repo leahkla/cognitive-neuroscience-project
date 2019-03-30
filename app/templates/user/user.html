@@ -7,6 +7,31 @@
         src="https://player.vimeo.com/api/player.js"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+
+<style>
+  #button-1 {
+  /* default for <button>, but useful for <a> */
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  font-family: : -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+
+  /* create a small space when buttons wrap on 2 lines */
+  margin: 2px 0;
+
+  /* invisible border (will be colored on hover/focus) */
+  border: solid 2px transparent;
+  border-radius: 4px;
+
+  /* size comes from text & padding (no width/height) */
+  padding: 0.5em 1em;
+
+  /* make sure colors have enough contrast! */
+  color: #ffffff;
+  background-color: #343A40;
+}
+</style>
+
 {% endblock %}
 
 
@@ -39,7 +64,10 @@
                  id="player"></div>
         </div>
         <div>
-            <form style="width:220%;transform:rotate(270deg)"
+            <div id="buttonContainer" style="position:relative;bottom:50px;margin-right:20px;margin-left:20px">
+                <button id="button-1">Press here</button>
+            </div>
+            <form id="slider-1" style="width:220%;transform:rotate(270deg)"
                   action="/save" method="post">
                 <input type="range" class="custom-range"
                        id="formControlRange" min="0" max="100" step="1"
@@ -49,11 +77,11 @@
                                 {sendData(timestamp, this.value, {{ vimeoId }})});
                                 slider_value.innerHTML = this.value;">
             </form>
+
         </div>
         <div id="slider_value" class="align-self-end"
-             style="position:relative;bottom:30px">50
+             style="position:relative;bottom:10px">50
         </div>
-
     </div>
 </div>
 
@@ -64,5 +92,38 @@
       console.log('The video is playing, yay!');
     });
 </script>
-
+ 
+<script>
+    let ticks = 0;
+    let clock; 
+    let time;
+    let button = document.getElementById('button-1');
+    button.addEventListener("mousedown", event => {
+        if(event.button == 0){
+            player.getCurrentTime().then(timestamp => {
+                time = timestamp;
+            });
+            clock = setInterval(() => {
+                if(ticks < 100){
+                    ticks++;
+                }
+                slider_value.innerHTML = ticks;
+            }, 10);
+ /*           setTimeout(() => {
+                console.log("TIMEOUT", ticks);
+            }, 1600); */
+        }
+    });
+    button.addEventListener("mouseup", event => {
+        if(event.button == 0){
+                //console.log(time, ticks)
+                
+                $("#formControlRange").val(ticks);  
+                $("#formControlRange").trigger('change');
+                //sendData(time, ticks, {{ vimeoId }})
+                clearInterval(clock);
+                ticks = 0;
+        }
+    });
+</script>
 {% endblock %}
