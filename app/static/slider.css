@@ -1,0 +1,165 @@
+@charset "UTF-8";
+/* Modified Meyer Reset based on http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126   License: none (public domain)*/
+html, body, div, span, h1, h2, h3, h4, h5, h6, p,
+a, b, em, img, input {
+    margin: 0;padding: 0;border: 0;
+    font: inherit; vertical-align: baseline;
+}
+body {line-height: 1.2;}
+*, *:before, *:after {box-sizing: border-box;}
+/* End Modified Meyer Reset*/
+
+html {font-size:16px;}
+:root {
+    --headerfont: sans-serif;
+    --mainfont: serif;
+    --headerfont: sans-serif;
+    --maincolor: #333;
+    --accentcolor: rgb(54,128,255);
+    --accentcoloralpha: rgba(54,128,255,0.5);
+    --maxwidth: 800px;
+    --lineheight: 1.3;
+    --thumbsize: 40px;
+    --tracksize: 300px;
+    --trackheight: 28px;
+    --trackradius: 6px;
+    --innertrackradius: 4px;
+}
+
+body
+/*Grid layout - also see media queries below*/
+.wrapper {
+  display:grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+.header, .footer {
+  grid-column: 1 / -1;
+}
+.content {
+  display:grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+@media screen and (min-width: 768px) {
+  html {font-size:18px;}
+	.content {grid-template-columns: 2.5fr 1fr;}
+}
+/* #### Small Mobile Phones Portrait #### */
+@media screen and (max-device-width: 480px) and (orientation: portrait){
+  :root {--tracksize:240px;}
+	.content {grid-template-columns: 1fr;}
+  .customrange {opacity:0.2;}
+  /*Range inputs on some mobile devices don't work well if the opacity  is set too low.*/
+}
+
+/* cosmetic styles */
+.wrapper {
+  margin:0 auto;
+  padding:20px;
+  background:white;
+  max-width:var(--maxwidth);
+  height:auto;
+  text-align:center;
+}
+
+h1, h2 {
+  font-weight:bold;
+  font-family:var(--headerfont);
+  color:var(--accentcolor);
+  pointer-events:none;
+}
+h1 {
+  font-size:2rem;
+  margin:0 0 30px 0;
+}
+h2 {
+  font-size:1.5rem;
+  margin:0 0 10px 0;
+  padding:0;
+  height:30px;
+  width:100%;
+  text-align:center;
+}
+.content {
+  margin:10px 0 20px 0;
+}
+.rangepresenter {
+  width:var(--tracksize);
+  height:auto;
+}
+.rangepresenter.verticalsliders {
+    max-width:calc(var(--tracksize)/2);
+    min-height:calc(var(--tracksize) + 60px);
+    position:relative;
+ }
+.rangewrapper {
+  line-height:var(--lineheight);
+  border:2px solid var(--maincolor);
+  border-radius:var(--trackradius);
+  margin:20px 0 40px 0;
+  padding:0;
+  position:relative;
+  width:var(--tracksize);
+  height:var(--trackheight);
+  overflow:visible;
+  background-color:#cfc;
+}
+.rangewrapper.vertical{
+  transform-origin: 50% 50%;
+  transform: rotate(-90deg);
+  position:absolute;
+  top:calc( (var(--tracksize)/2) + 30px);
+  left:-50%;
+  margin:0;
+}
+.sliderfill {
+  border:0 none;
+  border-radius:var(--innertrackradius);
+  margin:0;
+  padding:0;
+  height:100%;
+}
+.sliderthumb {
+  width:var(--thumbsize);
+  height:var(--thumbsize);
+	background-image:url('http://www.eurowirecontainers.com/media/catalog/product/cache/1/thumbnail/65x/040ec09b1e35df139433887a97daa66f/w/e/werzalit-square-table-top-deep-blue-600mm.jpg');
+  background-size: 100% 100%;
+	background-repeat: no-repeat;
+  background-color:transparent;
+	position:absolute;
+  left:0;
+  top:calc(((var(--thumbsize) - var(--trackheight))/-2) - 2px);
+  border:0 none;
+  padding:0;
+	pointer-events:none;
+}
+.slidervalue {
+  width:var(--thumbsize);
+  height:var(--thumbsize);
+  line-height:var(--thumbsize);
+	position:absolute;
+  left:calc(50% - (var(--thumbsize)/2));
+  top:calc(((var(--thumbsize) - var(--trackheight))/-2) - 2px);
+  color:white;
+  font-family:var(--mainfont);
+  font-size:1.1rem;
+  font-weight:normal;
+  border:0 none;
+	pointer-events:none;
+}
+.vertical .slidervalue {
+  transform:rotate(90deg);
+}
+.customrange {
+  cursor:pointer;
+  height:100%;
+  width:var(--tracksize);
+  opacity:0.05;
+}
+
+a:link, a:visited {
+  color:var(--accentcolor);
+}
+a:hover {color:#090;}

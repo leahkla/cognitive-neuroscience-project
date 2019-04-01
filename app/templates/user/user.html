@@ -7,6 +7,9 @@
         src="https://player.vimeo.com/api/player.js"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/slider.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='slider.css') }}">
 {% endblock %}
 
 
@@ -49,10 +52,27 @@
                                 {sendData(timestamp, this.value, {{ vimeoId }})});
                                 slider_value.innerHTML = this.value;">
             </form>
-        </div>
-        <div id="slider_value" class="align-self-end"
-             style="position:relative;bottom:30px">50
-        </div>
+
+          </div>
+          <div id="slider_value" class="align-self-end"
+               style="position:relative;bottom:30px">50
+          </div>
+
+            <div class="wrapper">
+              <div class="rangepresenter">
+                <div class="rangepresenter verticalsliders">
+                    <div class="rangewrapper vertical">
+                        <div class="sliderfill">
+                      <input class="customrange" type="range" min="0" max="100" value="50">
+                        </div>
+                    <div class="sliderthumb"></div>
+                    <div class="slidervalue">50</div>
+                </div>
+              </div>
+            </div>
+
+
+
 
     </div>
 </div>
