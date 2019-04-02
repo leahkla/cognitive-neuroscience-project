@@ -87,13 +87,19 @@
           </div>
           <form id="slider-2" style="position:relative;bottom:425px;margin-right:10px;margin-left:1020px"
                 action="/save" method="post">
+
+
             <div class="wrapper">
               <div class="rangepresenter">
                 <div class="rangepresenter verticalsliders">
                     <div class="rangewrapper vertical">
                         <div class="sliderfill">
 
-                      <input class="customrange" type="range" min="0" max="100" value="50">
+                      <input class="customrange" type="range" min="0" max="100" value="50" name="value"
+                      ondrag="slider_value.innerHTML = this.value;"
+                      onchange="player.getCurrentTime().then(timestamp =>
+                               {sendData(timestamp, this.value, {{ vimeoId }})});
+                               slider_value.innerHTML = this.value;">
                         </div>
                     <div class="sliderthumb"></div>
                     <div class="slidervalue"></div>
@@ -102,7 +108,7 @@
             </div>
 
         </div>
-      </form>
+        </form>
         <div id="slider_value" class="align-self-end"
              style="position:relative;bottom:10px">
         </div>
