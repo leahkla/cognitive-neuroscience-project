@@ -71,7 +71,8 @@ def save():
         d.insert_post({"videoid": request.form.get('videoid'),
                        "username": session['username'],
                        "timestamp": request.form.get('timestamp'),
-                       "value": request.form.get('value')
+                       "value": request.form.get('value'),
+                       "date": request.form.get('date')
                        })
         return "Saving completed"
 

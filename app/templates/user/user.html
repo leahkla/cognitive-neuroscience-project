@@ -70,8 +70,7 @@
             <div id="buttonContainer" style="position:relative;bottom:50px;margin-right:20px;margin-left:20px">
                 <button id="button-1">Press here</button>
             </div>
-            <form id="slider-1" style="width:220%;transform:rotate(270deg)"
-                  action="/save" method="post">
+            <!-- <form id="slider-1" style="width:220%;transform:rotate(270deg)">
                 <input type="range" class="custom-range"
                        id="formControlRange" min="0" max="100" step="1"
                        value="50" name="value"
@@ -79,16 +78,13 @@
                        onchange="player.getCurrentTime().then(timestamp =>
                                 {sendData(timestamp, this.value, {{ vimeoId }})});
                                 slider_value.innerHTML = this.value;">
-            </form>
+            </form> -->
 
           </div>
           <div id="slider_value" class="align-self-end"
                style="position:relative;bottom:30px">
           </div>
-          <form id="slider-2" style="position:relative;bottom:425px;margin-right:10px;margin-left:1020px"
-                action="/save" method="post">
-
-
+          <form id="slider-2" style="position:relative;bottom:425px;margin-right:10px;margin-left:1020px">
             <div class="wrapper">
               <div class="rangepresenter">
                 <div class="rangepresenter verticalsliders">
@@ -136,6 +132,7 @@
             clock = setInterval(() => {
                 if(ticks < 100){
                     ticks++;
+                    updateSlider(0, ticks);
                 }
                 slider_value.innerHTML = ticks;
             }, 10);
@@ -146,11 +143,7 @@
     });
     button.addEventListener("mouseup", event => {
         if(event.button == 0){
-                //console.log(time, ticks)
-
-                $("#formControlRange").val(ticks);
-                $("#formControlRange").trigger('change');
-                //sendData(time, ticks, {{ vimeoId }})
+                sendData(time, ticks, {{ vimeoId }})
                 clearInterval(clock);
                 ticks = 0;
         }

@@ -13,12 +13,19 @@ class DatabaseClient:
         """
         Initiate connection to the database "videoannotatordb".
         """
+        
         DB_NAME = "videoannotatordb"
         DB_HOST = "ds159185.mlab.com"
         DB_PORT = 59185
         DB_USER = "videoadmin"
         DB_PASS = "kantapassu123"
-
+        """
+        DB_NAME = "videoannotatordbdev"
+        DB_HOST = "ds231956.mlab.com"
+        DB_PORT = 31956
+        DB_USER = "videoadmin"
+        DB_PASS = "kantapassu123"
+        """
         client = MongoClient(DB_HOST, DB_PORT)
         db = client[DB_NAME]
         db.authenticate(DB_USER, DB_PASS)
