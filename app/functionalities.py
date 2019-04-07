@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
+
 def collect_mongodbobjects(db_client):
     """
     Fetch all data that is stored in the MongoDB database.
@@ -49,6 +50,7 @@ def check_access_right(forbidden, redirect_url, msg='default'):
                       "role: " + str(session['role']) + ")."
             flash(msg)
         raise RequestRedirect(url_for(redirect_url))
+
 
 def get_interpolators(data):
     df = pd.DataFrame(data)
