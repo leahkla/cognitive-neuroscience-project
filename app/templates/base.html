@@ -17,8 +17,10 @@
 
     <link rel="stylesheet"
           href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}">
     {% block head_extension %}{% endblock %}
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
 </head>
 
 <body>

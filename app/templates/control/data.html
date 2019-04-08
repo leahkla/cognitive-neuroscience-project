@@ -8,7 +8,8 @@
      id="navbarMain">
     <div class="navbar-nav">
         <a class="nav-item nav-link active"
-           href="{{ url_for('control.data') }}">Raw <span class="sr-only">(current)</span></a>
+           href="{{ url_for('control.data') }}">Raw<span class="sr-only">
+            (current)</span></a>
         <a class="nav-item nav-link"
            href="{{ url_for('researcher.correlations') }}">Correlations</a>
         <a class="nav-item nav-link" href="{{ url_for('researcher.chart') }}">Chart </a>
@@ -24,27 +25,35 @@
 
 {% if headers %}
 <div class="container">
-    <a class="btn btn-primary" href="{{ url_for('control.delete_all') }}">Delete
-        all</a>
+    <div class="row justify-content-between">
+        <a class="btn btn-primary"
+           href="{{ url_for('control.delete_all') }}">Delete
+            all</a>
+        <a class="btn btn-primary" title="Download data as csv file"
+           href="{{ url_for('control.export_all') }}">Export
+        </a>
+    </div>
     <p></p>
-    <table class="table table-striped">
-        <thead class="thead-dark">
-        <tr>
-            {% for header in headers %}
-            <th>{{ header }}</th>
+    <div class="row">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                {% for header in headers %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in data %}
+            <tr>
+                {% for item in row %}
+                <th>{{ item }}</th>
+                {% endfor %}
+            </tr>
             {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in data %}
-        <tr>
-            {% for item in row %}
-            <th>{{ item }}</th>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>
 {% else %}
 <div class="container">

@@ -5,9 +5,15 @@ This file contains the routes, i.e. the functions to be executed when a page
 It has only the webpages belonging to control functions of our app,
 i.e. those belonging to the control blueprint.
 """
-from flask import request, redirect, url_for, render_template, session, flash
+from flask import request, redirect, url_for, render_template, session, \
+    flash, send_file
 
-from app.functionalities import collect_mongodbobjects, check_access_right
+import pandas as pd
+from io import StringIO, BytesIO
+import datetime
+
+from app.functionalities import collect_mongodbobjects, check_access_right, \
+    sort_df
 from app.control import bp
 from app import d
 
@@ -97,15 +103,43 @@ def data():
     """
     check_access_right(forbidden='user', redirect_url='control.index')
     data = collect_mongodbobjects(d)
-    # The names of the data fields:
     if data:
-        headers = data[0].keys()
+        df = pd.DataFrame(data)
+        df = sort_df(df)
+        # The names of the data fields:
+        headers = list(df)
+        # And a list of their contents:
+        data = list(df.values)
+        return render_template('control/data.html', data=data, headers=headers)
     else:
-        headers = ''
-    # Make list of values out of the dictionary:
-    data = [list(e.values()) for e in data]
-    data = sorted(data)
-    return render_template('control/data.html', data=data, headers=headers)
+        return render_template('control/data.html', data='', headers='')
+
+
+@bp.route('/export_all')
+def export_all():
+    """
+    Export all the data stored in MongoDB to a file
+
+    Operation is not allowed for role user.
+    :return:
+    """
+    check_access_right(forbidden='user', redirect_url='control.index')
+    data = collect_mongodbobjects(d)
+    df = pd.DataFrame(data)
+    df = sort_df(df)
+    bytes_buffer = BytesIO()
+    with StringIO() as str_buffer:
+        df.to_csv(str_buffer, index=False)
+        str_buffer.seek(0)
+        bytes_buffer.write(str_buffer.getvalue().encode('utf-8'))
+    bytes_buffer.seek(0)
+    filename= 'va_data_{date:%Y-%m-%d_%H-%M-%S}.csv'.format(
+        date=datetime.datetime.now())
+    return send_file(bytes_buffer,
+                     as_attachment=True, attachment_filename=filename,
+                     mimetype='text/csv')
+
+    # return redirect(url_for('control.data'))
 
 
 @bp.route('/delete_all')

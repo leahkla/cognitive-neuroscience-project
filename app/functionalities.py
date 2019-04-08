@@ -84,3 +84,20 @@ def get_interpolators(data):
     # Create the interpolation
     interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
     return interpolators, max_t
+
+
+def sort_df(df):
+    """
+    Reorder columns in a dataframe, give them suitable data types and sort the
+    values.
+
+    :param df: Dataframe to be sorted
+    :return: Sorted dataframe
+    """
+    ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'date']
+    col_types = ['str', 'str', 'float', 'int', 'str']
+    df = df[ordered_cols]
+    for t,c in zip(col_types, ordered_cols):
+        df[c] = df[c].astype(t)
+    df.sort_values(ordered_cols, inplace=True)
+    return df
