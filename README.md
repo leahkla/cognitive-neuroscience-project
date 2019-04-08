@@ -21,9 +21,7 @@ $ conda install --yes --file requirements.txt
 
 ## Running the app
 
-Make sure MongoDB is running on your machine.
-
-Then, to start the app, run: (see below for development/debugging mode)
+To start the app, run: (see below for development/debugging mode)
 
 ```
 $ export FLASK_APP=video_annotator.py
