@@ -74,11 +74,11 @@ def save():
         return "Error: username not set"
     else:
         current_app.d.insert_post({"videoid": request.form.get('videoid'),
-                       "username": session['username'],
-                       "timestamp": request.form.get('timestamp'),
-                       "value": request.form.get('value'),
-                       "date": request.form.get('date')
-                       })
+                                   "username": session['username'],
+                                   "timestamp": request.form.get('timestamp'),
+                                   "value": request.form.get('value'),
+                                   "date": request.form.get('date')
+                                   })
         return "Saving completed"
 
 
@@ -101,15 +101,14 @@ def data():
     :return: Webpage displaying currently stored data
     """
     check_access_right(forbidden='user', redirect_url='control.index')
-    data = collect_mongodbobjects(current_app.d)
-    if data:
-        df = pd.DataFrame(data)
-        df = sort_df(df)
+    b, data = collect_mongodbobjects()
+    if b:
         # The names of the data fields:
-        headers = list(df)
+        headers = list(data)
         # And a list of their contents:
-        data = list(df.values)
-        return render_template('control/data.html', data=data, headers=headers)
+        data_rows = list(data.values)
+        return render_template('control/data.html', data=data_rows,
+                               headers=headers)
     else:
         return render_template('control/data.html', data='', headers='')
 
@@ -123,20 +122,22 @@ def export_all():
     :return:
     """
     check_access_right(forbidden='user', redirect_url='control.index')
-    data = collect_mongodbobjects(current_app.d)
-    df = pd.DataFrame(data)
-    df = sort_df(df)
-    bytes_buffer = BytesIO()
-    with StringIO() as str_buffer:
-        df.to_csv(str_buffer, index=False)
-        str_buffer.seek(0)
-        bytes_buffer.write(str_buffer.getvalue().encode('utf-8'))
-    bytes_buffer.seek(0)
-    filename = 'video_annotations_{date:%Y-%m-%d_%H-%M-%S}.csv'.format(
-        date=datetime.datetime.now())
-    return send_file(bytes_buffer,
-                     as_attachment=True, attachment_filename=filename,
-                     mimetype='text/csv')
+    b, data = collect_mongodbobjects()
+    if b:
+        bytes_buffer = BytesIO()
+        with StringIO() as str_buffer:
+            data.to_csv(str_buffer, index=False)
+            str_buffer.seek(0)
+            bytes_buffer.write(str_buffer.getvalue().encode('utf-8'))
+        bytes_buffer.seek(0)
+        filename = 'video_annotations_{date:%Y-%m-%d_%H-%M-%S}.csv'.format(
+            date=datetime.datetime.now())
+        return send_file(bytes_buffer,
+                         as_attachment=True, attachment_filename=filename,
+                         mimetype='text/csv')
+    else:
+        flash('No data to export!')
+        return render_template('control/data.html', data='', headers='')
 
 
 @bp.route('/delete_all')

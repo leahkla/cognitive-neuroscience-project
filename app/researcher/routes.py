@@ -43,14 +43,13 @@ def chart():
     check_access_right(forbidden='user', redirect_url='control.index')
 
     # Get the data:
-    data = collect_mongodbobjects(current_app.d)
-    df = pd.DataFrame(data)
-    df['timestamp'] = pd.to_numeric(df['timestamp'])
-    df['value'] = pd.to_numeric(df['value'])
-    df.sort_values(by=['timestamp'], inplace=True)
+    _, data = collect_mongodbobjects()
+    data['timestamp'] = pd.to_numeric(data['timestamp'])
+    data['value'] = pd.to_numeric(data['value'])
+    data.sort_values(by=['timestamp'], inplace=True)
 
     # Group by username and extract timestamps and values for each user
-    grouped_data = df.groupby('username')
+    grouped_data = data.groupby('username')
     data_by_user = [user for _, user in grouped_data]
     ts = [np.array(t) for t in
           (data_by_user[i]['timestamp'].apply(lambda x: float(x)) for i in
@@ -108,7 +107,7 @@ def chart():
 @bp.route('/correlations', methods=['GET'])
 def correlations():
     check_access_right(forbidden='user', redirect_url='control.index')
-    data = collect_mongodbobjects(current_app.d)
+    _, data = collect_mongodbobjects()
     interpolators, max_t = get_interpolators(data)
     xs = np.arange(0, int(max_t) + 1.5, 1)
     user_timeseries = [[interpolator(xs)] for interpolator in interpolators]

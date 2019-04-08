@@ -39,7 +39,6 @@ class DatabaseClient:
             db = client[DB_NAME]
             db.authenticate(DB_USER, DB_PASS)
         self.posts = db.posts
-        self.type=type
 
     def insert_post_with_removal(self, post_data):
         """

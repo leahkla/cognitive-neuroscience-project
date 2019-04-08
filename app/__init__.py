@@ -23,6 +23,7 @@ def create_app(conf=Config):
     # Load app configuration from the conf class:
     app.config.from_object(conf)
 
+    # Load app into Flask's app_context
     app.app_context().push()
 
     # Register blueprints:

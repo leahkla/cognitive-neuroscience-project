@@ -3,26 +3,54 @@ This file contains functions that are needed in several routes.py files to
 display the webpages, but do not have a decorator binding them to a
 particular webpage.
 """
-from flask import session, url_for, flash
+from flask import session, url_for, flash, current_app
 from werkzeug.routing import RequestRedirect
 import pandas as pd
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 
-def collect_mongodbobjects(db_client):
+def collect_mongodbobjects():
     """
     Fetch all data that is stored in the MongoDB database.
-    :param db_client: The databas client
-    :return: list of all the db entries
+
+    NB: This already processes them as a DataFrame using sort_df(),
+    which means that the names and variable types of the data must be known
+    in advance (they're hardcoded, see sort_df() ).
+    :return: Boolean indicating availability of data, DataFrame with all db
+    entries
     """
-    posts = db_client.collect_posts()
+    posts = current_app.d.collect_posts()
     collected = []
     for p in posts:
         if p['_id']:
             del p['_id']
         collected.append(p)
-    return collected
+
+    # If there is data at all
+    if collected:
+        df = pd.DataFrame(collected)
+        df = sort_df(df)
+        return True, df
+    else:
+        return False, None
+
+
+def sort_df(df):
+    """
+    Reorder columns in a dataframe, give them suitable data types and sort the
+    values.
+
+    :param df: Dataframe to be sorted
+    :return: Sorted dataframe
+    """
+    ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'date']
+    col_types = ['str', 'str', 'float', 'int', 'str']
+    df = df[ordered_cols]
+    for t, c in zip(col_types, ordered_cols):
+        df[c] = df[c].astype(t)
+    df.sort_values(ordered_cols, inplace=True)
+    return df
 
 
 def check_access_right(forbidden, redirect_url, msg='default'):
@@ -52,8 +80,7 @@ def check_access_right(forbidden, redirect_url, msg='default'):
         raise RequestRedirect(url_for(redirect_url))
 
 
-def get_interpolators(data):
-    df = pd.DataFrame(data)
+def get_interpolators(df):
     df['timestamp'] = pd.to_numeric(df['timestamp'])
     df['value'] = pd.to_numeric(df['value'])
     df.sort_values(by=['timestamp'], inplace=True)
@@ -84,20 +111,3 @@ def get_interpolators(data):
     # Create the interpolation
     interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
     return interpolators, max_t
-
-
-def sort_df(df):
-    """
-    Reorder columns in a dataframe, give them suitable data types and sort the
-    values.
-
-    :param df: Dataframe to be sorted
-    :return: Sorted dataframe
-    """
-    ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'date']
-    col_types = ['str', 'str', 'float', 'int', 'str']
-    df = df[ordered_cols]
-    for t,c in zip(col_types, ordered_cols):
-        df[c] = df[c].astype(t)
-    df.sort_values(ordered_cols, inplace=True)
-    return df
