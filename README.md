@@ -19,8 +19,6 @@ or with Anaconda:
 $ conda install --yes --file requirements.txt
 ```
 
-MongoDB is required by the app and needs to be installed separately. [Here](https://docs.mongodb.com/manual/administration/install-community/) are further instructions. MongoDB should be accessible at its default port when running.
-
 ## Running the app
 
 Make sure MongoDB is running on your machine.
@@ -47,6 +45,16 @@ If you want to switch debugging on, run this before starting the app:
 $ export FLASK_DEBUG=true
 ```
 (replace ``true`` with ``false`` to switch off debugging)
+
+-----------------
+By default the app will connect to and use a database that is hosted online. There is no need to care about this. But if you want another database, set this environment variable:
+```
+$ export DB_TYPE=dev
+```
+(you can use ``dev`` for the development database, ``local`` for a local database
+  and ``prod`` for the default production database)
+
+The production and development database are hosted online, which means that other people might access them and write data into them as well. The local one will be hosted on your local machine. This option requires MongoDB to be installed and running. [Here](https://docs.mongodb.com/manual/administration/install-community/) are further instructions. MongoDB should be accessible at its default port when running.
 
 ## Authors
 * [Pihla Toivanen](https://github.com/UMTti)

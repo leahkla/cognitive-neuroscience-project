@@ -6,7 +6,7 @@ It has only the webpages belonging to control functions of our app,
 i.e. those belonging to the control blueprint.
 """
 from flask import request, redirect, url_for, render_template, session, \
-    flash, send_file
+    flash, send_file, current_app
 
 import pandas as pd
 from io import StringIO, BytesIO
@@ -15,7 +15,6 @@ import datetime
 from app.functionalities import collect_mongodbobjects, check_access_right, \
     sort_df
 from app.control import bp
-from app import d
 
 
 @bp.route('/')
@@ -74,7 +73,7 @@ def save():
     if not session.get('username'):
         return "Error: username not set"
     else:
-        d.insert_post({"videoid": request.form.get('videoid'),
+        current_app.d.insert_post({"videoid": request.form.get('videoid'),
                        "username": session['username'],
                        "timestamp": request.form.get('timestamp'),
                        "value": request.form.get('value'),
@@ -102,7 +101,7 @@ def data():
     :return: Webpage displaying currently stored data
     """
     check_access_right(forbidden='user', redirect_url='control.index')
-    data = collect_mongodbobjects(d)
+    data = collect_mongodbobjects(current_app.d)
     if data:
         df = pd.DataFrame(data)
         df = sort_df(df)
@@ -124,7 +123,7 @@ def export_all():
     :return:
     """
     check_access_right(forbidden='user', redirect_url='control.index')
-    data = collect_mongodbobjects(d)
+    data = collect_mongodbobjects(current_app.d)
     df = pd.DataFrame(data)
     df = sort_df(df)
     bytes_buffer = BytesIO()
@@ -133,13 +132,11 @@ def export_all():
         str_buffer.seek(0)
         bytes_buffer.write(str_buffer.getvalue().encode('utf-8'))
     bytes_buffer.seek(0)
-    filename= 'va_data_{date:%Y-%m-%d_%H-%M-%S}.csv'.format(
+    filename = 'video_annotations_{date:%Y-%m-%d_%H-%M-%S}.csv'.format(
         date=datetime.datetime.now())
     return send_file(bytes_buffer,
                      as_attachment=True, attachment_filename=filename,
                      mimetype='text/csv')
-
-    # return redirect(url_for('control.data'))
 
 
 @bp.route('/delete_all')
@@ -151,6 +148,6 @@ def delete_all():
     :return: User feedback string
     """
     check_access_right(forbidden='user', redirect_url='control.index')
-    d.delete_many({})
+    current_app.d.delete_many({})
     flash('All data deleted!')
     return redirect(url_for('control.data'))

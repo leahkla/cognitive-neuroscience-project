@@ -8,7 +8,7 @@ i.e. those belonging to the researcher interface.
 
 import json
 import pandas as pd
-from flask import render_template, flash
+from flask import render_template, flash, current_app
 import numpy as np
 
 from bokeh.models import HoverTool
@@ -19,7 +19,6 @@ from bokeh.layouts import row
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, get_interpolators
-from app import d
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -44,7 +43,7 @@ def chart():
     check_access_right(forbidden='user', redirect_url='control.index')
 
     # Get the data:
-    data = collect_mongodbobjects(d)
+    data = collect_mongodbobjects(current_app.d)
     df = pd.DataFrame(data)
     df['timestamp'] = pd.to_numeric(df['timestamp'])
     df['value'] = pd.to_numeric(df['value'])
@@ -109,7 +108,7 @@ def chart():
 @bp.route('/correlations', methods=['GET'])
 def correlations():
     check_access_right(forbidden='user', redirect_url='control.index')
-    data = collect_mongodbobjects(d)
+    data = collect_mongodbobjects(current_app.d)
     interpolators, max_t = get_interpolators(data)
     xs = np.arange(0, int(max_t) + 1.5, 1)
     user_timeseries = [[interpolator(xs)] for interpolator in interpolators]

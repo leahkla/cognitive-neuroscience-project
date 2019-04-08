@@ -2,12 +2,9 @@
 This  file contains the flask factory function which will create an app.
 """
 
-from flask import Flask, session
+from flask import Flask
 from app.config import Config
 from app.database_client import DatabaseClient
-
-# Initialise the database client:
-d = DatabaseClient()
 
 
 def create_app(conf=Config):
@@ -26,6 +23,8 @@ def create_app(conf=Config):
     # Load app configuration from the conf class:
     app.config.from_object(conf)
 
+    app.app_context().push()
+
     # Register blueprints:
     from app.user import bp as user_bp
     app.register_blueprint(user_bp)
@@ -36,7 +35,7 @@ def create_app(conf=Config):
     from app.control import bp as control_bp
     app.register_blueprint(control_bp)
 
-    #
-    # session.set('role')='user'
+    # Initialise the database client:
+    app.d = DatabaseClient()
 
     return app
