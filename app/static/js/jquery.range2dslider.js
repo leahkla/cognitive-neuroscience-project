@@ -20,8 +20,8 @@
 			className:'range2dslider',
 			style:'',
 
-			height:'100px',
-			width:'auto',
+			height:'200px',
+			width:'700px',
 			x:'left',
 			y:'bottom',
 

@@ -112,6 +112,7 @@
         <div id="slider_value" class="align-self-end"
              style="position:relative;bottom:10px">
         </div>
+        <input id="slider" class="align-self-end" min="0" max="100" ondrag="slider_value.innerHTML = this.value;" onchange="twoDimensionalSliderOnChange();" style="position:relative;bottom:10px">
     </div>
 
 </div>
@@ -151,7 +152,7 @@ function twoDimensionalSliderOnChange()
 }
 </script>
 
-<input id="slider" class="align-self-end" min="0" max="100" ondrag="slider_value.innerHTML = this.value;" onchange="twoDimensionalSliderOnChange();" style="position:relative;bottom:10px">
+
 <script>
 window.onerror = function(msg, url, linenumber) {
       alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
@@ -169,6 +170,8 @@ $('#slider').range2DSlider({
   }
 })
   .range2DSlider('value',[[50,50]]);
+
+//  $('#slider').mouseup(twoDimensionalSliderOnChange);
 
 $('#slider')
   .range2DSlider();
