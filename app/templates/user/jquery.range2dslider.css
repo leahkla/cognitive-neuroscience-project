@@ -14,6 +14,10 @@ user-select: none;
 }
 .xdsoft_range2dslider{
 	position:relative;
+  width: 100px;
+  height: 100px;
+  top: 100px;
+  left: 100px;
 }
 
 .xdsoft_range2dslider.xdsoft_range2dslider_disabled{
@@ -22,7 +26,7 @@ opacity:0.7;
 
 .xdsoft_range2dslider_box{
 	border:1px solid #ccc;
-	height:100px;
+	height:500px;
 	width:auto;
 	position:relative;
 	cursor:pointer;
@@ -31,7 +35,7 @@ opacity:0.7;
 
 
 .xdsoft_range2dslider_runner{
-	width:16px;
+	width:116px;
 	height:16px;
 	position:absolute;
 	cursor:pointer;
