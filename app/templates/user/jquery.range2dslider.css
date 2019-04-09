@@ -13,11 +13,11 @@
 user-select: none;
 }
 .xdsoft_range2dslider{
-	position:relative;
-  width: 100px;
+  position:fixed;
+  width: 700px;
   height: 100px;
-  top: 100px;
-  left: 100px;
+  top: 800px;
+  left: 650px;
 }
 
 .xdsoft_range2dslider.xdsoft_range2dslider_disabled{
@@ -25,8 +25,8 @@ opacity:0.7;
 }
 
 .xdsoft_range2dslider_box{
-	border:1px solid #ccc;
-	height:500px;
+	border:5px solid #ccc;
+	height:200px;
 	width:auto;
 	position:relative;
 	cursor:pointer;
@@ -35,7 +35,7 @@ opacity:0.7;
 
 
 .xdsoft_range2dslider_runner{
-	width:116px;
+	width:16px;
 	height:16px;
 	position:absolute;
 	cursor:pointer;
@@ -77,16 +77,17 @@ opacity:0.7;
 	position:absolute;
 	display:block;
 	text-align:center;
-	font-weight:700;
+	font-weight:550;
 	font-family:Tahoma;
-	vertical-align:middle;
-	font-size:12px;
+	vertical-align: middle;
+	font-size:18px;
 	z-index:3;
 }
 
 .xdsoft_range2dslider_grid{
 position:absolute !important;
 cursor: inherit;
+
 }
 
 .xdsoft_projection{
@@ -119,7 +120,7 @@ span.xdsoft_slider_label{
   text-align: center;
   visibility: hidden;
   border-radius: 6px;
-  font-size:11px;
+  font-size:20px;
   padding:3px;
   opacity: 0.8;
   z-index: 999;
@@ -297,7 +298,7 @@ opacity:0.3;
 .xdsoft_range2dslider_skin1 .xdsoft_projection_value_x,
 .xdsoft_range2dslider_skin1  .xdsoft_projection_value_y{
 position:absolute;
-font-size:0.6em;
+font-size:1.0em;
 line-height:1.1em;
 }
 .xdsoft_projection_value_x{
