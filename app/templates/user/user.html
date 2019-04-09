@@ -98,7 +98,7 @@
                       <input class="customrange" type="range" min="0" max="100" value="50" name="value"
                       ondrag="slider_value.innerHTML = this.value;"
                       onchange="player.getCurrentTime().then(timestamp =>
-                               {sendData(timestamp, this.value, {{ vimeoId }})});
+                               {sendData2D(timestamp, this.value, 50, {{ vimeoId }})});
                                slider_value.innerHTML = this.value;">
                         </div>
                     <div class="sliderthumb"></div>
@@ -113,26 +113,45 @@
              style="position:relative;bottom:10px">
         </div>
     </div>
+
 </div>
 
 
 <style>
   #slider
   body,html{
-    margin:0px;
+    margin:100px;
     padding:0px;
+
   }
   ul{
     margin:0px 0px;
     padding:20px 25px;
+
   }
   body>div{
     margin:0px 20px;
     padding:20px;
-    background:rgba(184, 184, 184, 0.1);
   }
 </style>
-<input id="slider">
+
+<script>
+function twoDimensionalSliderOnChange()
+{
+  player.getCurrentTime().then(timestamp =>
+          {
+            let valval = $('#slider')[0].value;
+             if (valval && valval !== "") {
+               console.log(valval);
+               let valval1 = valval.split("|")[0];
+               let valval2 = valval.split("|")[1];
+               sendData2D(timestamp, Math.round(parseFloat(valval1)), Math.round(parseFloat(valval2)), {{ vimeoId }});
+             }
+           });
+}
+</script>
+
+<input id="slider" class="align-self-end" min="0" max="100" ondrag="slider_value.innerHTML = this.value;" onchange="twoDimensionalSliderOnChange();" style="position:relative;bottom:10px">
 <script>
 window.onerror = function(msg, url, linenumber) {
       alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
@@ -186,7 +205,7 @@ $('#slider')
     });
     button.addEventListener("mouseup", event => {
         if(event.button == 0){
-                sendData(time, ticks, {{ vimeoId }})
+                sendData2D(time, ticks, 50, {{ vimeoId }})
                 clearInterval(clock);
                 ticks = 0;
         }

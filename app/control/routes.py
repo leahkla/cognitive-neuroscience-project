@@ -81,6 +81,24 @@ def save():
                                    })
         return "Saving completed"
 
+@bp.route('/save2D', methods=['POST'])
+def save2D():
+    """
+    Save a valence value and respective video timestamp to the database.
+    :return: Feedback string
+    """
+    if not session.get('username'):
+        return "Error: username not set"
+    else:
+        current_app.d.insert_post({"videoid": request.form.get('videoid'),
+                                   "username": session['username'],
+                                   "timestamp": request.form.get('timestamp'),
+                                   "value": request.form.get('value'),
+                                   "value2": request.form.get('value2'),
+                                   "date": request.form.get('date')
+                                   })
+        return "Saving completed"
+
 
 @bp.route('/<path:path>')
 def static_file(path):

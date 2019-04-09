@@ -44,8 +44,8 @@ def sort_df(df):
     :param df: Dataframe to be sorted
     :return: Sorted dataframe
     """
-    ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'date']
-    col_types = ['str', 'str', 'float', 'int', 'str']
+    ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'value2', 'date']
+    col_types = ['str', 'str', 'float', 'int', 'int', 'str']
     df = df[ordered_cols]
     for t, c in zip(col_types, ordered_cols):
         df[c] = df[c].astype(t)
