@@ -1,7 +1,7 @@
 # Video Annotation Tool
 This is a web app for measuring and analysing emotional reactions to videos.
 
-While watching videos, people can indicate their emotional valence. In a seperate view for researchers, the answers people give can be analysed.
+While watching videos, people can indicate their emotional valence or alternatively, emotional valence and the intensity of the valence simultaneously. In a seperate view for researchers, the answers people give can be analysed.
 
 This software was written as part of the course _Data Science Project_ at the University of Helsinki in spring 2019.
 
