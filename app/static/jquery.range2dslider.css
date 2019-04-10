@@ -109,15 +109,15 @@ z-index:4;
 }
 
 span.xdsoft_slider_label{
-  position: absolute;
-  min-width:50px;
-  color: #fff;
-  background: #000;
+	position: absolute;
+  min-width:60px;
+  color: #f8f9fa;
+  background: #2400c1;
   text-align: center;
   visibility: hidden;
-  border-radius: 6px;
-  font-size:11px;
-  padding:3px;
+  border-radius: 16px;
+  font-size:18px;
+  padding:7px;
   opacity: 0.8;
   z-index: 999;
 }
@@ -138,9 +138,9 @@ span.xdsoft_slider_label:after {
 span.xdsoft_slider_label.xdsoft_slider_label_top:after{
 	top: 100%;
 	left: 50%;
-	margin-left: -8px;
+	margin-left: -10px;
 	width: 0; height: 0;
-	border-top-color:#000;
+	border-top-color:#2400c1;
 	border-bottom-width: 0px;
 }
 span.xdsoft_slider_label.xdsoft_slider_label_top{

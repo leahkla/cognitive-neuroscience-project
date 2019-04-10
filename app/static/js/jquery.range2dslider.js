@@ -18,7 +18,7 @@
 
 			skin:'skin1',
 			className:'range2dslider',
-			style:'',
+			style:'top',
 
 			height:'200px',
 			width:'700px',
