@@ -23,7 +23,7 @@
 			height:'200px',
 			width:'700px',
 			x:'left',
-			y:'bottom',
+			y:'top',
 
 			posOnBoxClick:true,
 
