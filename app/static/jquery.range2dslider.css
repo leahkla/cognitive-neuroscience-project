@@ -110,16 +110,17 @@ z-index:4;
 
 span.xdsoft_slider_label{
 	position: absolute;
-  min-width:60px;
-  color: #f8f9fa;
-  background: #2400c1;
-  text-align: center;
-  visibility: hidden;
-  border-radius: 16px;
-  font-size:18px;
-  padding:7px;
-  opacity: 0.8;
-  z-index: 999;
+	min-width:60px;
+	color: #f8f9fa;
+	background: #2400c1;
+	text-align: center;
+	visibility: hidden;
+	border-radius: 16px;
+	font-size:18px;
+	font-weight:bold;
+	padding:7px;
+	opacity: 0.8;
+	z-index: 999;
 }
 span.xdsoft_slider_label.xdsoft_slider_label_visible{
 	visibility:visible;
@@ -257,7 +258,7 @@ span.xdsoft_slider_label.xdsoft_slider_label_right{
 /******************************************************************************************/
 
 .xdsoft_range2dslider_skin1 .xdsoft_range2dslider_runner{
-	border:5px solid rgba(127,127,127,0.9);
+	border:5px solid rgba(193, 0, 0, 0.84);
 	background:rgba(255,255,255,0.9);
 	border-radius:50%;
 	box-shadow: 0px 1px 7px -2px #999;
@@ -275,7 +276,7 @@ span.xdsoft_slider_label.xdsoft_slider_label_right{
 	background: -webkit-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(249,249,249,1) 33%, rgba(237,237,237,1) 100%);
 	background: -o-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(249,249,249,1) 33%, rgba(237,237,237,1) 100%);
 	background: -ms-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(249,249,249,1) 33%, rgba(237,237,237,1) 100%);
-	background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(249,249,249,1) 33%, rgba(237,237,237,1) 100%);
+	background: linear-gradient(to right, rgb(0, 56, 97) 0%, rgb(60, 228, 212) 33%, rgb(183, 245, 164) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ededed', GradientType=1 );
 }
 
@@ -294,8 +295,10 @@ opacity:0.3;
 .xdsoft_range2dslider_skin1 .xdsoft_projection_value_x,
 .xdsoft_range2dslider_skin1  .xdsoft_projection_value_y{
 position:absolute;
-font-size:0.6em;
+font-size:1.0em;
 line-height:1.1em;
+color: #f8f9fa;
+font-weight:bold;
 }
 .xdsoft_projection_value_x{
 	left:2px;
