@@ -10,7 +10,7 @@
 <script type="text/javascript"
         src="{{ url_for('static', filename='js/slider.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='slider.css') }}">
-<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='growingbutton.css') }}"> -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='growingbutton.css') }}">
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.range2dslider.css') }}">
@@ -50,7 +50,7 @@
         </div>
         <div>
             <div id="buttonContainer" style="position:relative;bottom:50px;margin-right:20px;margin-left:20px">
-                <button id="button-1">Press here</button>
+                <button class="btn btn-dark" id="button-1">Press here</button>
             </div>
             <!-- <form id="slider-1" style="width:220%;transform:rotate(270deg)">
                 <input type="range" class="custom-range"
