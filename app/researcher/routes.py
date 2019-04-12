@@ -106,23 +106,35 @@ def chart():
 
 @bp.route('/correlations', methods=['GET'])
 def correlations():
+    """
+        Display correlation plot for the researcher.
+
+        This webpage is only for the role researcher.
+        :return: Correlation plot
+        """
     check_access_right(forbidden='user', redirect_url='control.index')
     _, data = collect_mongodbobjects()
+
+    # Get interpolators from functionalities.py
     interpolators, max_t = get_interpolators(data)
     xs = np.arange(0, int(max_t) + 1.5, 1)
+
+    # Generate data
     user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
 
     seed = 0
     np.random.seed(seed)
 
+    # Set cluster count
     n_clusters = 3
     if n_clusters > np.array(user_timeseries).shape[0]:
         n_clusters = np.array(user_timeseries).shape[0]
+
     # Euclidean k-means
     km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True, random_state=seed)
     y_pred = km.fit_predict(user_timeseries)
 
-    # add a line renderer
+    # Generate plots
     all_plots = ""
     all_scripts = ""
     plots = []
@@ -136,6 +148,7 @@ def correlations():
         values = km.cluster_centers_[yi].ravel()
         p.line(range(0, len(values)), values, line_width=2)
         plots.append(p)
+    # Get plot codes
     script, div = components(row(plots))
 
     return render_template("researcher/correlations.html", the_div=div, the_script=script)
