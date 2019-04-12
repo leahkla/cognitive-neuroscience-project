@@ -2,14 +2,9 @@
 /* Modified Meyer Reset based on http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126   License: none (public domain)*/
 
-body {line-height: 1.2;}
-*, *:before, *:after {box-sizing: border-box;}
 /* End Modified Meyer Reset*/
 
 :root {
-    --headerfont: inherit;
-    --mainfont: inherit;
-    --headerfont: inherit;
     --maincolor: #333;
     --accentcolor: rgb(54,128,255);
     --accentcoloralpha: rgba(54,128,255,0.5);
@@ -22,7 +17,6 @@ body {line-height: 1.2;}
     --innertrackradius: 4px;
 }
 
-body
 /*Grid layout - also see media queries below*/
 .wrapper {
   display:grid;
@@ -38,8 +32,7 @@ body
   justify-items: center;
 }
 @media screen and (min-width: 768px) {
-  html {font-size:18px;}
-	.content {grid-template-columns: 2.5fr 1fr;}
+    .content {grid-template-columns: 2.5fr 1fr;}
 }
 /* #### Small Mobile Phones Portrait #### */
 @media screen and (max-device-width: 480px) and (orientation: portrait){
