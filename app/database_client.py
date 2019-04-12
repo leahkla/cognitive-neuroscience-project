@@ -5,6 +5,7 @@ from flask import current_app
 
 from pymongo import MongoClient
 
+
 class DatabaseClient:
     """
     Class specifying the connection to the MongoDB database.
@@ -29,7 +30,7 @@ class DatabaseClient:
                 DB_PORT = 31956
                 DB_USER = "videoadmin"
                 DB_PASS = "kantapassu123"
-            else: # type ='prod'
+            else:  # type ='prod'
                 DB_NAME = "videoannotatordb"
                 DB_HOST = "ds159185.mlab.com"
                 DB_PORT = 59185
@@ -39,15 +40,6 @@ class DatabaseClient:
             db = client[DB_NAME]
             db.authenticate(DB_USER, DB_PASS)
         self.posts = db.posts
-
-    def insert_post_with_removal(self, post_data):
-        """
-        Not sure what exactly this is doing.
-        :param post_data: Data is to be posted
-        :return: None
-        """
-        self.posts.delete_many({})
-        self.posts.insert_one(post_data)
 
     def insert_post(self, post_data):
         """
