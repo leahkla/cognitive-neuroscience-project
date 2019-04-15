@@ -163,3 +163,21 @@ a:link, a:visited {
   color:var(--accentcolor);
 }
 a:hover {color:#090;}
+
+@media screen and (min-width: 0px) {
+    .slider2 {
+        position:relative;
+        bottom:200px;
+        margin-right:10px;
+        margin-left:400px
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .slider2 {
+        position:relative;
+        bottom:425px;
+        margin-right:10px;
+        margin-left:1020px
+    }
+}
