@@ -1,10 +1,20 @@
 @charset "UTF-8";
 /* Modified Meyer Reset based on http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126   License: none (public domain)*/
-
+html, body, div, span, h1, h2, h3, h4, h5, h6, p,
+a, b, em, img, input {
+    margin: 0;padding: 0;border: 0;
+    font: inherit; vertical-align: baseline;
+}
+body {line-height: 1.2;}
+*, *:before, *:after {box-sizing: border-box;}
 /* End Modified Meyer Reset*/
 
+html {font-size:16px;}
 :root {
+    --headerfont: sans-serif;
+    --mainfont: serif;
+    --headerfont: sans-serif;
     --maincolor: #333;
     --accentcolor: rgb(54,128,255);
     --accentcoloralpha: rgba(54,128,255,0.5);
@@ -17,6 +27,7 @@
     --innertrackradius: 4px;
 }
 
+body
 /*Grid layout - also see media queries below*/
 .wrapper {
   display:grid;
@@ -32,7 +43,8 @@
   justify-items: center;
 }
 @media screen and (min-width: 768px) {
-    .content {grid-template-columns: 2.5fr 1fr;}
+  html {font-size:18px;}
+	.content {grid-template-columns: 2.5fr 1fr;}
 }
 /* #### Small Mobile Phones Portrait #### */
 @media screen and (max-device-width: 480px) and (orientation: portrait){
@@ -52,6 +64,24 @@
   text-align:center;
 }
 
+h1, h2 {
+  font-weight:bold;
+  font-family:var(--headerfont);
+  color:var(--accentcolor);
+  pointer-events:none;
+}
+h1 {
+  font-size:2rem;
+  margin:0 0 30px 0;
+}
+h2 {
+  font-size:1.5rem;
+  margin:0 0 10px 0;
+  padding:0;
+  height:30px;
+  width:100%;
+  text-align:center;
+}
 .content {
   margin:10px 0 20px 0;
 }

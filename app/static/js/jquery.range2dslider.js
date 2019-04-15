@@ -28,7 +28,7 @@
 			height:'200px',
 			width:width_variable,
 			x:'left',
-			y:'top',
+			y:'bottom',
 
 			posOnBoxClick:true,
 
