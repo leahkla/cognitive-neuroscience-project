@@ -67,7 +67,6 @@
     <div class="row align-items-center">
         <div>
             <div data-vimeo-id="{{ vimeoId }}"
-                 data-vimeo-width="800"
                  id="player"></div>
         </div>
         <div>
@@ -178,7 +177,16 @@ $('#slider')
 </script>
 
 <script>
-    var player = new Vimeo.Player('player');
+    console.log($(window).width());
+    if($(window).width() > 1000){
+        var player = new Vimeo.Player('player', {
+            width: '800'
+        });
+    } else {
+        var player = new Vimeo.Player('player', {
+            width: '300'
+        });
+    }
     player.on('play', function () {
       console.log('The video is playing, yay!');
     });

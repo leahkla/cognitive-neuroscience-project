@@ -163,3 +163,10 @@ a:link, a:visited {
   color:var(--accentcolor);
 }
 a:hover {color:#090;}
+
+.oned {
+    position: relative,
+    bottom:425px
+    margin-right:10px,
+    margin-left:1020px
+}

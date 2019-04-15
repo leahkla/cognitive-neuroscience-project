@@ -4,6 +4,11 @@
  * (c) 2014, Chupurnov Valeriy.
  */
 !function($){
+    if($(window).width() < 1000){
+        width_variable = '300px';
+    } else {
+        width_variable = '700px';
+    }
 	var ARROWLEFT = 37,
 		ARROWUP = 38,
 		ARROWRIGHT = 39,
@@ -21,7 +26,7 @@
 			style:'',
 
 			height:'100px',
-			width:'auto',
+			width:width_variable,
 			x:'left',
 			y:'bottom',
 
