@@ -47,7 +47,7 @@
                  id="player"></div>
         </div>
         <div>
-            <div id="buttonContainer" style="margin:auto;">
+            <div id="buttonContainer" >
                 <button class="btn btn-dark" id="button-1">Press here</button>
             </div>
             <!-- <form id="slider-1" style="width:220%;transform:rotate(270deg)">
@@ -65,8 +65,8 @@
                style="position:relative;bottom:30px">
           </div>
 
-          <div style="display:block;">
-          <form id="slider-2" class="rangepresenter" style="margin:auto;">
+          <div id="slider2-wrapper">
+          <form id="slider-2" class="rangepresenter" >
             <div class="rangewrapper">
                 <div class="sliderfill">
 
@@ -87,7 +87,7 @@
         <div id="slider_value" class="align-self-end"
              style="position:relative;bottom:10px">
         </div>
-        <div style="display:block; width:700px; margin:auto;">
+        <div style="display:block; width:700px;" id="slider_div">
 
         <input id="slider" class="align-self-end" min="0" max="100" ondrag="slider_value.innerHTML = this.value;" onchange="twoDimensionalSliderOnChange();" style="position:relative;bottom:10px">
 
@@ -143,10 +143,17 @@ $('#slider')
         var player = new Vimeo.Player('player', {
             width: '800'
         });
+        $('.rangepresenter').addClass('verticalsliders');
+        $('.rangewrapper').addClass('vertical');
+        $('#slider-2').addClass('slider2');
     } else {
         var player = new Vimeo.Player('player', {
             width: '300'
         });
+        $('#slider2-wrapper').css('display', 'block');
+        $('#slider-2').css('margin', 'auto');
+        $('#slider_div').css('margin', 'auto');
+        $('#buttonContainer').css('margin', 'auto');
     }
     player.on('play', function () {
       console.log('The video is playing, yay!');
