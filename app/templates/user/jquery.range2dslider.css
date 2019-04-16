@@ -15,21 +15,21 @@ user-select: none;
 
 @media screen and (min-width:0px) {
     .xdsoft_range2dslider{
-    position:fixed;
-    width: 300px;
-    height: 100px;
-    top: 800px;
-    left: 650px;
+        position:fixed;
+        width: 300px;
+        height: 100px;
+        top: 800px;
+        left: 650px;
     }
 }
 
 @media screen and (min-width:1000px) {
     .xdsoft_range2dslider{
-    position:fixed;
-    width: 700px;
-    height: 100px;
-    top: 800px;
-    left: 650px;
+        position:fixed;
+        width: 700px;
+        height: 100px;
+        top: 800px;
+        left: 650px;
     }
 }
 

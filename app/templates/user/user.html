@@ -87,7 +87,7 @@
         <div id="slider_value" class="align-self-end"
              style="position:relative;bottom:10px">
         </div>
-        <div style="display:block; width:700px;" id="slider_div">
+        <div style="display:block;" id="slider_div">
 
         <input id="slider" class="align-self-end" min="0" max="100" ondrag="slider_value.innerHTML = this.value;" onchange="twoDimensionalSliderOnChange();" style="position:relative;bottom:10px">
 
@@ -146,6 +146,7 @@ $('#slider')
         $('.rangepresenter').addClass('verticalsliders');
         $('.rangewrapper').addClass('vertical');
         $('#slider-2').addClass('slider2');
+        $('#slider_div').css('width', '700px');
     } else {
         var player = new Vimeo.Player('player', {
             width: '300'
@@ -154,6 +155,7 @@ $('#slider')
         $('#slider-2').css('margin', 'auto');
         $('#slider_div').css('margin', 'auto');
         $('#buttonContainer').css('margin', 'auto');
+        $('#slider_div').css('width', '300px');
     }
     player.on('play', function () {
       console.log('The video is playing, yay!');
