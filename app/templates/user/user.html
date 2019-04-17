@@ -147,10 +147,17 @@ $('#slider')
         $('.rangewrapper').addClass('vertical');
         $('#slider-2').addClass('slider2');
         $('#slider_div').css('width', '700px');
+
+    } else if ($(window).width() > 600) {
+        var player = new Vimeo.Player('player', {
+            width: '500'
+        });
     } else {
         var player = new Vimeo.Player('player', {
             width: '300'
         });
+    }
+    if ($(window).width() <= 1000) {
         $('#slider2-wrapper').css('display', 'block');
         $('#slider-2').css('margin', 'auto');
         //$('#slider_div').css('margin', 'auto');
