@@ -1,0 +1,7 @@
+# List of the video ID's for the videos that are accessible in the app:
+# (the ID is the number following "https://vimeo.com/" in the url)
+# Behind the ID, write a colon and the name of the video.
+# Lines beginning with a # or empty lines are ignored.
+
+65107797:Omelette
+37145612:Snow Drifter

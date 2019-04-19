@@ -33,20 +33,36 @@
 {% endblock %}
 
 
-{% set vimeoId = '65107797' %}
-
 {% block main_body %}
 
-<div class="container text-muted">
-    Please watch the video and, at the same time, move the slider up or down
-    when it makes you feel good or bad.
-    <p></p>
+<div class="container">
+    <div class="row">
+        <div class="dropdown col-md-auto">
+            <button class="btn btn-secondary dropdown-toggle" type="button"
+                    id="video_selector" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"
+                    data-display="static">
+                Video
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {% for id, v in vid_dict.items() %}
+                <a class="dropdown-item"
+                   href="{{ url_for('user.user', vid=id) }}">{{ v }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="py-2 col-md-auto">
+            <span>Currently shown video: <b>{{currentVideo[1]}}</b></span>
+        </div>
+    </div>
+    <hr>
 </div>
+
 
 <div class="container">
     <div class="align-items-center">
         <div>
-            <div data-vimeo-id="{{ vimeoId }}"
+            <div data-vimeo-id="{{ currentVideo[0] }}"
                  id="player"></div>
         </div>
         <div>
@@ -59,12 +75,12 @@
                        value="50" name="value"
                        ondrag="slider_value.innerHTML = this.value;"
                        onchange="player.getCurrentTime().then(timestamp =>
-                                {sendData(timestamp, this.value, {{ vimeoId }})});
+                                {sendData(timestamp, this.value, {{ currentVideo[0] }})});
                                 slider_value.innerHTML = this.value;">
             </form> -->
 
         </div>
-        <div id="slider_value" class="align-self-end"
+        <div id="slider_value1" class="align-self-end"
              style="position:relative;bottom:30px">
         </div>
 
@@ -75,10 +91,10 @@
 
                         <input class="customrange" type="range" min="0"
                                max="100" value="50" name="value"
-                               ondrag="slider_value.innerHTML = this.value;"
+                               ondrag="slider_value1.innerHTML = this.value;"
                                onchange="player.getCurrentTime().then(timestamp =>
-                       {sendData2D(timestamp, this.value, 50, {{ vimeoId }})});
-                       slider_value.innerHTML = this.value;">
+                       {sendData2D(timestamp, this.value, 50, {{ currentVideo[0] }})});
+                       slider_value1.innerHTML = this.value;">
                     </div>
                     <div class="sliderthumb"></div>
                     <center>
@@ -88,13 +104,13 @@
             </form>
         </div>
 
-        <div id="slider_value" class="align-self-end"
+        <div id="slider_value2" class="align-self-end"
              style="position:relative;bottom:10px">
         </div>
         <div style="display:block;" id="slider_div">
 
             <input id="slider" class="align-self-end" min="0" max="100"
-                   ondrag="slider_value.innerHTML = this.value;"
+                   ondrag="slider_value2.innerHTML = this.value;"
                    onchange="twoDimensionalSliderOnChange();"
                    style="position:relative;bottom:10px">
 
@@ -113,10 +129,17 @@ function twoDimensionalSliderOnChange()
                console.log(valval);
                let valval1 = valval.split("|")[0];
                let valval2 = valval.split("|")[1];
-               sendData2D(timestamp, Math.round(parseFloat(valval1)), Math.round(parseFloat(valval2)), {{ vimeoId }});
+               sendData2D(timestamp, Math.round(parseFloat(valval1)), Math.round(parseFloat(valval2)), {{ currentVideo[0] }});
              }
            });
 }
+
+
+
+
+
+
+
 
 
 </script>
@@ -144,6 +167,13 @@ $('#slider').range2DSlider({
 
 $('#slider')
   .range2DSlider();
+
+
+
+
+
+
+
 
 
 </script>
@@ -180,6 +210,13 @@ $('#slider')
     });
 
 
+
+
+
+
+
+
+
 </script>
 
 <script>
@@ -206,11 +243,18 @@ $('#slider')
     });
     button.addEventListener("mouseup", event => {
         if(event.button == 0){
-                sendData2D(time, ticks, 50, {{ vimeoId }})
+                sendData2D(time, ticks, 50, {{ currentVideo[0] }})
                 clearInterval(clock);
                 ticks = 0;
         }
     });
+
+
+
+
+
+
+
 
 
 </script>
