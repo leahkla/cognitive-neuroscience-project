@@ -28,10 +28,6 @@ from tslearn.clustering import TimeSeriesKMeans
 from tslearn.datasets import CachedDatasets
 from tslearn.preprocessing import TimeSeriesScalerMeanVariance, TimeSeriesResampler
 
-
-# from scipy.interpolate import spline
-# from scipy.interpolate import interp1d
-
 @bp.route('/chart', methods=['GET'])
 def chart():
     """
