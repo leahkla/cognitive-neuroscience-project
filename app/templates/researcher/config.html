@@ -87,4 +87,27 @@
     <hr>
 </div>
 
+<div class="container">
+    <form action="/change_db" , method="post">
+        <div class="form-group-row">
+            <label for="selectdb_type"
+                   class="col-md-auto col-form-label r_label">Currently used
+                database: </label>
+            <select class="custom-select" style="width:95pt"
+                    id="selectdb_type" name="db"
+                    onchange="this.form.submit();">
+                {% for c, db in dbs.items() %}
+                {% if c == cur_db %}
+                <option selected value="{{c}}">{{db}}</option>
+                {% else %}
+                <option value="{{c}}">{{db}}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <span class="col-md-auto">(Make sure the database you select is
+                running!)</span>
+        </div>
+    </form>
+</div>
+
 {% endblock %}

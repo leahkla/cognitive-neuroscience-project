@@ -27,7 +27,9 @@ from scipy.interpolate import PchipInterpolator
 
 from tslearn.clustering import TimeSeriesKMeans
 from tslearn.datasets import CachedDatasets
-from tslearn.preprocessing import TimeSeriesScalerMeanVariance, TimeSeriesResampler
+from tslearn.preprocessing import TimeSeriesScalerMeanVariance, \
+    TimeSeriesResampler
+
 
 @bp.route('/chart', methods=['GET'])
 def chart():
@@ -66,7 +68,7 @@ def chart():
             ts[i] = np.append(ts[i], [max_t])
             vals[i] = np.append(vals[i], [50])
         # Round last timestamp up (for smoother display):
-        ts[i] = np.append(ts[i][:-1], int(ts[i][-1])+1)
+        ts[i] = np.append(ts[i][:-1], int(ts[i][-1]) + 1)
 
     # Create the interpolation
     xs = np.arange(0, int(max_t) + 1.5, 1)
@@ -82,11 +84,11 @@ def chart():
     p.yaxis.axis_label = 'Valence rating'
 
     for i, tseries in enumerate(user_timeseries):
-        p.line(tseries[0], tseries[1], line_color=Spectral6[i%6],
+        p.line(tseries[0], tseries[1], line_color=Spectral6[i % 6],
                line_width=3, name=data_by_user[i]['username'].iloc[0])
     for i in range(len(ts)):
         for j in range(len(ts[i])):
-            p.circle(ts[i][j], vals[i][j], fill_color=Spectral6[i%6],
+            p.circle(ts[i][j], vals[i][j], fill_color=Spectral6[i % 6],
                      line_color='black', radius=0.7)
 
     p.select_one(HoverTool).tooltips = [
@@ -128,7 +130,8 @@ def correlations():
         n_clusters = np.array(user_timeseries).shape[0]
 
     # Euclidean k-means
-    km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True, random_state=seed)
+    km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True,
+                          random_state=seed)
     y_pred = km.fit_predict(user_timeseries)
 
     # Generate plots
@@ -141,14 +144,16 @@ def correlations():
         p = figure(plot_width=300, plot_height=300, title=title)
         for xx in range(0, len(y_pred)):
             if y_pred[xx] == yi:
-                p.line(range(0, len(user_timeseries[xx][0])), user_timeseries[xx][0], line_width=0.3)
+                p.line(range(0, len(user_timeseries[xx][0])),
+                       user_timeseries[xx][0], line_width=0.3)
         values = km.cluster_centers_[yi].ravel()
         p.line(range(0, len(values)), values, line_width=2)
         plots.append(p)
     # Get plot codes
     script, div = components(row(plots))
 
-    return render_template("researcher/correlations.html", the_div=div, the_script=script)
+    return render_template("researcher/correlations.html", the_div=div,
+                           the_script=script)
 
 
 @bp.route('/config')
@@ -162,4 +167,6 @@ def config():
 
     vid_dict, _ = get_videos()
 
-    return render_template("researcher/config.html", vid_dict=vid_dict)
+    return render_template("researcher/config.html", vid_dict=vid_dict,
+                           dbs=current_app.dbs,
+                           cur_db=current_app.config['DB'])

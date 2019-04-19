@@ -47,7 +47,7 @@ $ export FLASK_DEBUG=true
 -----------------
 By default the app will connect to and use a database that is hosted online. There is no need to care about this. But if you want another database, set this environment variable:
 ```
-$ export DB_TYPE=dev
+$ export DB=dev
 ```
 (you can use ``dev`` for the development database, ``local`` for a local database
   and ``prod`` for the default production database)

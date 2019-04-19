@@ -16,6 +16,6 @@ class Config(object):
 
     # The database used can be the production database, the development
     # database (both online) or local if the user has MongoDB running locally.
-    # Values DB_TYPE can take are hence 'prod', 'dev', or 'local'. Defaults
+    # Values DB can take are hence 'prod', 'dev', or 'local'. Defaults
     # to 'prod'.
-    DB_TYPE = os.environ.get('DB_TYPE') or 'prod'
+    DB = os.environ.get('DB') or 'prod'

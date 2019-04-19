@@ -8,6 +8,7 @@ from werkzeug.routing import RequestRedirect
 import pandas as pd
 import numpy as np
 from scipy.interpolate import PchipInterpolator
+import pymongo
 
 
 def collect_mongodbobjects():

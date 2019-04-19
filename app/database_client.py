@@ -19,7 +19,7 @@ class DatabaseClient:
         machine), or to the dev-database or to a production database
         (which is the default).
         """
-        type = current_app.config['DB_TYPE']
+        type = current_app.config['DB']
         if type == 'local':
             client = MongoClient()
             db = client.videoannotatordb

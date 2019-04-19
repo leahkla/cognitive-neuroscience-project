@@ -40,5 +40,7 @@ def create_app(conf=Config):
     app.d = DatabaseClient()
     # File where the videos are stored:
     app.vid_file = 'app/user/video_conf.txt'
+    # All the databases that are available:
+    app.dbs = {'prod': 'Production', 'dev': 'Development', 'local': 'Local'}
 
     return app

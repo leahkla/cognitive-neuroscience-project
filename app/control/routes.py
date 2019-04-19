@@ -15,6 +15,8 @@ import datetime
 from app.functionalities import collect_mongodbobjects, check_access_right, \
     sort_df
 from app.control import bp
+from app.database_client import DatabaseClient
+import pymongo
 
 
 @bp.route('/')
@@ -183,7 +185,7 @@ def add_video():
     vid_name = request.form.get('vid_name')
 
     if (not vid_id) or (not vid_name):
-        flash("You need to provide a video ID (or it's URL) and video name in "
+        flash("You need to provide a video ID (or its URL) and video name in "
               "order to add a video")
     else:
         if not vid_id.isdigit():
@@ -227,4 +229,19 @@ def remove_video():
     else:
         flash('Video "' + vid_name + '" not found. Nothing removed.')
 
+    return redirect(url_for('researcher.config'))
+
+
+@bp.route('/change_db', methods=['POST'])
+def change_db():
+    """
+
+    :return:
+    """
+    new_db = request.form.get('db')
+    current_app.config['DB'] = new_db
+
+    current_app.d = DatabaseClient()
+
+    flash('Database changed to "' + current_app.dbs[new_db] + '".')
     return redirect(url_for('researcher.config'))
