@@ -18,7 +18,8 @@ from bokeh.palettes import Spectral6
 from bokeh.layouts import row
 
 from app.researcher import bp
-from app.functionalities import collect_mongodbobjects, check_access_right, get_interpolators
+from app.functionalities import collect_mongodbobjects, check_access_right, \
+    get_interpolators, get_videos
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -148,3 +149,17 @@ def correlations():
     script, div = components(row(plots))
 
     return render_template("researcher/correlations.html", the_div=div, the_script=script)
+
+
+@bp.route('/config')
+def config():
+    """
+    Display the configuarion page, where the user can add or remove videos or
+    change the database this is connected to.
+    :return: Renders the website
+    """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
+    vid_dict, _ = get_videos()
+
+    return render_template("researcher/config.html", vid_dict=vid_dict)

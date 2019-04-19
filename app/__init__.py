@@ -38,5 +38,7 @@ def create_app(conf=Config):
 
     # Initialise the database client:
     app.d = DatabaseClient()
+    # File where the videos are stored:
+    app.vid_file = 'app/user/video_conf.txt'
 
     return app

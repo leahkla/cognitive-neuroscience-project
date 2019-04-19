@@ -81,6 +81,7 @@ def save():
                                    })
         return "Saving completed"
 
+
 @bp.route('/save2D', methods=['POST'])
 def save2D():
     """
@@ -170,3 +171,60 @@ def delete_all():
     current_app.d.delete_many({})
     flash('All data deleted!')
     return redirect(url_for('control.data'))
+
+
+@bp.route('/add_video', methods=['POST'])
+def add_video():
+    """
+    Add a new video to the file video_conf.txt
+    :return: Redirects to researcher.config
+    """
+    vid_id = request.form.get('vid_id')
+    vid_name = request.form.get('vid_name')
+
+    if (not vid_id) or (not vid_name):
+        flash("You need to provide a video ID (or it's URL) and video name in "
+              "order to add a video")
+    else:
+        if not vid_id.isdigit():
+            # If the whole video url is given
+            vid_id = vid_id.split('/')[-1]
+            if not vid_id.isdigit():
+                flash(
+                    'Error, the URL seems to be not of the write format. It '
+                    'should end in a number, like for example '
+                    '"https://vimeo.com/65107797"')
+                return (redirect(url_for('researcher.config')))
+        with open(current_app.vid_file, 'a') as f:
+            f.write('\n' + vid_id + ':' + vid_name)
+        flash('Video "' + vid_name + '" was successfully added.')
+
+    return redirect(url_for('researcher.config'))
+
+
+@bp.route('/remove_video')
+def remove_video():
+    """
+    Remove a video from the file video_conf.txt
+    :return: Redirects to researcher.config
+    """
+    vid_id = request.args.get('vid_id')
+    vid_name = request.args.get('vid_name')
+
+    removed = False
+
+    with open(current_app.vid_file, 'r') as f:
+        lines = f.readlines()
+    with open(current_app.vid_file, 'w') as f:
+        for line in lines:
+            if vid_id not in line:
+                f.write(line)
+            else:
+                removed = True
+
+    if removed:
+        flash('Video "' + vid_name + '" has been removed.')
+    else:
+        flash('Video "' + vid_name + '" not found. Nothing removed.')
+
+    return redirect(url_for('researcher.config'))

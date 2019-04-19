@@ -45,7 +45,8 @@ def sort_df(df):
     :return: Sorted dataframe
     """
     try:
-        ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'value2', 'date']
+        ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'value2',
+                        'date']
         col_types = ['str', 'str', 'float', 'int', 'int', 'str']
         df = df[ordered_cols]
         for t, c in zip(col_types, ordered_cols):
@@ -115,3 +116,18 @@ def get_interpolators(df):
     # Create the interpolation
     interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
     return interpolators, max_t
+
+
+def get_videos():
+    """
+    Find the currently available video names and ids.
+    :return: Dictionary of available videos, each stored as id:name, and list
+    containing id and name of the video that is the first one in the file.
+    """
+    with open(current_app.vid_file, 'r') as f:
+        videos = f.readlines()
+    vid_list = [x.strip() for x in videos if x.strip() if
+                (x.strip()[0] is not '#')]
+    vid_dict = dict([i.split(':', 1) for i in vid_list])
+    first_vid = vid_list[0].split(':', 1)
+    return vid_dict, first_vid

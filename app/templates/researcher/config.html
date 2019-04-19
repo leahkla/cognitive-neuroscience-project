@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Video annotation - Researcher</title>{% endblock %}
+
+{% block head_extension %}
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='css/navbar_divider.css') }}">
+{% endblock %}
+
+{% block navbar_extension %}
+
+
+<div class="collapse navbar-collapse justify-content-end"
+     id="navbarMain">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link active"
+           href="{{ url_for('researcher.config') }}">Configure <span
+                class="sr-only">(current)</span></a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.data') }}">Raw</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.correlations') }}">Correlations</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.chart') }}">Chart</a>
+        <div class="divider"></div>
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.choose_role') }}">Change role</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block main_body %}
+
+<div class="container">
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>
+                Available videos
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for id, v in vid_dict.items() %}
+        <tr>
+            <th>{{v}}</th>
+            <td class="text-right">
+                {% if vid_dict|length > 1 %}
+                <a class="btn btn-primary"
+                   href="{{ url_for('control.remove_video', vid_id=id, vid_name=v) }}"
+                   role="button">Remove</a>
+                {% else %}
+                <div data-toggle="tooltip"
+                     title="There has to be at least one video">
+                    <a class="btn btn-primary disabled"
+                       href=""
+                       role="button">Remove</a>
+                </div>
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="/add_video" method="post" class="form-group-row">
+        <div class="row">
+            <div class="col-3">
+                <label class="sr-only" for="input_vid_id">Video ID or
+                    URL:</label>
+                <input type="text" class="form-control" name="vid_id"
+                       placeholder="Video ID or URL" id="input_vid_id">
+            </div>
+            <div class="col-3">
+                <label class="sr-only" for="input_vid_name">Video
+                    name:</label>
+                <input type="text" class="form-control" id="input_vid_name"
+                       placeholder="Video name" name="vid_name">
+            </div>
+            <button type="submit" id="add_button"
+                    class="btn btn-primary">Add
+            </button>
+        </div>
+    </form>
+    <hr>
+</div>
+
+{% endblock %}
