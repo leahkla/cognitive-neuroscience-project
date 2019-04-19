@@ -5,13 +5,15 @@
 {% block main_body %}
 
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='choose_role.css') }}">
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/choose_role.css') }}">
 </head>
 
 <form action="/submit_username" method="post">
     <div class="container">
         <form class="form-group-row">
-            <label for="selectRole" class="col-1 col-form-label r_label">Role</label>
+            <label for="selectRole"
+                   class="col-1 col-form-label r_label">Role</label>
             <select class="custom-select" style="width:95pt"
                     id="selectRole" name="role">
                 <option selected value="user">User</option>
@@ -21,7 +23,8 @@
         </form>
         <p></p>
         <div class="form-group row">
-            <label for="inputUser" class="col-1 col-form-label r_label">Username</label>
+            <label for="inputUser"
+                   class="col-1 col-form-label r_label">Username</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control" id="inputUser"
                        placeholder="Username" name="username"
@@ -32,8 +35,8 @@
         </div>
         <p></p>
         <p id="note" class="form-text text-muted">
-                If you are a researcher, you can leave username blank.
-            </p>
+            If you are a researcher, you can leave username blank.
+        </p>
         <div class="form-group-row">
             <div class="col-sm-2">
                 <button type="submit" class="btn btn-primary">Proceed</button>

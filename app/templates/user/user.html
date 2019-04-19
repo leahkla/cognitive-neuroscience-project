@@ -9,11 +9,16 @@
         src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 <script type="text/javascript"
         src="{{ url_for('static', filename='js/slider.js') }}"></script>
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.range2dslider.css') }}">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='slider.css') }}">
-<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
+<script type="text/javascript"
+        src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='css/jquery.range2dslider.css') }}">
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='css/slider.css') }}">
+<script type="text/javascript"
+        src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
 
 
 {% endblock %}
@@ -47,7 +52,7 @@
                  id="player"></div>
         </div>
         <div>
-            <div id="buttonContainer" >
+            <div id="buttonContainer">
                 <button class="btn btn-dark" id="button-1">Press here</button>
             </div>
             <!-- <form id="slider-1" style="width:220%;transform:rotate(270deg)">
@@ -60,28 +65,29 @@
                                 slider_value.innerHTML = this.value;">
             </form> -->
 
-          </div>
-          <div id="slider_value" class="align-self-end"
-               style="position:relative;bottom:30px">
-          </div>
+        </div>
+        <div id="slider_value" class="align-self-end"
+             style="position:relative;bottom:30px">
+        </div>
 
-          <div id="slider2-wrapper" style="width:100px; height:100px">
-          <form id="slider-2" class="rangepresenter" >
-            <div class="rangewrapper">
-                <div class="sliderfill">
+        <div id="slider2-wrapper" style="width:100px; height:100px">
+            <form id="slider-2" class="rangepresenter">
+                <div class="rangewrapper">
+                    <div class="sliderfill">
 
-              <input class="customrange" type="range" min="0" max="100" value="50" name="value"
-              ondrag="slider_value.innerHTML = this.value;"
-              onchange="player.getCurrentTime().then(timestamp =>
+                        <input class="customrange" type="range" min="0"
+                               max="100" value="50" name="value"
+                               ondrag="slider_value.innerHTML = this.value;"
+                               onchange="player.getCurrentTime().then(timestamp =>
                        {sendData2D(timestamp, this.value, 50, {{ vimeoId }})});
                        slider_value.innerHTML = this.value;">
+                    </div>
+                    <div class="sliderthumb"></div>
+                    <center>
+                        <div class="slidervalue"></div>
+                    </center>
                 </div>
-            <div class="sliderthumb"></div>
-            <center>
-            <div class="slidervalue"></div>
-            </center>
-          </div>
-          </form>
+            </form>
         </div>
 
         <div id="slider_value" class="align-self-end"
@@ -89,9 +95,12 @@
         </div>
         <div style="display:block;" id="slider_div">
 
-        <input id="slider" class="align-self-end" min="0" max="100" ondrag="slider_value.innerHTML = this.value;" onchange="twoDimensionalSliderOnChange();" style="position:relative;bottom:10px">
+            <input id="slider" class="align-self-end" min="0" max="100"
+                   ondrag="slider_value.innerHTML = this.value;"
+                   onchange="twoDimensionalSliderOnChange();"
+                   style="position:relative;bottom:10px">
 
-      </div>
+        </div>
     </div>
 
 </div>
@@ -110,6 +119,8 @@ function twoDimensionalSliderOnChange()
              }
            });
 }
+
+
 </script>
 
 
@@ -135,6 +146,8 @@ $('#slider').range2DSlider({
 
 $('#slider')
   .range2DSlider();
+
+
 </script>
 
 <script>
@@ -167,6 +180,8 @@ $('#slider')
     player.on('play', function () {
       console.log('The video is playing, yay!');
     });
+
+
 </script>
 
 <script>
@@ -198,5 +213,7 @@ $('#slider')
                 ticks = 0;
         }
     });
+
+
 </script>
 {% endblock %}
