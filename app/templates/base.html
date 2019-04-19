@@ -9,7 +9,8 @@
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -28,12 +29,14 @@
 <!-- The navigation bar for the site, elements need to be provided by
 templates that inherit from base. -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    {% block navbar_toggle_button %}
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarMain"
             aria-controls="navbarMain" aria-expanded="false"
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+    {% endblock %}
     <div class="navbar-brand">Video Annotation Tool</div>
     {% block navbar_extension %}{% endblock %}
 </nav>

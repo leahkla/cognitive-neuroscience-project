@@ -1,6 +1,6 @@
 """
 This file contains the routes, i.e. the functions to be executed when a page
-(like "/researcher_view") is accessed in the browser.
+(like "/chart") is accessed in the browser.
 
 It has only the webpages belonging to the researcher blueprint,
 i.e. those belonging to the researcher interface.
@@ -100,7 +100,7 @@ def chart():
     ]
 
     script, div = components(p)
-    return render_template("researcher/researcher.html", the_div=div,
+    return render_template("researcher/chart.html", the_div=div,
                            the_script=script)
 
 

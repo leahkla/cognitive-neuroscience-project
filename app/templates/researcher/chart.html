@@ -2,7 +2,13 @@
 
 {% block title %}<title>Video annotation - Researcher</title>{% endblock %}
 
+{% block head_extension %}
+    <link rel="stylesheet" type="text/css"
+          href="{{ url_for('static', filename='css/navbar_divider.css') }}">
+{% endblock %}
+
 {% block navbar_extension %}
+
 
 <div class="collapse navbar-collapse justify-content-end"
      id="navbarMain">
@@ -13,7 +19,7 @@
            href="{{ url_for('researcher.correlations') }}">Correlations</a>
         <a class="nav-item nav-link active"
            href="{{ url_for('researcher.chart') }}">Chart <span class="sr-only">(current)</span></a>
-        <div class="nav-link nav-item">|</div>
+        <div class="divider"></div>
         <a class="nav-item nav-link"
            href="{{ url_for('control.choose_role') }}">Change role</a>
     </div>

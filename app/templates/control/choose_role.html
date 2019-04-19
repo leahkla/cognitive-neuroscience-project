@@ -4,10 +4,13 @@
 
 {% block main_body %}
 
-<head>
+{% block head_extension %}
     <link rel="stylesheet" type="text/css"
           href="{{ url_for('static', filename='css/choose_role.css') }}">
-</head>
+{% endblock %}
+
+<!--Remove the navbar toggle button because there are no items in the navbar-->
+{% block navbar_toggle_button %}{% endblock %}
 
 <form action="/submit_username" method="post">
     <div class="container">

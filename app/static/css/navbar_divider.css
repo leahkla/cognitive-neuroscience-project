@@ -1,0 +1,16 @@
+@media (max-width:992px){
+    .divider {
+        height: 1px;
+        margin: 9px 0;
+        overflow: hidden;
+        background-color: #e5e5e5;
+    }
+}
+
+@media (min-width:992px){
+    .divider {
+        height: 25px;
+        margin: 7px 9px;
+        border-left: 1px solid #e5e5e5;
+    }
+}
