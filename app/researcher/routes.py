@@ -31,6 +31,10 @@ from tslearn.datasets import CachedDatasets
 from tslearn.preprocessing import TimeSeriesScalerMeanVariance, \
     TimeSeriesResampler
 
+"""from rpy2.robjects import DataFrame, FloatVector, IntVector, r
+from rpy2.robjects.packages import importr
+from math import isclose
+"""
 
 @bp.route('/chart', methods=['GET'])
 def chart():
@@ -125,7 +129,7 @@ def correlations():
     # Generate data
     user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
 
-    seed = 0
+    seed = np.random.randint(0,100000,1)[0]
     np.random.seed(seed)
 
     # Set cluster count
@@ -142,11 +146,25 @@ def correlations():
     all_plots = ""
     all_scripts = ""
     plots = [] 
-    print("asd")
-    for yi in range(n_clusters):
-        #p = figure(plot_width=350, plot_height=300, title=title)
-        p = figure(plot_width=350, plot_height=300)
 
+    ### TODO MAYBE: intra-cluster correlation with rpy2. Might not work with matrices
+    """    valmatrix = np.empty([24,151])
+    for iii in range(24):
+        valmatrix[iii, :] = user_timeseries[iii][0]
+    print(type(valmatrix), valmatrix.shape)
+    print(type(valmatrix[0]), len(valmatrix[0]))
+    print(type(valmatrix[0][0]))
+    r_icc = importr("ICC", lib_loc="C:/Users/Lauri Lode/Documents/R/win-library/3.4")
+    #m = r.matrix(FloatVector(valmatrix.flatten()), nrow=24)
+    df = DataFrame({"groups": IntVector(y_pred),
+        "values": FloatVector(valmatrix.flatten())})
+    
+    icc_res = r_icc.ICCbare("groups", "values", data=df)
+    icc_val = icc_res[0]
+    print("ICC" + str(icc_val))"""
+
+    for yi in range(n_clusters):
+        p = figure(plot_width=350, plot_height=300)
         n=0
         values = km.cluster_centers_[yi].ravel()
         centerMean = np.mean(km.cluster_centers_[yi].ravel())
@@ -155,13 +173,13 @@ def correlations():
             if y_pred[xx] == yi:
                 n = n+1
                 for iii in range(len(user_timeseries[xx][0])):
-                    varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii])
+                    varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii])/len(user_timeseries[xx][0])
 
                 p.line(range(0, len(user_timeseries[xx][0])),
                        user_timeseries[xx][0], line_width=0.3)
         varsum = np.sqrt(varsum)
 
-        titleString = "C#" + str(yi + 1) + ": n: " + str(n) +", μ: " + str(np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(np.round(varsum**2, decimals=3))
+        titleString = "C#" + str(yi + 1) + ", n: " + str(n) +", μ: " + str(np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(np.round(varsum**2, decimals=3))
         t = Title()
         t.text = titleString
         p.title = t
