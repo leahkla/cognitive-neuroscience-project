@@ -16,6 +16,7 @@ from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.palettes import Spectral6
 from bokeh.layouts import row
+from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
@@ -103,6 +104,9 @@ def chart():
                            the_script=script)
 
 
+def eucl(a, b):
+    return np.sqrt((a-b)**2)
+
 @bp.route('/correlations', methods=['GET'])
 def correlations():
     """
@@ -134,21 +138,36 @@ def correlations():
                           random_state=seed)
     y_pred = km.fit_predict(user_timeseries)
 
-    # Generate plots
+    # Generate plots and calculate statistics
     all_plots = ""
     all_scripts = ""
-    plots = []
-
+    plots = [] 
+    print("asd")
     for yi in range(n_clusters):
-        title = "Cluster " + str(yi + 1)
-        p = figure(plot_width=300, plot_height=300, title=title)
+        #p = figure(plot_width=350, plot_height=300, title=title)
+        p = figure(plot_width=350, plot_height=300)
+
+        n=0
+        values = km.cluster_centers_[yi].ravel()
+        centerMean = np.mean(km.cluster_centers_[yi].ravel())
+        varsum = 0
         for xx in range(0, len(y_pred)):
             if y_pred[xx] == yi:
+                n = n+1
+                for iii in range(len(user_timeseries[xx][0])):
+                    varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii])
+
                 p.line(range(0, len(user_timeseries[xx][0])),
                        user_timeseries[xx][0], line_width=0.3)
-        values = km.cluster_centers_[yi].ravel()
+        varsum = np.sqrt(varsum)
+
+        titleString = "C#" + str(yi + 1) + ": n: " + str(n) +", μ: " + str(np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(np.round(varsum**2, decimals=3))
+        t = Title()
+        t.text = titleString
+        p.title = t
         p.line(range(0, len(values)), values, line_width=2)
         plots.append(p)
+
     # Get plot codes
     script, div = components(row(plots))
 
