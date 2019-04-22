@@ -8,7 +8,7 @@ i.e. those belonging to the researcher interface.
 
 import json
 import pandas as pd
-from flask import render_template, flash, current_app
+from flask import render_template, flash, current_app, request
 import numpy as np
 
 from bokeh.models import HoverTool
@@ -120,7 +120,14 @@ def correlations():
         :return: Correlation plot
         """
     check_access_right(forbidden='user', redirect_url='control.index')
-    _, data = collect_mongodbobjects()
+    vid_dict, first_vid = get_videos()
+    print(vid_dict)
+    cur_vid_id = request.args.get('vid')
+    if not cur_vid_id:
+        currentVideo = first_vid
+    else:
+        currentVideo = [cur_vid_id, vid_dict[cur_vid_id]]
+    _, data = collect_mongodbobjects(cur_vid_id)
 
     # Get interpolators from functionalities.py
     interpolators, max_t = get_interpolators(data)
@@ -188,9 +195,10 @@ def correlations():
 
     # Get plot codes
     script, div = components(row(plots))
+    print(vid_dict)
 
     return render_template("researcher/correlations.html", the_div=div,
-                           the_script=script)
+                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
 
 
 @bp.route('/config')

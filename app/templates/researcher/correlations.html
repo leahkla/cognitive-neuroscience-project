@@ -31,6 +31,29 @@
 {% block main_body %}
 
 <div class="container">
+	<div class="row">
+		<div class="dropdown col-md-auto">
+			<button class="btn btn-secondary dropdown-toggle" type="button"
+					id="video_selector" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false"
+					data-display="static">
+				Video
+			</button>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				{% for id, v in vid_dict.items() %}
+				<a class="dropdown-item"
+				   href="{{ url_for('researcher.correlations', vid=id) }}">{{ v }}</a>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="py-2 col-md-auto">
+			<span>Currently shown data: video <b>{{currentVideo[1]}}</b></span>
+		</div>
+	</div>
+	<hr>
+</div>
+
+<div class="container">
     <h3>Observation clusters</h3>
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css"
           rel="stylesheet" type="text/css">

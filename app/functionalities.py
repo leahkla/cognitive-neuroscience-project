@@ -11,7 +11,7 @@ from scipy.interpolate import PchipInterpolator
 import pymongo
 
 
-def collect_mongodbobjects():
+def collect_mongodbobjects(videoid=None):
     """
     Fetch all data that is stored in the MongoDB database.
 
@@ -26,7 +26,8 @@ def collect_mongodbobjects():
     for p in posts:
         if p['_id']:
             del p['_id']
-        collected.append(p)
+        if videoid == None or p['videoid'] == videoid:
+            collected.append(p)
 
     # If there is data at all
     if collected:
