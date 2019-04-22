@@ -51,6 +51,10 @@ def chart():
     currentVideo, cur_vid_id, vid_dict = get_video_information(request)
     _, data = collect_mongodbobjects(cur_vid_id)
 
+    if _ == False:
+        return render_template("researcher/chart.html", the_div="There are no observations for this video!",
+                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo)
+
     data['timestamp'] = pd.to_numeric(data['timestamp'])
     data['value'] = pd.to_numeric(data['value'])
     data.sort_values(by=['timestamp'], inplace=True)
@@ -125,6 +129,10 @@ def correlations():
     check_access_right(forbidden='user', redirect_url='control.index')
     currentVideo, cur_vid_id, vid_dict = get_video_information(request)
     _, data = collect_mongodbobjects(cur_vid_id)
+
+    if _ == False:
+        return render_template("researcher/correlations.html", the_div="There are no observations for this video!",
+                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo)
 
     # Get interpolators from functionalities.py
     interpolators, max_t = get_interpolators(data)
