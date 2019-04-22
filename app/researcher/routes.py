@@ -97,11 +97,11 @@ def chart():
 
     for i, tseries in enumerate(user_timeseries):
         p.line(tseries[0], tseries[1], line_color=Spectral6[i % 6],
-               line_width=3, name=data_by_user[i]['username'].iloc[0])
+               line_width=1.5, name=data_by_user[i]['username'].iloc[0])
     for i in range(len(ts)):
         for j in range(len(ts[i])):
             p.circle(ts[i][j], vals[i][j], fill_color=Spectral6[i % 6],
-                     line_color='black', radius=0.7)
+                     line_color='black', radius=0.5)
 
     p.select_one(HoverTool).tooltips = [
         ('Time', '@x'),
