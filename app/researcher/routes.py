@@ -130,9 +130,22 @@ def correlations():
     currentVideo, cur_vid_id, vid_dict = get_video_information(request)
     _, data = collect_mongodbobjects(cur_vid_id)
 
+    ### set desired amount of clusters
+    clustervals = np.arange(1,10,1)
+    print(clustervals)
+    cur_clusters = request.args.get('cluster')
+    if not cur_clusters:
+        n_clusters = 3
+    else:
+        n_clusters = int(cur_clusters)
+
+    print("clusters: " + str(n_clusters))
+
     if _ == False:
         return render_template("researcher/correlations.html", the_div="There are no observations for this video!",
-                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo)
+                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo, clsutervals=clustervals)
+
+
 
     # Get interpolators from functionalities.py
     interpolators, max_t = get_interpolators(data)
@@ -145,7 +158,7 @@ def correlations():
     np.random.seed(seed)
 
     # Set cluster count
-    n_clusters = 3
+    #n_clusters = 3
     if n_clusters > np.array(user_timeseries).shape[0]:
         n_clusters = np.array(user_timeseries).shape[0]
 
@@ -202,7 +215,7 @@ def correlations():
     script, div = components(row(plots))
 
     return render_template("researcher/correlations.html", the_div=div,
-                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
+                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo, clustervals=clustervals)
 
 
 @bp.route('/config')
