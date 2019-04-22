@@ -133,3 +133,12 @@ def get_videos():
     vid_dict = dict([i.split(':', 1) for i in vid_list])
     first_vid = vid_list[0].split(':', 1)
     return vid_dict, first_vid
+
+def get_video_information(request):
+    vid_dict, first_vid = get_videos()
+    cur_vid_id = request.args.get('vid')
+    if not cur_vid_id:
+        currentVideo = first_vid
+    else:
+        currentVideo = [cur_vid_id, vid_dict[cur_vid_id]]
+    return currentVideo, cur_vid_id, vid_dict

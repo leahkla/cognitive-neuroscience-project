@@ -20,7 +20,7 @@ from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    get_interpolators, get_videos
+    get_interpolators, get_videos, get_video_information
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -47,7 +47,10 @@ def chart():
     check_access_right(forbidden='user', redirect_url='control.index')
 
     # Get the data:
-    _, data = collect_mongodbobjects()
+
+    currentVideo, cur_vid_id, vid_dict = get_video_information(request)
+    _, data = collect_mongodbobjects(cur_vid_id)
+
     data['timestamp'] = pd.to_numeric(data['timestamp'])
     data['value'] = pd.to_numeric(data['value'])
     data.sort_values(by=['timestamp'], inplace=True)
@@ -105,7 +108,7 @@ def chart():
 
     script, div = components(p)
     return render_template("researcher/chart.html", the_div=div,
-                           the_script=script)
+                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
 
 
 def eucl(a, b):
@@ -120,13 +123,7 @@ def correlations():
         :return: Correlation plot
         """
     check_access_right(forbidden='user', redirect_url='control.index')
-    vid_dict, first_vid = get_videos()
-    print(vid_dict)
-    cur_vid_id = request.args.get('vid')
-    if not cur_vid_id:
-        currentVideo = first_vid
-    else:
-        currentVideo = [cur_vid_id, vid_dict[cur_vid_id]]
+    currentVideo, cur_vid_id, vid_dict = get_video_information(request)
     _, data = collect_mongodbobjects(cur_vid_id)
 
     # Get interpolators from functionalities.py
@@ -195,7 +192,6 @@ def correlations():
 
     # Get plot codes
     script, div = components(row(plots))
-    print(vid_dict)
 
     return render_template("researcher/correlations.html", the_div=div,
                            the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
