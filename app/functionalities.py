@@ -135,6 +135,10 @@ def get_videos():
     return vid_dict, first_vid
 
 def get_video_information(request):
+    """
+        Parse video information for nice form based on get_video() result and a request query parameter
+        :return: Current video, id of the current video and dictionary of available videos (described more detailly in get_videos() )
+        """
     vid_dict, first_vid = get_videos()
     cur_vid_id = request.args.get('vid')
     if not cur_vid_id:

@@ -9,7 +9,7 @@ i.e. those belonging to the user interface.
 from flask import render_template, request, flash
 
 from app.user import bp
-from app.functionalities import check_access_right, get_videos
+from app.functionalities import check_access_right, get_videos, get_video_information
 
 
 @bp.route('/user')
@@ -26,13 +26,7 @@ def user():
 
     check_access_right(forbidden='researcher', redirect_url='researcher.chart')
 
-    vid_dict, first_vid = get_videos()
-
-    cur_vid_id = request.args.get('vid')
-    if not cur_vid_id:
-        currentVideo = first_vid
-    else:
-        currentVideo = [cur_vid_id, vid_dict[cur_vid_id]]
+    currentVideo, cur_vid_id, vid_dict = get_video_information(request)
 
     return render_template('user/user.html', vid_dict=vid_dict,
                            currentVideo=currentVideo)
