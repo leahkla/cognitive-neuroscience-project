@@ -35,8 +35,6 @@
         <a class="nav-item nav-link"
            href="{{ url_for('control.data') }}">Raw</a>
         <a class="nav-item nav-link"
-           href="{{ url_for('researcher.correlations') }}">Correlations</a>
-        <a class="nav-item nav-link"
            href="{{ url_for('researcher.chart') }}">Chart </a>
         <a class="nav-item nav-link active"
             href="{{ url_for('researcher.instructions') }}">Researcher instructions <span class="sr-only">(current)</span></a>
@@ -62,13 +60,29 @@
 	 <h4 class="subheader"> Functionalities</h4>
 
 	 <p>
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+		<b>Configure page:</b> The configuarion page, where the researcher can add or remove videos or
+	    change the database this is connected to.
    </p>
 
+	 <p>
+		<b>Raw data page: </b> On this page the researcher can view the raw user input data with columns "videoid", "username", "timestamp", "value" (valence), "value2" (intensity of the valence) and "date". On the upper left corner there is a "Delete all" button for deleting all the data. On the upper right corner there is a "Export" button for exporting the data.
+   </p>
+
+	 <p>
+		<b>Clusters page: </b> Display correlation plot for the researcher. This webpage is only for the role researcher.
+   </p>
+
+	 <p>
+		<b>Chart page: </b> This page will show the Valence ratings by timestamp -plot for a chosen video, where Valence rating is on the y-axis and Timestamp (in seconds) is on the x-axis. The researcher can change the current plot view to the plot of another video by selecting the name of that video from the 'Video' button on the upper left corner. The heading above the chart will inform to which video the specific plot belongs to.
+   </p>
+
+	 <p>
+		<b>Change role: </b> From this page the researcher can change the role between 'User' and 'Researcher' but also choose the role 'Test/Both' for debugging purposes.
+   </p>
 	 <h4 class="subheader"> Limitations</h4>
 
 	 <p>
-		Limitations here.
+		<b>Slow loading with chart view:</b> The chart view loads in 4.9 seconds currently. This bug is linked to rendering the plot and calculating the values that the plot uses in server side. The amount of data points will probably affect by increasing the loading time of the chart view. Updated April 23rd 2019.
 		</p>
 
 </div>
