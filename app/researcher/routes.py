@@ -20,7 +20,7 @@ from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    get_interpolators, get_videos, get_video_information, calculate_chart
+    get_interpolators, get_videos, get_video_information
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -57,11 +57,68 @@ def chart():
         return render_template("researcher/chart.html", the_div="There are no observations for this video!",
                                the_script="", vid_dict=vid_dict, currentVideo=currentVideo)
 
-    div = current_app.config['CACHE'].get(currentVideo[0] + 'div_chart')
-    script = current_app.config['CACHE'].get(currentVideo[0] + 'script_chart')
+    current_video_status = current_app.config['CACHE'].get(currentVideo[0] + 'modified_chart')
+    if current_video_status == True or current_video_status == None:
+        data['timestamp'] = pd.to_numeric(data['timestamp'])
+        data['value'] = pd.to_numeric(data['value'])
+        data.sort_values(by=['timestamp'], inplace=True)
 
-    if div == None or script == None:
-        calculate_chart(currentVideo[0])
+        # Group by username and extract timestamps and values for each user
+        grouped_data = data.groupby('username')
+        data_by_user = [user for _, user in grouped_data]
+        ts = [np.array(t) for t in
+              (data_by_user[i]['timestamp'].apply(lambda x: float(x)) for i in
+               range(len(data_by_user)))]
+        vals = [np.array(val) for val in
+                (data_by_user[i]['value'].apply(lambda x: float(x)) for i in
+                 range(len(data_by_user)))]
+
+        # Make sure all data starts and ends at the same time for each user, if the
+        # data doesn't suggest otherwise start and end value are 50.
+        max_t = max([max(t) for t in ts])
+        for i in range(len(ts)):
+            if min(ts[i]) != 0:
+                ts[i] = np.append([0], ts[i])
+                vals[i] = np.append([50], vals[i])
+            if max(ts[i]) != max_t:
+                ts[i] = np.append(ts[i], [max_t])
+                vals[i] = np.append(vals[i], [50])
+            # Round last timestamp up (for smoother display):
+            ts[i] = np.append(ts[i][:-1], int(ts[i][-1]) + 1)
+
+        # Create the interpolation
+        xs = np.arange(0, int(max_t) + 1.5, 1)
+        interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
+        user_timeseries = [[xs, interpolator(xs)] for interpolator in interpolators]
+
+        # Create the Bokeh plot
+        TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
+        p = figure(title="Valence ratings by timestamp", y_axis_type="linear",
+                   plot_height=500,
+                   tools=TOOLS, active_scroll='wheel_zoom', plot_width=900)
+        p.xaxis.axis_label = 'Timestamp (seconds)'
+        p.yaxis.axis_label = 'Valence rating'
+
+        for i, tseries in enumerate(user_timeseries):
+            p.line(tseries[0], tseries[1], line_color=Spectral6[i % 6],
+                   line_width=1.5, name=data_by_user[i]['username'].iloc[0])
+        for i in range(len(ts)):
+            for j in range(len(ts[i])):
+                p.circle(ts[i][j], vals[i][j], fill_color=Spectral6[i % 6],
+                         line_color='black', radius=0.5)
+
+        p.select_one(HoverTool).tooltips = [
+            ('Time', '@x'),
+            ('Valence', '@y'),
+            ('User', '$name')
+
+        ]
+
+        script, div = components(p)
+        current_app.config['CACHE'].set(currentVideo[0] + 'div_chart', div)
+        current_app.config['CACHE'].set(currentVideo[0] + 'script_chart', script)
+        current_app.config['CACHE'].set(currentVideo[0] + 'modified_chart', False)
+    else:
         div = current_app.config['CACHE'].get(currentVideo[0] + 'div_chart')
         script = current_app.config['CACHE'].get(currentVideo[0] + 'script_chart')
 
