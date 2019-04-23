@@ -21,16 +21,29 @@
 		src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
 <link rel="stylesheet" type="text/css"
 		href="{{ url_for('static', filename='css/instructions.css') }}">
+<link rel="stylesheet" type="text/css"
+    href="{{ url_for('static', filename='css/navbar_divider.css') }}">
 {% endblock %}
 
 
 {% block navbar_extension %}
 <div class="collapse navbar-collapse justify-content-end"
-	 id="navbarMain">
-	<div class="navbar-nav">
-		<a class="nav-item nav-link"
-		   href="{{ url_for('control.choose_role') }}">Change role</a>
-	</div>
+     id="navbarMain">
+    <div class="navbar-nav">
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.config') }}">Configure</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.data') }}">Raw</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.correlations') }}">Correlations</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.chart') }}">Chart </a>
+        <a class="nav-item nav-link active"
+            href="{{ url_for('researcher.instructions') }}">Researcher instructions <span class="sr-only">(current)</span></a>
+        <div class="divider"></div>
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.choose_role') }}">Change role</a>
+    </div>
 </div>
 {% endblock %}
 
