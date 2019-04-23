@@ -19,6 +19,8 @@
 	  href="{{ url_for('static', filename='css/slider.css') }}">
 <script type="text/javascript"
 		src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
+<link rel="stylesheet" type="text/css"
+		href="{{ url_for('static', filename='css/navbar_divider.css') }}">
 {% endblock %}
 
 
@@ -26,6 +28,9 @@
 <div class="collapse navbar-collapse justify-content-end"
 	 id="navbarMain">
 	<div class="navbar-nav">
+		<a class="nav-item nav-link"
+			 href="{{ url_for('user.userinstructions') }}">User instructions</a>
+		<div class="divider"></div>
 		<a class="nav-item nav-link"
 		   href="{{ url_for('control.choose_role') }}">Change role</a>
 	</div>
@@ -122,7 +127,7 @@
 
 <script>
 
-//This handles the value recording via the button. 
+//This handles the value recording via the button.
 	let ticks = 0;
 	let clock;
 	let time;
