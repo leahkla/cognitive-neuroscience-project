@@ -26,7 +26,7 @@ def user():
 
     check_access_right(forbidden='researcher', redirect_url='researcher.chart')
 
-    currentVideo, cur_vid_id, vid_dict = get_video_information(request)
+    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(request)
 
     return render_template('user/user.html', vid_dict=vid_dict,
                            currentVideo=currentVideo)

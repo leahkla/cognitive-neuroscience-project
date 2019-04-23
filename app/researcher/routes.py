@@ -15,12 +15,12 @@ from bokeh.models import HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.palettes import Spectral6
-from bokeh.layouts import row
+from bokeh.layouts import row, gridplot
 from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    get_interpolators, get_videos, get_video_information
+    get_interpolators, get_videos, get_video_information, eucl
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -50,7 +50,7 @@ def chart():
 
     # Get the data:
 
-    currentVideo, cur_vid_id, vid_dict = get_video_information(request)
+    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(request)
     _, data = collect_mongodbobjects(cur_vid_id)
 
     if _ == False:
@@ -126,8 +126,6 @@ def chart():
                            the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
 
 
-def eucl(a, b):
-    return np.sqrt((a-b)**2)
 
 @bp.route('/clusters', methods=['GET'])
 def clusters():
@@ -138,23 +136,16 @@ def clusters():
         :return: Correlation plot
         """
     check_access_right(forbidden='user', redirect_url='control.index')
-    currentVideo, cur_vid_id, vid_dict = get_video_information(request)
+    currentVideo, cur_vid_id, vid_dict, n_clusters = get_video_information(request)
     _, data = collect_mongodbobjects(cur_vid_id)
 
     ### set desired amount of clusters
     clustervals = np.arange(1,10,1)
-    print(clustervals)
-    cur_clusters = request.args.get('cluster')
-    if not cur_clusters:
-        n_clusters = 3
-    else:
-        n_clusters = int(cur_clusters)
-
-    print("clusters: " + str(n_clusters))
 
     if _ == False:
         return render_template("researcher/clusters.html", the_div="There are no observations for this video!",
-                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo, clsutervals=clustervals)
+                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo, 
+                               currentCluster= n_clusters, clustervals=clustervals)
 
 
 
@@ -202,7 +193,7 @@ def clusters():
         print("ICC" + str(icc_val))"""
 
         for yi in range(n_clusters):
-            p = figure(plot_width=350, plot_height=300)
+            p = figure()
             n = 0
             values = km.cluster_centers_[yi].ravel()
             centerMean = np.mean(km.cluster_centers_[yi].ravel())
@@ -227,7 +218,7 @@ def clusters():
             plots.append(p)
 
         # Get plot codes
-        script, div = components(row(plots))
+        script, div = components(gridplot(plots, ncols = 3, plot_width=350, plot_height=300))
         if n_clusters == 3:
             current_app.config['CACHE'].set(currentVideo[0] + 'div_correlations', div)
             current_app.config['CACHE'].set(currentVideo[0] + 'script_correlations', script)
@@ -237,7 +228,8 @@ def clusters():
         script = current_app.config['CACHE'].get(currentVideo[0] + 'script_correlations')
 
     return render_template("researcher/clusters.html", the_div=div,
-                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo, clustervals=clustervals)
+                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo, 
+                           currentCluster =n_clusters, clustervals=clustervals)
 
 
 @bp.route('/config')

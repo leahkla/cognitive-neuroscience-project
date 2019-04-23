@@ -15,6 +15,9 @@ from bokeh.embed import components
 from bokeh.palettes import Spectral6
 
 
+def eucl(a, b):
+    return np.sqrt((a-b)**2)
+
 def collect_mongodbobjects(videoid=None):
     """
     Fetch all data that is stored in the MongoDB database.
@@ -145,11 +148,17 @@ def get_video_information(request):
         """
     vid_dict, first_vid = get_videos()
     cur_vid_id = request.args.get('vid')
+    currentCluster = request.args.get('cluster')
     if not cur_vid_id:
         currentVideo = first_vid
     else:
         currentVideo = [cur_vid_id, vid_dict[cur_vid_id]]
-    return currentVideo, cur_vid_id, vid_dict
+
+    if not currentCluster:
+        n_clusters = 3
+    else:
+        n_clusters = int(currentCluster)
+    return currentVideo, cur_vid_id, vid_dict, n_clusters
 
 def signal_data_modification(video_id):
     """
