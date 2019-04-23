@@ -20,7 +20,7 @@ from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    get_interpolators, get_videos, get_video_information
+    get_interpolators, get_videos, get_video_information, calculate_chart
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -30,6 +30,8 @@ from tslearn.clustering import TimeSeriesKMeans
 from tslearn.datasets import CachedDatasets
 from tslearn.preprocessing import TimeSeriesScalerMeanVariance, \
     TimeSeriesResampler
+
+from werkzeug.contrib.cache import SimpleCache
 
 """from rpy2.robjects import DataFrame, FloatVector, IntVector, r
 from rpy2.robjects.packages import importr
@@ -55,62 +57,14 @@ def chart():
         return render_template("researcher/chart.html", the_div="There are no observations for this video!",
                                the_script="", vid_dict=vid_dict, currentVideo=currentVideo)
 
-    data['timestamp'] = pd.to_numeric(data['timestamp'])
-    data['value'] = pd.to_numeric(data['value'])
-    data.sort_values(by=['timestamp'], inplace=True)
+    div = current_app.config['CACHE'].get(currentVideo[0] + 'div_chart')
+    script = current_app.config['CACHE'].get(currentVideo[0] + 'script_chart')
 
-    # Group by username and extract timestamps and values for each user
-    grouped_data = data.groupby('username')
-    data_by_user = [user for _, user in grouped_data]
-    ts = [np.array(t) for t in
-          (data_by_user[i]['timestamp'].apply(lambda x: float(x)) for i in
-           range(len(data_by_user)))]
-    vals = [np.array(val) for val in
-            (data_by_user[i]['value'].apply(lambda x: float(x)) for i in
-             range(len(data_by_user)))]
+    if div == None or script == None:
+        calculate_chart(currentVideo[0])
+        div = current_app.config['CACHE'].get(currentVideo[0] + 'div_chart')
+        script = current_app.config['CACHE'].get(currentVideo[0] + 'script_chart')
 
-    # Make sure all data starts and ends at the same time for each user, if the
-    # data doesn't suggest otherwise start and end value are 50.
-    max_t = max([max(t) for t in ts])
-    for i in range(len(ts)):
-        if min(ts[i]) != 0:
-            ts[i] = np.append([0], ts[i])
-            vals[i] = np.append([50], vals[i])
-        if max(ts[i]) != max_t:
-            ts[i] = np.append(ts[i], [max_t])
-            vals[i] = np.append(vals[i], [50])
-        # Round last timestamp up (for smoother display):
-        ts[i] = np.append(ts[i][:-1], int(ts[i][-1]) + 1)
-
-    # Create the interpolation
-    xs = np.arange(0, int(max_t) + 1.5, 1)
-    interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
-    user_timeseries = [[xs, interpolator(xs)] for interpolator in interpolators]
-
-    # Create the Bokeh plot
-    TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
-    p = figure(title="Valence ratings by timestamp", y_axis_type="linear",
-               plot_height=500,
-               tools=TOOLS, active_scroll='wheel_zoom', plot_width=900)
-    p.xaxis.axis_label = 'Timestamp (seconds)'
-    p.yaxis.axis_label = 'Valence rating'
-
-    for i, tseries in enumerate(user_timeseries):
-        p.line(tseries[0], tseries[1], line_color=Spectral6[i % 6],
-               line_width=1.5, name=data_by_user[i]['username'].iloc[0])
-    for i in range(len(ts)):
-        for j in range(len(ts[i])):
-            p.circle(ts[i][j], vals[i][j], fill_color=Spectral6[i % 6],
-                     line_color='black', radius=0.5)
-
-    p.select_one(HoverTool).tooltips = [
-        ('Time', '@x'),
-        ('Valence', '@y'),
-        ('User', '$name')
-
-    ]
-
-    script, div = components(p)
     return render_template("researcher/chart.html", the_div=div,
                            the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
 
@@ -147,72 +101,83 @@ def correlations():
 
 
 
-    # Get interpolators from functionalities.py
-    interpolators, max_t = get_interpolators(data)
-    xs = np.arange(0, int(max_t) + 1.5, 1)
+    current_video_status = current_app.config['CACHE'].get(currentVideo[0] + 'modified_correlations')
+    if current_video_status == True or current_video_status == None or n_clusters != 3:
+        # Get interpolators from functionalities.py
+        interpolators, max_t = get_interpolators(data)
+        xs = np.arange(0, int(max_t) + 1.5, 1)
 
-    # Generate data
-    user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
+        # Generate data
+        user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
 
-    seed = np.random.randint(0,100000,1)[0]
-    np.random.seed(seed)
+        seed = np.random.randint(0, 100000, 1)[0]
+        np.random.seed(seed)
 
-    # Set cluster count
-    #n_clusters = 3
-    if n_clusters > np.array(user_timeseries).shape[0]:
-        n_clusters = np.array(user_timeseries).shape[0]
+        # Set cluster count
+        # n_clusters = 3
+        if n_clusters > np.array(user_timeseries).shape[0]:
+            n_clusters = np.array(user_timeseries).shape[0]
 
-    # Euclidean k-means
-    km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True,
-                          random_state=seed)
-    y_pred = km.fit_predict(user_timeseries)
+        # Euclidean k-means
+        km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True,
+                              random_state=seed)
+        y_pred = km.fit_predict(user_timeseries)
 
-    # Generate plots and calculate statistics
-    all_plots = ""
-    all_scripts = ""
-    plots = [] 
+        # Generate plots and calculate statistics
+        all_plots = ""
+        all_scripts = ""
+        plots = []
 
-    ### TODO MAYBE: intra-cluster correlation with rpy2. Might not work with matrices
-    """    valmatrix = np.empty([24,151])
-    for iii in range(24):
-        valmatrix[iii, :] = user_timeseries[iii][0]
-    print(type(valmatrix), valmatrix.shape)
-    print(type(valmatrix[0]), len(valmatrix[0]))
-    print(type(valmatrix[0][0]))
-    r_icc = importr("ICC", lib_loc="C:/Users/Lauri Lode/Documents/R/win-library/3.4")
-    #m = r.matrix(FloatVector(valmatrix.flatten()), nrow=24)
-    df = DataFrame({"groups": IntVector(y_pred),
-        "values": FloatVector(valmatrix.flatten())})
-    
-    icc_res = r_icc.ICCbare("groups", "values", data=df)
-    icc_val = icc_res[0]
-    print("ICC" + str(icc_val))"""
+        ### TODO MAYBE: intra-cluster correlation with rpy2. Might not work with matrices
+        """    valmatrix = np.empty([24,151])
+        for iii in range(24):
+            valmatrix[iii, :] = user_timeseries[iii][0]
+        print(type(valmatrix), valmatrix.shape)
+        print(type(valmatrix[0]), len(valmatrix[0]))
+        print(type(valmatrix[0][0]))
+        r_icc = importr("ICC", lib_loc="C:/Users/Lauri Lode/Documents/R/win-library/3.4")
+        #m = r.matrix(FloatVector(valmatrix.flatten()), nrow=24)
+        df = DataFrame({"groups": IntVector(y_pred),
+            "values": FloatVector(valmatrix.flatten())})
 
-    for yi in range(n_clusters):
-        p = figure(plot_width=350, plot_height=300)
-        n=0
-        values = km.cluster_centers_[yi].ravel()
-        centerMean = np.mean(km.cluster_centers_[yi].ravel())
-        varsum = 0
-        for xx in range(0, len(y_pred)):
-            if y_pred[xx] == yi:
-                n = n+1
-                for iii in range(len(user_timeseries[xx][0])):
-                    varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii])/len(user_timeseries[xx][0])
+        icc_res = r_icc.ICCbare("groups", "values", data=df)
+        icc_val = icc_res[0]
+        print("ICC" + str(icc_val))"""
 
-                p.line(range(0, len(user_timeseries[xx][0])),
-                       user_timeseries[xx][0], line_width=0.3)
-        varsum = np.sqrt(varsum)
+        for yi in range(n_clusters):
+            p = figure(plot_width=350, plot_height=300)
+            n = 0
+            values = km.cluster_centers_[yi].ravel()
+            centerMean = np.mean(km.cluster_centers_[yi].ravel())
+            varsum = 0
+            for xx in range(0, len(y_pred)):
+                if y_pred[xx] == yi:
+                    n = n + 1
+                    for iii in range(len(user_timeseries[xx][0])):
+                        varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii]) / len(user_timeseries[xx][0])
 
-        titleString = "C#" + str(yi + 1) + ", n: " + str(n) +", μ: " + str(np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(np.round(varsum**2, decimals=3))
-        t = Title()
-        t.text = titleString
-        p.title = t
-        p.line(range(0, len(values)), values, line_width=2)
-        plots.append(p)
+                    p.line(range(0, len(user_timeseries[xx][0])),
+                           user_timeseries[xx][0], line_width=0.3)
+            varsum = np.sqrt(varsum)
 
-    # Get plot codes
-    script, div = components(row(plots))
+            titleString = "C#" + str(yi + 1) + ", n: " + str(n) + ", μ: " + str(
+                np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(
+                np.round(varsum ** 2, decimals=3))
+            t = Title()
+            t.text = titleString
+            p.title = t
+            p.line(range(0, len(values)), values, line_width=2)
+            plots.append(p)
+
+        # Get plot codes
+        script, div = components(row(plots))
+        if n_clusters == 3:
+            current_app.config['CACHE'].set(currentVideo[0] + 'div_correlations', div)
+            current_app.config['CACHE'].set(currentVideo[0] + 'script_correlations', script)
+            current_app.config['CACHE'].set(currentVideo[0] + 'modified_correlations', False)
+    else:
+        div = current_app.config['CACHE'].get(currentVideo[0] + 'div_correlations')
+        script = current_app.config['CACHE'].get(currentVideo[0] + 'script_correlations')
 
     return render_template("researcher/correlations.html", the_div=div,
                            the_script=script, vid_dict=vid_dict, currentVideo=currentVideo, clustervals=clustervals)

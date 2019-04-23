@@ -13,10 +13,11 @@ from io import StringIO, BytesIO
 import datetime
 
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    sort_df
+    sort_df, signal_data_modification, calculate_chart
 from app.control import bp
 from app.database_client import DatabaseClient
 import pymongo
+from werkzeug.contrib.cache import SimpleCache
 
 
 @bp.route('/')
@@ -81,6 +82,8 @@ def save():
                                    "value": request.form.get('value'),
                                    "date": request.form.get('date')
                                    })
+        signal_data_modification(request.form.get('videoid'))
+        calculate_chart(request.form.get('videoid'))
         return "Saving completed"
 
 
@@ -100,6 +103,8 @@ def save2D():
                                    "value2": request.form.get('value2'),
                                    "date": request.form.get('date')
                                    })
+        signal_data_modification(request.form.get('videoid'))
+        calculate_chart(request.form.get('videoid'))
         return "Saving completed"
 
 
@@ -171,6 +176,7 @@ def delete_all():
     """
     check_access_right(forbidden='user', redirect_url='control.index')
     current_app.d.delete_many({})
+    current_app.config['CACHE'] = SimpleCache(default_timeout=1000000000000000000000)
     flash('All data deleted!')
     return redirect(url_for('control.data'))
 
