@@ -13,7 +13,7 @@ from io import StringIO, BytesIO
 import datetime
 
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    sort_df, signal_data_modification
+    sort_df, signal_data_modification, calculate_chart
 from app.control import bp
 from app.database_client import DatabaseClient
 import pymongo
@@ -83,6 +83,7 @@ def save():
                                    "date": request.form.get('date')
                                    })
         signal_data_modification(request.form.get('videoid'))
+        calculate_chart(request.form.get('videoid'))
         return "Saving completed"
 
 
@@ -103,6 +104,7 @@ def save2D():
                                    "date": request.form.get('date')
                                    })
         signal_data_modification(request.form.get('videoid'))
+        calculate_chart(request.form.get('videoid'))
         return "Saving completed"
 
 
