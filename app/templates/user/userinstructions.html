@@ -21,6 +21,8 @@
 		src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
 <link rel="stylesheet" type="text/css"
 		href="{{ url_for('static', filename='css/userinstructions.css') }}">
+<link rel="stylesheet" type="text/css"
+		href="{{ url_for('static', filename='css/navbar_divider.css') }}">
 {% endblock %}
 
 
@@ -28,6 +30,9 @@
 <div class="collapse navbar-collapse justify-content-end"
 	 id="navbarMain">
 	<div class="navbar-nav">
+		<a class="nav-item nav-link"
+		   href="{{ url_for('user.user') }}">Main page</a>
+		<div class="divider"></div>
 		<a class="nav-item nav-link"
 		   href="{{ url_for('control.choose_role') }}">Change role</a>
 	</div>
