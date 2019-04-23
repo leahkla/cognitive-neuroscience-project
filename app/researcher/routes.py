@@ -197,3 +197,15 @@ def config():
     return render_template("researcher/config.html", vid_dict=vid_dict,
                            dbs=current_app.dbs,
                            cur_db=current_app.config['DB'])
+
+@bp.route('/instructions')
+def instructions():
+    """
+    Display the instruction page for the researcher.
+    This is not accessible for somebody with the role user.
+    :return: User instructions page.
+
+    """
+    check_access_right(forbidden='user', redirect_url='user.userinstructions')
+
+    return render_template('researcher/instructions.html')

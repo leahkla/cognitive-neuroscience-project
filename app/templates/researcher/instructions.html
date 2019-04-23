@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Video annotation - User</title>{% endblock %}
+
+{% block head_extension %}
+<script type="text/javascript"
+		src="https://player.vimeo.com/api/player.js"></script>
+<script type="text/javascript"
+		src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script type="text/javascript"
+		src="{{ url_for('static', filename='js/slider.js') }}"></script>
+<script type="text/javascript"
+		src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript"
+		src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<link rel="stylesheet" type="text/css"
+	  href="{{ url_for('static', filename='css/jquery.range2dslider.css') }}">
+<link rel="stylesheet" type="text/css"
+	  href="{{ url_for('static', filename='css/slider.css') }}">
+<script type="text/javascript"
+		src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
+<link rel="stylesheet" type="text/css"
+		href="{{ url_for('static', filename='css/instructions.css') }}">
+{% endblock %}
+
+
+{% block navbar_extension %}
+<div class="collapse navbar-collapse justify-content-end"
+	 id="navbarMain">
+	<div class="navbar-nav">
+		<a class="nav-item nav-link"
+		   href="{{ url_for('control.choose_role') }}">Change role</a>
+	</div>
+</div>
+{% endblock %}
+
+
+{% block main_body %}
+<div id="content_box">
+
+   <h2 class="header">
+      Instructions for the researcher
+   </h2>
+
+<p>
+	 This is the instruction page for the researcher on how to use this video annotation web-app. First, we will introduce the different features of the app in the 'Functionalities' section and inform all the known bugs and limitations of the app in the 'Limitations' section. If you have any issues with the app or you want to report a bug, please contact us via slack or e-mail.
+</p>
+
+	 <h4 class="subheader"> Functionalities</h4>
+
+	 <p>
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+   </p>
+
+	 <h4 class="subheader"> Limitations</h4>
+
+	 <p>
+		Limitations here.
+		</p>
+
+</div>
+
+{% endblock %}
