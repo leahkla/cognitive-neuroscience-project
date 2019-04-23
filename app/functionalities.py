@@ -146,3 +146,10 @@ def get_video_information(request):
     else:
         currentVideo = [cur_vid_id, vid_dict[cur_vid_id]]
     return currentVideo, cur_vid_id, vid_dict
+
+def signal_data_modification(video_id):
+    """
+            Signal cache that data of specified video id has changed. This causes re-calculating plots later.
+            """
+    current_app.config['CACHE'].set(video_id + 'modified_correlations', True)
+    current_app.config['CACHE'].set(video_id + 'modified_chart', True)
