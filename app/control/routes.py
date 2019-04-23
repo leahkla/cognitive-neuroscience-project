@@ -176,7 +176,7 @@ def delete_all():
     """
     check_access_right(forbidden='user', redirect_url='control.index')
     current_app.d.delete_many({})
-    current_app.config['CACHE'] = SimpleCache()
+    current_app.config['CACHE'] = SimpleCache(default_timeout=1000000000000000000000)
     flash('All data deleted!')
     return redirect(url_for('control.data'))
 

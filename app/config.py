@@ -20,4 +20,4 @@ class Config(object):
     # Values DB can take are hence 'prod', 'dev', or 'local'. Defaults
     # to 'prod'.
     DB = os.environ.get('DB') or 'prod'
-    CACHE = SimpleCache()
+    CACHE = SimpleCache(default_timeout=1000000000000000000000)
