@@ -141,12 +141,25 @@ def correlations():
     currentVideo, cur_vid_id, vid_dict = get_video_information(request)
     _, data = collect_mongodbobjects(cur_vid_id)
 
+    ### set desired amount of clusters
+    clustervals = np.arange(1,10,1)
+    print(clustervals)
+    cur_clusters = request.args.get('cluster')
+    if not cur_clusters:
+        n_clusters = 3
+    else:
+        n_clusters = int(cur_clusters)
+
+    print("clusters: " + str(n_clusters))
+
     if _ == False:
         return render_template("researcher/correlations.html", the_div="There are no observations for this video!",
-                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo)
+                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo, clsutervals=clustervals)
+
+
 
     current_video_status = current_app.config['CACHE'].get(currentVideo[0] + 'modified_correlations')
-    if current_video_status == True or current_video_status == None:
+    if current_video_status == True or current_video_status == None or n_clusters != 3:
         # Get interpolators from functionalities.py
         interpolators, max_t = get_interpolators(data)
         xs = np.arange(0, int(max_t) + 1.5, 1)
@@ -154,11 +167,11 @@ def correlations():
         # Generate data
         user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
 
-        seed = np.random.randint(0,100000,1)[0]
+        seed = np.random.randint(0, 100000, 1)[0]
         np.random.seed(seed)
 
         # Set cluster count
-        n_clusters = 3
+        # n_clusters = 3
         if n_clusters > np.array(user_timeseries).shape[0]:
             n_clusters = np.array(user_timeseries).shape[0]
 
@@ -183,28 +196,30 @@ def correlations():
         #m = r.matrix(FloatVector(valmatrix.flatten()), nrow=24)
         df = DataFrame({"groups": IntVector(y_pred),
             "values": FloatVector(valmatrix.flatten())})
-        
+
         icc_res = r_icc.ICCbare("groups", "values", data=df)
         icc_val = icc_res[0]
         print("ICC" + str(icc_val))"""
 
         for yi in range(n_clusters):
             p = figure(plot_width=350, plot_height=300)
-            n=0
+            n = 0
             values = km.cluster_centers_[yi].ravel()
             centerMean = np.mean(km.cluster_centers_[yi].ravel())
             varsum = 0
             for xx in range(0, len(y_pred)):
                 if y_pred[xx] == yi:
-                    n = n+1
+                    n = n + 1
                     for iii in range(len(user_timeseries[xx][0])):
-                        varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii])/len(user_timeseries[xx][0])
+                        varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii]) / len(user_timeseries[xx][0])
 
                     p.line(range(0, len(user_timeseries[xx][0])),
                            user_timeseries[xx][0], line_width=0.3)
             varsum = np.sqrt(varsum)
 
-            titleString = "C#" + str(yi + 1) + ", n: " + str(n) +", μ: " + str(np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(np.round(varsum**2, decimals=3))
+            titleString = "C#" + str(yi + 1) + ", n: " + str(n) + ", μ: " + str(
+                np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(
+                np.round(varsum ** 2, decimals=3))
             t = Title()
             t.text = titleString
             p.title = t
@@ -213,15 +228,16 @@ def correlations():
 
         # Get plot codes
         script, div = components(row(plots))
-        current_app.config['CACHE'].set(currentVideo[0] + 'div_correlations', div)
-        current_app.config['CACHE'].set(currentVideo[0] + 'script_correlations', script)
-        current_app.config['CACHE'].set(currentVideo[0] + 'modified_correlations', False)
+        if n_clusters == 3:
+            current_app.config['CACHE'].set(currentVideo[0] + 'div_correlations', div)
+            current_app.config['CACHE'].set(currentVideo[0] + 'script_correlations', script)
+            current_app.config['CACHE'].set(currentVideo[0] + 'modified_correlations', False)
     else:
         div = current_app.config['CACHE'].get(currentVideo[0] + 'div_correlations')
         script = current_app.config['CACHE'].get(currentVideo[0] + 'script_correlations')
 
     return render_template("researcher/correlations.html", the_div=div,
-                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
+                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo, clustervals=clustervals)
 
 
 @bp.route('/config')
