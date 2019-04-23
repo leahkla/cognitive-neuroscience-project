@@ -30,3 +30,14 @@ def user():
 
     return render_template('user/user.html', vid_dict=vid_dict,
                            currentVideo=currentVideo)
+
+
+@bp.route('/userinstructions')
+def userinstructions():
+    """
+    Display the instruction page for the user.
+    
+    """
+    return render_template('user/userinstructions.html')
+
+    

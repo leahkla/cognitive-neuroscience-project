@@ -1,0 +1,32 @@
+/* content_box */
+#content_box {
+   position: relative;
+   width: 584px;
+   margin: auto auto;
+   font-family: Arial, Verdana, Helvetica, sans-serif;
+}
+
+/*  paragraph alignment */
+p {
+   margin: 0px 5px 2em;
+   line-height: 1.6em;
+   text-align: Justify;
+}
+
+/* header */
+.header {
+   background-color: #98caee;
+   font-family: "arial", courier-new, sans-serif, sans;
+   font-weight: normal;
+   display: block;
+   font-size: 24px;
+   color: #333;
+   margin: 0 0 10px 0;
+   line-height: 110%;
+   padding: 10px;
+   clear: both;
+   border-radius: 5px;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   text-transform: capitalize;
+}
