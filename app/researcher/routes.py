@@ -129,8 +129,8 @@ def chart():
 def eucl(a, b):
     return np.sqrt((a-b)**2)
 
-@bp.route('/correlations', methods=['GET'])
-def correlations():
+@bp.route('/clusters', methods=['GET'])
+def clusters():
     """
         Display correlation plot for the researcher.
 
@@ -153,7 +153,7 @@ def correlations():
     print("clusters: " + str(n_clusters))
 
     if _ == False:
-        return render_template("researcher/correlations.html", the_div="There are no observations for this video!",
+        return render_template("researcher/clusters.html", the_div="There are no observations for this video!",
                                the_script="", vid_dict=vid_dict, currentVideo=currentVideo, clsutervals=clustervals)
 
 
@@ -236,7 +236,7 @@ def correlations():
         div = current_app.config['CACHE'].get(currentVideo[0] + 'div_correlations')
         script = current_app.config['CACHE'].get(currentVideo[0] + 'script_correlations')
 
-    return render_template("researcher/correlations.html", the_div=div,
+    return render_template("researcher/clusters.html", the_div=div,
                            the_script=script, vid_dict=vid_dict, currentVideo=currentVideo, clustervals=clustervals)
 
 
