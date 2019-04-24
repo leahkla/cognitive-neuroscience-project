@@ -46,12 +46,5 @@ def userinstructions():
     with open(current_app.user_instructions_file, 'r') as f:
         instructions = f.read()
 
-    role = session['role']
-    if role == None:
-        return redirect(url_for('control.index'))
-    if role == 'researcher':
-        researcher = True
-    else:
-        researcher = False
-    return render_template('user/userinstructions.html', researcher=researcher,
+    return render_template('user/userinstructions.html',
                            instructions=instructions)

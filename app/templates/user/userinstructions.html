@@ -4,82 +4,51 @@
 
 {% block head_extension %}
 <script type="text/javascript"
-		src="https://player.vimeo.com/api/player.js"></script>
+        src="https://player.vimeo.com/api/player.js"></script>
 <script type="text/javascript"
-		src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+        src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 <script type="text/javascript"
-		src="{{ url_for('static', filename='js/slider.js') }}"></script>
+        src="{{ url_for('static', filename='js/slider.js') }}"></script>
 <script type="text/javascript"
-		src="http://code.jquery.com/jquery-latest.min.js"></script>
+        src="http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript"
-		src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+        src="{{ url_for('static', filename='js/jquery.js') }}"></script>
 <link rel="stylesheet" type="text/css"
-	  href="{{ url_for('static', filename='css/jquery.range2dslider.css') }}">
+      href="{{ url_for('static', filename='css/jquery.range2dslider.css') }}">
 <link rel="stylesheet" type="text/css"
-	  href="{{ url_for('static', filename='css/slider.css') }}">
+      href="{{ url_for('static', filename='css/slider.css') }}">
 <script type="text/javascript"
-		src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
+        src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
 <link rel="stylesheet" type="text/css"
-		href="{{ url_for('static', filename='css/userinstructions.css') }}">
+      href="{{ url_for('static', filename='css/userinstructions.css') }}">
 <link rel="stylesheet" type="text/css"
-		href="{{ url_for('static', filename='css/navbar_divider.css') }}">
+      href="{{ url_for('static', filename='css/navbar_divider.css') }}">
 {% endblock %}
 
 
 {% block navbar_extension %}
 <div class="collapse navbar-collapse justify-content-end"
-	 id="navbarMain">
-	<div class="navbar-nav">
-		{% if not researcher %}
-		<a class="nav-item nav-link"
-		   href="{{ url_for('user.user') }}">Main page</a>
-		{% else %}
-		<a class="nav-item nav-link"
-           href="{{ url_for('researcher.config') }}">Configure</a>
+     id="navbarMain">
+    <div class="navbar-nav">
         <a class="nav-item nav-link"
-           href="{{ url_for('control.data') }}">Raw</a>
+           href="{{ url_for('user.user') }}">Main page</a>
+        <div class="divider"></div>
         <a class="nav-item nav-link"
-           href="{{ url_for('researcher.chart') }}">Chart </a>
-        <a class="nav-item nav-link"
-            href="{{ url_for('researcher.instructions') }}">Researcher instructions</a>
-		<a class="nav-item nav-link active"
-           href="{{ url_for('user.userinstructions') }}">Modify user instructions <span class="sr-only">(current)</span></a>
-		{% endif %}
-		<div class="divider"></div>
-		<a class="nav-item nav-link"
-		   href="{{ url_for('control.choose_role') }}">Change role</a>
-	</div>
+           href="{{ url_for('control.choose_role') }}">Change role</a>
+    </div>
 </div>
 {% endblock %}
 
 
 {% block main_body %}
 
-{% if researcher %}
-
-<div class="instructions_form">
-	<div class="form-group">
-
-	<form action="/save_user_instructions" method="post" class="form-group-row">
-  		<h2>Modify instructions shown for users:</h2>
-  		<textarea class="form-control" rows="20" id="comment" name="user_instructions">{{ instructions|safe }}</textarea>
-		    <div class="submit_button">
-					<button type="submit" id="add_button"
-                    	class="btn btn-primary">Save instructions
-            		</button>
-			</div>
-    </form>
-	</div>
-</div>
-
-{% else %}
-
-<div id="start_annotating" >
-	<a style="margin:20px;" href="/user" class="btn btn-primary btn-lg active" role="button" aria-pressed="true" id="start_annotating">Start annotating!</a>
+<div id="start_annotating">
+    <a style="margin:20px;" href="/user"
+       class="btn btn-primary btn-lg active" role="button" aria-pressed="true"
+       id="start_annotating2">Start annotating!</a>
 </div>
 
 {{ instructions|safe }}
 
-{% endif %}
 
 {% endblock %}

@@ -121,28 +121,6 @@ def static_file(path):
     return bp.send_static_file(path)
 
 
-@bp.route('/data')
-def data():
-    """
-    Function to print all data that is stored in the MongoDB database.
-
-    Operation is not allowed for role user.
-    :return: Webpage displaying currently stored data
-    """
-    check_access_right(forbidden='user', redirect_url='control.index')
-
-    b, data = collect_mongodbobjects()
-    if b:
-        # The names of the data fields:
-        headers = list(data)
-        # And a list of their contents:
-        data_rows = list(data.values)
-        return render_template('control/data.html', data=data_rows,
-                               headers=headers)
-    else:
-        return render_template('control/data.html', data='', headers='')
-
-
 @bp.route('/export_all')
 def export_all():
     """
@@ -181,7 +159,7 @@ def delete_all():
     """
     check_access_right(forbidden='user', redirect_url='control.index')
     current_app.d.delete_many({})
-    current_app.config['CACHE'] = SimpleCache(default_timeout=1000000000000000000000)
+    current_app.config['CACHE'] = SimpleCache(default_timeout=1e15)
     flash('All data deleted!')
     return redirect(url_for('control.data'))
 

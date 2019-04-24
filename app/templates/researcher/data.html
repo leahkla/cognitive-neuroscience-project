@@ -13,17 +13,16 @@
      id="navbarMain">
     <div class="navbar-nav">
         <a class="nav-item nav-link"
+           href="{{ url_for('researcher.instructions') }}">Instructions</a>
+        <a class="nav-item nav-link"
            href="{{ url_for('researcher.config') }}">Configure</a>
         <a class="nav-item nav-link active"
-           href="{{ url_for('control.data') }}">Raw<span class="sr-only">
+           href="{{ url_for('researcher.data') }}">Raw<span class="sr-only">
             (current)</span></a>
         <a class="nav-item nav-link"
            href="{{ url_for('researcher.clusters') }}">Clusters</a>
-        <a class="nav-item nav-link" href="{{ url_for('researcher.chart') }}">Chart </a>
         <a class="nav-item nav-link"
-           href="{{ url_for('researcher.instructions') }}">Researcher instructions</a>
-        <a class="nav-item nav-link"
-           href="{{ url_for('user.userinstructions') }}">Modify user instructions</a>
+           href="{{ url_for('researcher.chart') }}">Chart </a>
         <div class="divider"></div>
         <a class="nav-item nav-link"
            href="{{ url_for('control.choose_role') }}">Change role</a>

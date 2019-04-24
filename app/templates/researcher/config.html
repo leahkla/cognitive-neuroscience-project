@@ -13,19 +13,17 @@
 <div class="collapse navbar-collapse justify-content-end"
      id="navbarMain">
     <div class="navbar-nav">
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.instructions') }}">Instructions</a>
         <a class="nav-item nav-link active"
            href="{{ url_for('researcher.config') }}">Configure <span
                 class="sr-only">(current)</span></a>
         <a class="nav-item nav-link"
-           href="{{ url_for('control.data') }}">Raw</a>
+           href="{{ url_for('researcher.data') }}">Raw</a>
         <a class="nav-item nav-link"
            href="{{ url_for('researcher.clusters') }}">Clusters</a>
         <a class="nav-item nav-link"
            href="{{ url_for('researcher.chart') }}">Chart</a>
-        <a class="nav-item nav-link"
-           href="{{ url_for('researcher.instructions') }}">Researcher instructions</a>
-        <a class="nav-item nav-link"
-           href="{{ url_for('user.userinstructions') }}">Modify user instructions</a>
         <div class="divider"></div>
         <a class="nav-item nav-link"
            href="{{ url_for('control.choose_role') }}">Change role</a>
@@ -112,6 +110,28 @@
                 running!)</span>
         </div>
     </form>
+    <hr>
+</div>
+
+<div class="container">
+    <div class="instructions_form">
+        <div class="form-group">
+
+            <form action="/save_user_instructions" method="post"
+                  class="form-group-row">
+                Modify instructions shown to the users:
+                <p></p>
+                <textarea class="form-control" rows="20" id="comment"
+                          name="user_instructions">{{ instructions|safe }}</textarea>
+                <p></p>
+                <div class="submit_button">
+                    <button type="submit" id="add_button2"
+                            class="btn btn-primary">Save instructions
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

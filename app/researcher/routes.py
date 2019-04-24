@@ -52,8 +52,7 @@ def chart():
 
     # Get the data:
 
-    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(
-        request)
+    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information()
     _, data = collect_mongodbobjects(cur_vid_id)
 
     if _ == False:
@@ -156,7 +155,7 @@ def clusters():
 
     if _ == False:
         return render_template("researcher/clusters.html",
-                               the_div="There are no observations for this video!",
+                               the_div="There is no data for this video!",
                                the_script="", vid_dict=vid_dict,
                                currentVideo=currentVideo,
                                currentCluster=n_clusters,
@@ -267,9 +266,35 @@ def config():
 
     vid_dict, _ = get_videos()
 
+    with open(current_app.user_instructions_file, 'r') as f:
+        instructions = f.read()
+
     return render_template("researcher/config.html", vid_dict=vid_dict,
                            dbs=current_app.dbs,
-                           cur_db=current_app.config['DB'])
+                           cur_db=current_app.config['DB'],
+                           instructions=instructions)
+
+
+@bp.route('/data')
+def data():
+    """
+    Function to print all data that is stored in the MongoDB database.
+
+    Operation is not allowed for role user.
+    :return: Webpage displaying currently stored data
+    """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
+    b, data = collect_mongodbobjects()
+    if b:
+        # The names of the data fields:
+        headers = list(data)
+        # And a list of their contents:
+        data_rows = list(data.values)
+        return render_template('researcher/data.html', data=data_rows,
+                               headers=headers)
+    else:
+        return render_template('researcher/data.html', data='', headers='')
 
 
 @bp.route('/instructions')
@@ -299,5 +324,5 @@ def save_user_instructions():
         f.write(instructions)
         f.close()
 
-    flash('Instructions saved')
-    return redirect(url_for('user.userinstructions'))
+    flash('Instructions saved!')
+    return redirect(url_for('researcher.config'))
