@@ -6,7 +6,7 @@ It has only the webpages belonging to the user blueprint,
 i.e. those belonging to the user interface.
 """
 
-from flask import render_template, request, flash, session, current_app, \
+from flask import render_template, flash, session, current_app, \
     redirect, url_for
 
 from app.user import bp
@@ -28,8 +28,7 @@ def user():
 
     check_access_right(forbidden='researcher', redirect_url='control.index')
 
-    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(
-        request)
+    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information()
 
     return render_template('user/user.html', vid_dict=vid_dict,
                            currentVideo=currentVideo)

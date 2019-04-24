@@ -3,12 +3,12 @@ This file contains functions that are needed in several routes.py files to
 display the webpages, but do not have a decorator binding them to a
 particular webpage.
 """
-from flask import session, url_for, flash, current_app
+from flask import session, url_for, flash, current_app, request
 from werkzeug.routing import RequestRedirect
 import pandas as pd
 import numpy as np
 from scipy.interpolate import PchipInterpolator
-import pymongo
+
 from bokeh.models import HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
@@ -143,7 +143,7 @@ def get_videos():
     return vid_dict, first_vid
 
 
-def get_video_information(request):
+def get_video_information():
     """
         Parse video information for nice form based on get_video() result and a request query parameter
         :return: Current video, id of the current video and dictionary of available videos (described more detailly in get_videos() )

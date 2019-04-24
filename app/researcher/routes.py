@@ -147,8 +147,8 @@ def clusters():
         :return: Correlation plot
         """
     check_access_right(forbidden='user', redirect_url='control.index')
-    currentVideo, cur_vid_id, vid_dict, n_clusters = get_video_information(
-        request)
+
+    currentVideo, cur_vid_id, vid_dict, n_clusters = get_video_information()
     _, data = collect_mongodbobjects(cur_vid_id)
 
     ### set desired amount of clusters
