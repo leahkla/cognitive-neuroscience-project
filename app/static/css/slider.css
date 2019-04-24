@@ -71,7 +71,7 @@
   width:var(--tracksize);
   height:var(--trackheight);
   overflow:visible;
-  background-color:#cfc;
+  background-color:rgb(54,128,255);
 }
 .rangewrapper.vertical{
   transform-origin: 50% 50%;
