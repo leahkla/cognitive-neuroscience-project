@@ -18,8 +18,12 @@
 
     <link rel="stylesheet"
           href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="shortcut icon"
-          href="{{ url_for('static', filename='icons/favicon.ico') }}">
+    <link rel="icon"
+          href="{{ url_for('static', filename='icons/video_annotator_icon.png') }}"
+          type="image/x-icon">
+    <link rel="icon"
+          href="{{ url_for('static', filename='icons/video_annotator_icon.svg') }}"
+          type="image/svg+xml"/>
     {% block head_extension %}{% endblock %}
 
 </head>
@@ -37,7 +41,11 @@ templates that inherit from base. -->
         <span class="navbar-toggler-icon"></span>
     </button>
     {% endblock %}
-    <div class="navbar-brand">Video Annotation Tool</div>
+    <div class="navbar-brand">
+        <img
+                src="{{ url_for('static', filename='icons/video_annotator_icon.svg') }}" height="25" hspace="5">
+        Video Annotation Tool
+    </div>
     {% block navbar_extension %}{% endblock %}
 </nav>
 

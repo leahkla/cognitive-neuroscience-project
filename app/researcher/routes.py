@@ -8,7 +8,8 @@ i.e. those belonging to the researcher interface.
 
 import json
 import pandas as pd
-from flask import render_template, flash, current_app, request, redirect, url_for
+from flask import render_template, flash, current_app, request, redirect, \
+    url_for
 import numpy as np
 
 from bokeh.models import HoverTool
@@ -38,6 +39,7 @@ from rpy2.robjects.packages import importr
 from math import isclose
 """
 
+
 @bp.route('/chart', methods=['GET'])
 def chart():
     """
@@ -50,14 +52,18 @@ def chart():
 
     # Get the data:
 
-    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(request)
+    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(
+        request)
     _, data = collect_mongodbobjects(cur_vid_id)
 
     if _ == False:
-        return render_template("researcher/chart.html", the_div="There are no observations for this video!",
-                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo)
+        return render_template("researcher/chart.html",
+                               the_div="There are no observations for this video!",
+                               the_script="", vid_dict=vid_dict,
+                               currentVideo=currentVideo)
 
-    current_video_status = current_app.config['CACHE'].get(currentVideo[0] + 'modified_chart')
+    current_video_status = current_app.config['CACHE'].get(
+        currentVideo[0] + 'modified_chart')
     if current_video_status == True or current_video_status == None:
         data['timestamp'] = pd.to_numeric(data['timestamp'])
         data['value'] = pd.to_numeric(data['value'])
@@ -88,8 +94,10 @@ def chart():
 
         # Create the interpolation
         xs = np.arange(0, int(max_t) + 1.5, 1)
-        interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
-        user_timeseries = [[xs, interpolator(xs)] for interpolator in interpolators]
+        interpolators = [PchipInterpolator(t, val) for (t, val) in
+                         zip(ts, vals)]
+        user_timeseries = [[xs, interpolator(xs)] for interpolator in
+                           interpolators]
 
         # Create the Bokeh plot
         TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
@@ -116,15 +124,18 @@ def chart():
 
         script, div = components(p)
         current_app.config['CACHE'].set(currentVideo[0] + 'div_chart', div)
-        current_app.config['CACHE'].set(currentVideo[0] + 'script_chart', script)
-        current_app.config['CACHE'].set(currentVideo[0] + 'modified_chart', False)
+        current_app.config['CACHE'].set(currentVideo[0] + 'script_chart',
+                                        script)
+        current_app.config['CACHE'].set(currentVideo[0] + 'modified_chart',
+                                        False)
     else:
         div = current_app.config['CACHE'].get(currentVideo[0] + 'div_chart')
-        script = current_app.config['CACHE'].get(currentVideo[0] + 'script_chart')
+        script = current_app.config['CACHE'].get(
+            currentVideo[0] + 'script_chart')
 
     return render_template("researcher/chart.html", the_div=div,
-                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo)
-
+                           the_script=script, vid_dict=vid_dict,
+                           currentVideo=currentVideo)
 
 
 @bp.route('/clusters', methods=['GET'])
@@ -136,20 +147,23 @@ def clusters():
         :return: Correlation plot
         """
     check_access_right(forbidden='user', redirect_url='control.index')
-    currentVideo, cur_vid_id, vid_dict, n_clusters = get_video_information(request)
+
+    currentVideo, cur_vid_id, vid_dict, n_clusters = get_video_information()
     _, data = collect_mongodbobjects(cur_vid_id)
 
     ### set desired amount of clusters
-    clustervals = np.arange(1,10,1)
+    clustervals = np.arange(1, 10, 1)
 
     if _ == False:
-        return render_template("researcher/clusters.html", the_div="There are no observations for this video!",
-                               the_script="", vid_dict=vid_dict, currentVideo=currentVideo, 
-                               currentCluster= n_clusters, clustervals=clustervals)
+        return render_template("researcher/clusters.html",
+                               the_div="There are no observations for this video!",
+                               the_script="", vid_dict=vid_dict,
+                               currentVideo=currentVideo,
+                               currentCluster=n_clusters,
+                               clustervals=clustervals)
 
-
-
-    current_video_status = current_app.config['CACHE'].get(currentVideo[0] + 'modified_correlations')
+    current_video_status = current_app.config['CACHE'].get(
+        currentVideo[0] + 'modified_correlations')
     if current_video_status == True or current_video_status == None or n_clusters != 3:
         # Get interpolators from functionalities.py
         interpolators, max_t = get_interpolators(data)
@@ -202,14 +216,17 @@ def clusters():
                 if y_pred[xx] == yi:
                     n = n + 1
                     for iii in range(len(user_timeseries[xx][0])):
-                        varsum = varsum + eucl(user_timeseries[xx][0][iii], values[iii]) / len(user_timeseries[xx][0])
+                        varsum = varsum + eucl(user_timeseries[xx][0][iii],
+                                               values[iii]) / len(
+                            user_timeseries[xx][0])
 
                     p.line(range(0, len(user_timeseries[xx][0])),
                            user_timeseries[xx][0], line_width=0.3)
             varsum = np.sqrt(varsum)
 
             titleString = "C#" + str(yi + 1) + ", n: " + str(n) + ", μ: " + str(
-                np.round(centerMean, decimals=3)) + ", σ: " + str(np.round(varsum, decimals=3)) + ", σ²: " + str(
+                np.round(centerMean, decimals=3)) + ", σ: " + str(
+                np.round(varsum, decimals=3)) + ", σ²: " + str(
                 np.round(varsum ** 2, decimals=3))
             t = Title()
             t.text = titleString
@@ -218,18 +235,25 @@ def clusters():
             plots.append(p)
 
         # Get plot codes
-        script, div = components(gridplot(plots, ncols = 3, plot_width=350, plot_height=300))
+        script, div = components(
+            gridplot(plots, ncols=3, plot_width=350, plot_height=300))
         if n_clusters == 3:
-            current_app.config['CACHE'].set(currentVideo[0] + 'div_correlations', div)
-            current_app.config['CACHE'].set(currentVideo[0] + 'script_correlations', script)
-            current_app.config['CACHE'].set(currentVideo[0] + 'modified_correlations', False)
+            current_app.config['CACHE'].set(
+                currentVideo[0] + 'div_correlations', div)
+            current_app.config['CACHE'].set(
+                currentVideo[0] + 'script_correlations', script)
+            current_app.config['CACHE'].set(
+                currentVideo[0] + 'modified_correlations', False)
     else:
-        div = current_app.config['CACHE'].get(currentVideo[0] + 'div_correlations')
-        script = current_app.config['CACHE'].get(currentVideo[0] + 'script_correlations')
+        div = current_app.config['CACHE'].get(
+            currentVideo[0] + 'div_correlations')
+        script = current_app.config['CACHE'].get(
+            currentVideo[0] + 'script_correlations')
 
     return render_template("researcher/clusters.html", the_div=div,
-                           the_script=script, vid_dict=vid_dict, currentVideo=currentVideo, 
-                           currentCluster =n_clusters, clustervals=clustervals)
+                           the_script=script, vid_dict=vid_dict,
+                           currentVideo=currentVideo,
+                           currentCluster=n_clusters, clustervals=clustervals)
 
 
 @bp.route('/config')
@@ -247,6 +271,7 @@ def config():
                            dbs=current_app.dbs,
                            cur_db=current_app.config['DB'])
 
+
 @bp.route('/instructions')
 def instructions():
     """
@@ -259,9 +284,16 @@ def instructions():
 
     return render_template('researcher/instructions.html')
 
+
 @bp.route('/save_user_instructions', methods=['POST'])
 def save_user_instructions():
+    """
+    Let's the researcher change the user instructions.
+    :return:
+    """
+
     check_access_right(forbidden='user', redirect_url='control.index')
+
     instructions = request.form.get('user_instructions')
     with open(current_app.user_instructions_file, 'w') as f:
         f.write(instructions)
@@ -269,4 +301,3 @@ def save_user_instructions():
 
     flash('Instructions saved')
     return redirect(url_for('user.userinstructions'))
-

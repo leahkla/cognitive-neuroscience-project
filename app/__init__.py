@@ -43,5 +43,9 @@ def create_app(conf=Config):
     app.user_instructions_file = 'app/user/user_instructions.txt'
     # All the databases that are available:
     app.dbs = {'prod': 'Production', 'dev': 'Development', 'local': 'Local'}
+    # The default page for the researcher:
+    app.researcher_default = 'researcher.clusters'
+    # The default page for the user:
+    app.user_default = 'user.userinstructions'
 
     return app

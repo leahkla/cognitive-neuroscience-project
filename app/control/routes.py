@@ -30,10 +30,10 @@ def index():
     if ((session.get('role') == 'user') or (
             session.get('role') == 'test')) and session.get('username'):
         # Role is 'user' or 'test' and username is provided
-        return redirect(url_for('user.user'))
+        return redirect(url_for(current_app.user_default))
     if session.get('role') == 'researcher':
         # Role is 'researcher'
-        return redirect(url_for('researcher.chart'))
+        return redirect(url_for(current_app.researcher_default))
     else:
         return redirect(url_for("control.choose_role"))
 
@@ -51,6 +51,8 @@ def choose_role():
 def submit_username():
     """
     Save a username for the current session.
+    If the username provided is 'testing', the app will be put in test
+    environment, which means the user has access to all webpages.
     :return: Redirect to /index
     """
     username = request.form.get('username')
@@ -58,13 +60,16 @@ def submit_username():
     if (not username) and (role != "researcher"):
         # Role is not researcher, but username is not provided
         flash('Please provide a username.')
-        return redirect(url_for('control.choose_role'))
+        return redirect(url_for('control.index'))
     session['role'] = role
     if role == 'researcher':
         # If role is researcher, username does not need to be stored
-        return redirect(url_for('researcher.chart'))
+        return redirect(url_for('control.index'))
+    if username == 'testing':
+        # Set role to test
+        session['role'] = 'test'
     session['username'] = username
-    return redirect(url_for('user.userinstructions'))
+    return redirect(url_for('control.index'))
 
 
 @bp.route('/save', methods=['POST'])
@@ -125,6 +130,7 @@ def data():
     :return: Webpage displaying currently stored data
     """
     check_access_right(forbidden='user', redirect_url='control.index')
+
     b, data = collect_mongodbobjects()
     if b:
         # The names of the data fields:
@@ -146,6 +152,7 @@ def export_all():
     :return:
     """
     check_access_right(forbidden='user', redirect_url='control.index')
+
     b, data = collect_mongodbobjects()
     if b:
         bytes_buffer = BytesIO()
@@ -185,6 +192,8 @@ def add_video():
     Add a new video to the file video_conf.txt
     :return: Redirects to researcher.config
     """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
     vid_id = request.form.get('vid_id')
     vid_name = request.form.get('vid_name')
 
@@ -214,6 +223,8 @@ def remove_video():
     Remove a video from the file video_conf.txt
     :return: Redirects to researcher.config
     """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
     vid_id = request.args.get('vid_id')
     vid_name = request.args.get('vid_name')
 
@@ -239,9 +250,12 @@ def remove_video():
 @bp.route('/change_db', methods=['POST'])
 def change_db():
     """
-
-    :return:
+    Change the internal database in config['DB'] according to the database
+    provided by the form.
+    :return: Redirects to the configuration page for the researcher.
     """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
     new_db = request.form.get('db')
     current_app.config['DB'] = new_db
 
