@@ -6,7 +6,7 @@ It has only the webpages belonging to the user blueprint,
 i.e. those belonging to the user interface.
 """
 
-from flask import render_template, request, flash
+from flask import render_template, request, flash, session
 
 from app.user import bp
 from app.functionalities import check_access_right, get_videos, get_video_information
@@ -38,6 +38,11 @@ def userinstructions():
     Display the instruction page for the user.
     
     """
-    return render_template('user/userinstructions.html')
+    role = session['role']
+    if role == 'researcher':
+        researcher = True
+    else:
+        researcher = False
+    return render_template('user/userinstructions.html', researcher=researcher)
 
     
