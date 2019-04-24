@@ -8,7 +8,7 @@ i.e. those belonging to the researcher interface.
 
 import json
 import pandas as pd
-from flask import render_template, flash, current_app, request
+from flask import render_template, flash, current_app, request, redirect, url_for
 import numpy as np
 
 from bokeh.models import HoverTool
@@ -258,3 +258,15 @@ def instructions():
     check_access_right(forbidden='user', redirect_url='user.userinstructions')
 
     return render_template('researcher/instructions.html')
+
+@bp.route('/save_user_instructions', methods=['POST'])
+def save_user_instructions():
+    check_access_right(forbidden='user', redirect_url='control.index')
+    instructions = request.form.get('user_instructions')
+    with open(current_app.user_instructions_file, 'w') as f:
+        f.write(instructions)
+        f.close()
+
+    flash('Instructions saved')
+    return redirect(url_for('user.userinstructions'))
+

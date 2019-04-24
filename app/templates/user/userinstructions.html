@@ -30,8 +30,21 @@
 <div class="collapse navbar-collapse justify-content-end"
 	 id="navbarMain">
 	<div class="navbar-nav">
+		{% if not researcher %}
 		<a class="nav-item nav-link"
 		   href="{{ url_for('user.user') }}">Main page</a>
+		{% else %}
+		<a class="nav-item nav-link"
+           href="{{ url_for('researcher.config') }}">Configure</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('control.data') }}">Raw</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.chart') }}">Chart </a>
+        <a class="nav-item nav-link"
+            href="{{ url_for('researcher.instructions') }}">Researcher instructions</a>
+		<a class="nav-item nav-link active"
+           href="{{ url_for('user.userinstructions') }}">Modify user instructions <span class="sr-only">(current)</span></a>
+		{% endif %}
 		<div class="divider"></div>
 		<a class="nav-item nav-link"
 		   href="{{ url_for('control.choose_role') }}">Change role</a>
@@ -41,43 +54,28 @@
 
 
 {% block main_body %}
-<div id="content_box">
 
-   <h2 class="header">
-      Instructions for using annotation tool
-   </h2>
+{% if researcher %}
 
-	 <h4 class="subheader"> Logging in to the page </h4>
-   <p>
+<div class="instructions_form">
+	<div class="form-group">
 
-      Go to <a href="http://videoannotator.herokuapp.com"> this </a>page and choose the suitable user name for you, check that the Role field is 'User' and click the 'Proceed' button below the textfield.
-   </p>
-
-	 <h4 class="subheader"> Video options </h4>
-	 <p>
-    By clicking the play button on the lower left corner of the video, the video will start. From the lower right corner of the video, you can adjust the sound or change the size of the video into full screen mode. Notice: you will not be able to use the sliders simultaneously while the video is on full screen mode.
-   </p>
-
-	 <h4 class="subheader"> Vertical slider </h4>
-	 <p>
-    On the right side of the video you see a vertical slider. You may use either this vertical slider or 2D slider to annotate the video. You can drag the slider or click on the blue or green sides the value-bar to change the value of the slider. The slider will show you the specific value.
-   </p>
-
-	 <h4 class="subheader">Press here button </h4>
-	 <p>
-    Alternatively, you may also use the 'Press here' button below the video to move the vertical slider. The value depends on the time you press the button: with small click the value of the slider rises only slightly and with a longer pressing the slider will get bigger values.
-   </p>
-
-	 <h4 class="subheader">2D Slider</h4>
-	 <p>
-    Below the video and 'Press here' button you see a 2D slider. You may use this 2D slider to annotate the video by clicking to the specific location in the coloured area so that the button will move to that spot. The slider will show you the specific valence (horizontal) value in the purple area above the red button and intensity (vertical) value on the left side of the coloured area.
-   </p>
-
-	 <h4 class="subheader"> How to start annotation task </h4>
-	 <p>
-    Click the play button in the video whenever you feel ready to annotate the video. You don't have to pause the video while using either of the slider options for annotating it, but you may do so if it feels easier.
-   </p>
-
+	<form action="/save_user_instructions" method="post" class="form-group-row">
+  		<h2>Modify instructions shown for users:</h2>
+  		<textarea class="form-control" rows="20" id="comment" name="user_instructions">{{ instructions|safe }}</textarea>
+		    <div class="submit_button">
+					<button type="submit" id="add_button"
+                    	class="btn btn-primary">Save instructions
+            		</button>
+			</div>
+    </form>
+	</div>
 </div>
+
+{% else %}
+
+{{ instructions|safe }}
+
+{% endif %}
 
 {% endblock %}

@@ -41,3 +41,12 @@ p {
    -moz-border-radius: 5px;
    text-transform: capitalize;
 }
+
+.instructions_form {
+    padding: 20px
+}
+
+.submit_button {
+    padding: 20px
+}
+
