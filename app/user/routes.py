@@ -6,10 +6,12 @@ It has only the webpages belonging to the user blueprint,
 i.e. those belonging to the user interface.
 """
 
-from flask import render_template, request, flash, session, current_app, redirect, url_for
+from flask import render_template, request, flash, session, current_app, \
+    redirect, url_for
 
 from app.user import bp
-from app.functionalities import check_access_right, get_videos, get_video_information
+from app.functionalities import check_access_right, get_videos, \
+    get_video_information
 
 
 @bp.route('/user')
@@ -24,9 +26,10 @@ def user():
     """
     # videos = {'Omelette':'65107797', 'Happiness':'28374299'}
 
-    check_access_right(forbidden='researcher', redirect_url='researcher.chart')
+    check_access_right(forbidden='researcher', redirect_url='control.index')
 
-    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(request)
+    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information(
+        request)
 
     return render_template('user/user.html', vid_dict=vid_dict,
                            currentVideo=currentVideo)
@@ -35,9 +38,12 @@ def user():
 @bp.route('/userinstructions')
 def userinstructions():
     """
-    Display the instruction page for the user.
-    
+    Display the instruction page for the user, which looks different
+    depending on whether the person accessing has the role user or researcher
+    :return: User instructions webpage.
     """
+    check_access_right(forbidden='', redirect_url='control.index')
+
     with open(current_app.user_instructions_file, 'r') as f:
         instructions = f.read()
 
@@ -48,6 +54,5 @@ def userinstructions():
         researcher = True
     else:
         researcher = False
-    return render_template('user/userinstructions.html', researcher=researcher, instructions=instructions)
-
-    
+    return render_template('user/userinstructions.html', researcher=researcher,
+                           instructions=instructions)

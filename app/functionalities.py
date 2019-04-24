@@ -16,7 +16,8 @@ from bokeh.palettes import Spectral6
 
 
 def eucl(a, b):
-    return np.sqrt((a-b)**2)
+    return np.sqrt((a - b) ** 2)
+
 
 def collect_mongodbobjects(videoid=None):
     """
@@ -141,6 +142,7 @@ def get_videos():
     first_vid = vid_list[0].split(':', 1)
     return vid_dict, first_vid
 
+
 def get_video_information(request):
     """
         Parse video information for nice form based on get_video() result and a request query parameter
@@ -160,6 +162,7 @@ def get_video_information(request):
         n_clusters = int(currentCluster)
     return currentVideo, cur_vid_id, vid_dict, n_clusters
 
+
 def signal_data_modification(video_id):
     """
             Signal cache that data of specified video id has changed. This causes re-calculating plots later.
@@ -174,7 +177,8 @@ def calculate_chart(currentVideo):
             """
     _, data = collect_mongodbobjects(currentVideo)
 
-    current_video_status = current_app.config['CACHE'].get(currentVideo + 'modified_chart')
+    current_video_status = current_app.config['CACHE'].get(
+        currentVideo + 'modified_chart')
     if current_video_status == True or current_video_status == None:
         data['timestamp'] = pd.to_numeric(data['timestamp'])
         data['value'] = pd.to_numeric(data['value'])
@@ -205,8 +209,10 @@ def calculate_chart(currentVideo):
 
         # Create the interpolation
         xs = np.arange(0, int(max_t) + 1.5, 1)
-        interpolators = [PchipInterpolator(t, val) for (t, val) in zip(ts, vals)]
-        user_timeseries = [[xs, interpolator(xs)] for interpolator in interpolators]
+        interpolators = [PchipInterpolator(t, val) for (t, val) in
+                         zip(ts, vals)]
+        user_timeseries = [[xs, interpolator(xs)] for interpolator in
+                           interpolators]
 
         # Create the Bokeh plot
         TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
