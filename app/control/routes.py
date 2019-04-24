@@ -248,4 +248,5 @@ def change_db():
     current_app.d = DatabaseClient()
 
     flash('Database changed to "' + current_app.dbs[new_db] + '".')
+    current_app.config['CACHE'] = SimpleCache(default_timeout=1000000000000000000000)
     return redirect(url_for('researcher.config'))
