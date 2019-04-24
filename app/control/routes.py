@@ -64,7 +64,7 @@ def submit_username():
         # If role is researcher, username does not need to be stored
         return redirect(url_for('researcher.chart'))
     session['username'] = username
-    return redirect(url_for('user.user'))
+    return redirect(url_for('user.userinstructions'))
 
 
 @bp.route('/save', methods=['POST'])
