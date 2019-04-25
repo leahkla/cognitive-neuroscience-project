@@ -4,13 +4,13 @@
 
 :root {
     --maincolor: #333;
-    --accentcolor: rgb(54,128,255);
-    --accentcoloralpha: rgba(54,128,255,0.5);
+    --accentcolor: rgb(200,200,200);
+    --accentcoloralpha: rgba(54,128,255,0.3);
     --maxwidth: 800px;
     --lineheight: 1.3;
     --thumbsize: 40px;
     --tracksize: 300px;
-    --trackheight: 28px;
+    --trackheight: 20px;
     --trackradius: 6px;
     --innertrackradius: 4px;
 }
@@ -71,7 +71,7 @@
   width:var(--tracksize);
   height:var(--trackheight);
   overflow:visible;
-  background-color:rgb(54,128,255);
+  background-color:rgb(220,220,220);
 }
 .rangewrapper.vertical{
   transform-origin: 50% 50%;
@@ -91,7 +91,7 @@
 .sliderthumb {
   width:var(--thumbsize);
   height:var(--thumbsize);
-	background-image:url('../icons/slider_fancy.jpg');
+	background-image:url('../icons/slider_fancy.png');
   background-size: 100% 100%;
 	background-repeat: no-repeat;
   background-color:transparent;
