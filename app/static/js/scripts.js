@@ -1,7 +1,8 @@
-function sendData(tstamp, v, vId) {
+function sendData(tstamp, values, names, vId) {
   let epoch = + new Date();
-  if (tstamp > 0 && v !== null && vId !== null) {
-    $.post("/save", { timestamp: tstamp, value: v, videoid: vId , date: epoch})
+  if (tstamp > 0 && values !== null && vId !== null) {
+    $.post("/save", {'timestamp': tstamp, 'values': JSON.stringify(values),
+    'names': JSON.stringify(names), 'videoid': vId , 'date': epoch})
       .done(function (data) {
         console.log(data);
       });

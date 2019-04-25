@@ -8,7 +8,7 @@ i.e. those belonging to the control blueprint.
 from flask import request, redirect, url_for, render_template, session, \
     flash, send_file, current_app
 
-import pandas as pd
+import json
 from io import StringIO, BytesIO
 import datetime
 
@@ -60,7 +60,7 @@ def submit_username():
     if (not username) and (role != "researcher"):
         # Role is not researcher, but username is not provided
         flash('Please provide a username.')
-        return redirect(url_for('control.index'))
+        return redirect(url_for('control.choose_role'))
     session['role'] = role
     if role == 'researcher':
         # If role is researcher, username does not need to be stored
@@ -81,12 +81,17 @@ def save():
     if not session.get('username'):
         return "Error: username not set"
     else:
-        current_app.d.insert_post({"videoid": request.form.get('videoid'),
-                                   "username": session['username'],
-                                   "timestamp": request.form.get('timestamp'),
-                                   "value": request.form.get('value'),
-                                   "date": request.form.get('date')
-                                   })
+        data_point = {"videoid": request.form.get('videoid'),
+                      "username": session['username'],
+                      "timestamp": request.form.get('timestamp'),
+                      "date": request.form.get('date')
+                      }
+        values = json.loads(request.form.get('values'))
+        names = json.loads(request.form.get('names'))
+        for n, v in zip(names, values):
+            data_point[n] = v
+
+        current_app.d.insert_post(data_point)
         signal_data_modification(request.form.get('videoid'))
         return "Saving completed"
 
@@ -161,14 +166,14 @@ def delete_all():
     current_app.d.delete_many({})
     current_app.config['CACHE'] = SimpleCache(default_timeout=1e15)
     flash('All data deleted!')
-    return redirect(url_for('control.data'))
+    return redirect(url_for('researcher.data'))
 
 
 @bp.route('/add_video', methods=['POST'])
 def add_video():
     """
-    Add a new video to the file video_conf.txt
-    :return: Redirects to researcher.config
+    Add a new video to the list of available videos.
+    :return: Redirects to researcher.config.
     """
     check_access_right(forbidden='user', redirect_url='control.index')
 
@@ -198,7 +203,7 @@ def add_video():
 @bp.route('/remove_video')
 def remove_video():
     """
-    Remove a video from the file video_conf.txt
+    Remove a video from the available videos.
     :return: Redirects to researcher.config
     """
     check_access_right(forbidden='user', redirect_url='control.index')
@@ -225,6 +230,78 @@ def remove_video():
     return redirect(url_for('researcher.config'))
 
 
+@bp.route('/add_slider', methods=['POST'])
+def add_slider():
+    """
+    Add a slider to the user page.
+    :return: Redirects to researcher.config.
+    """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
+    slider_type = request.form.get('slider_type')
+
+    min_val = request.form.get('min')
+    max_val = request.form.get('max')
+    def_val = request.form.get('def')
+    name = request.form.get('name')
+    if (not min_val) or (not max_val) or (not def_val) or (not name):
+        flash("You need to provide values to all fields in order to add a "
+              "slider!")
+        return redirect(url_for('researcher.config'))
+
+    if slider_type == 'slider':
+        with open(current_app.input_fields, 'a') as f:
+            f.write('\n' + slider_type + ':' + min_val + ':' + max_val + ':' +
+                    def_val + ':' + name)
+        flash('Slider "' + name + '" was successfully added.')
+
+    elif slider_type == '2dslider':
+        min_val2 = request.form.get('min2')
+        max_val2 = request.form.get('max2')
+        def_val2 = request.form.get('def2')
+        name2 = request.form.get('name2')
+        if (not min_val2) or (not max_val2) or (not def_val2) or (not name2):
+            flash("You need to provide values to all fields in order to add a "
+                  "slider!")
+            return redirect(url_for('researcher.config'))
+        with open(current_app.input_fields, 'a') as f:
+            f.write(
+                '\n' + slider_type + ':' + min_val + ':' + min_val2 + ':' + max_val + ':' + max_val2 + ':' +
+                def_val + ':' + def_val2 + ':' + name + ':' + name2)
+        flash('Slider "' + name + '" was successfully added.')
+
+    return (redirect(url_for('researcher.config')))
+
+
+@bp.route('/remove_slider')
+def remove_slider():
+    """
+    Remove a slider from the user page.
+    :return: Redirects to researcher.config
+    """
+    check_access_right(forbidden='user', redirect_url='control.index')
+
+    slider_name = request.args.get('slider_name')
+
+    removed = False
+
+    with open(current_app.input_fields, 'r') as f:
+        lines = f.readlines()
+    with open(current_app.input_fields, 'w') as f:
+        for line in lines:
+            if slider_name not in line:
+                f.write(line)
+            else:
+                removed = True
+
+    if removed:
+        flash('Slider "' + slider_name + '" has been removed.')
+    else:
+        flash('Slider "' + slider_name + '" does not exist. Nothing removed.')
+
+    return redirect(url_for('researcher.config'))
+
+
 @bp.route('/change_db', methods=['POST'])
 def change_db():
     """
@@ -240,5 +317,5 @@ def change_db():
     current_app.d = DatabaseClient()
 
     flash('Database changed to "' + current_app.dbs[new_db] + '".')
-    current_app.config['CACHE'] = SimpleCache(default_timeout=1000000000000000000000)
+    current_app.config['CACHE'] = SimpleCache(default_timeout=1e15)
     return redirect(url_for('researcher.config'))

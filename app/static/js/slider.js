@@ -1,5 +1,5 @@
 let sliders, sliderfills, thumbs, slidervalues;
-let initialValue = [38,50,63,88]; //initial values for the sliders
+let initialValue; //initial values for the sliders
 
 document.addEventListener('DOMContentLoaded', function (e) { init();});
 
@@ -13,7 +13,7 @@ function init(){
     sliders[i].addEventListener("input",function(e){updateSlider(i,sliders[i].value);});
     sliders[i].addEventListener("change",function(e){updateSlider(i,sliders[i].value);});
     //set initial values for the sliders
-    sliders[i].value = initialValue[i];
+    sliders[i].value = Number(sliders[i].getAttribute("value"));
     //update each slider
     updateSlider(i,sliders[i].value);
   }

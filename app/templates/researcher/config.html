@@ -34,6 +34,7 @@
 {% block main_body %}
 
 <div class="container">
+    <h4>Videos</h4>
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -86,10 +87,193 @@
             </button>
         </div>
     </form>
+    <br><br>
     <hr>
 </div>
 
 <div class="container">
+    <h4>Input fields</h4>
+    <h6>One-dimensional sliders</h6>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>
+                Minimum
+            </th>
+            <th>
+                Maximum
+            </th>
+            <th>
+                Default
+            </th>
+            <th>
+                Name
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sl in oneDsliders %}
+        <tr>
+            <th>{{sl[1]}}</th>
+            <th>{{sl[2]}}</th>
+            <th>{{sl[3]}}</th>
+            <th>{{sl[4]}}</th>
+            <td class="text-right">
+                <a class="btn btn-primary"
+                   href="{{ url_for('control.remove_slider', slider_name=sl[4] )}}"
+                   role="button">Remove</a>
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="/add_slider" method="post" class="form-group-row">
+        <div class="row">
+            <button class="invisible" name="slider_type"
+                    value="slider"></button>
+            <div class="col-1">
+                <label class="sr-only" for="input_min">Minimum value</label>
+                <input type="text" class="form-control" name="min"
+                       placeholder="Min" id="input_min">
+            </div>
+            <div class="col-1">
+                <label class="sr-only" for="input_max">Maximum value</label>
+                <input type="text" class="form-control" name="max"
+                       placeholder="Max" id="input_max">
+            </div>
+            <div class="col-1">
+                <label class="sr-only" for="input_def">Default value</label>
+                <input type="text" class="form-control" name="def"
+                       placeholder="Def" id="input_def">
+            </div>
+            <div class="col-2">
+                <label class="sr-only" for="input_slider_name">Slider
+                    name:</label>
+                <input type="text" class="form-control" id="input_slider_name"
+                       placeholder="Slider name" name="name">
+            </div>
+            <button type="submit" id="add_button1"
+                    class="btn btn-primary">Add
+            </button>
+        </div>
+    </form>
+
+    <p></p>
+
+
+    <h6>Two-dimensional sliders</h6>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>
+                Minimum x
+            </th>
+            <th>
+                Minimum y
+            </th>
+            <th>
+                Maximum x
+            </th>
+            <th>
+                Maximum y
+            </th>
+            <th>
+                Default x
+            </th>
+            <th>
+                Default y
+            </th>
+            <th>
+                Name x
+            </th>
+            <th>
+                Name y
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for sl in twoDsliders %}
+        <tr>
+            <th>{{sl[1]}}</th>
+            <th>{{sl[2]}}</th>
+            <th>{{sl[3]}}</th>
+            <th>{{sl[4]}}</th>
+            <th>{{sl[5]}}</th>
+            <th>{{sl[6]}}</th>
+            <th>{{sl[7]}}</th>
+            <th>{{sl[8]}}</th>
+            <td class="text-right">
+                <a class="btn btn-primary"
+                   href="{{ url_for('control.remove_slider', slider_name=sl[7] + ':' + sl[8] )}}"
+                   role="button">Remove</a>
+            </td>
+
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="/add_slider" method="post" class="form-group-row">
+        <div class="row">
+            <button class="invisible" name="slider_type"
+                    value="2dslider"></button>
+            <div class="col-1">
+                <label class="sr-only" for="input_min1">Minimum value</label>
+                <input type="text" class="form-control" name="min"
+                       placeholder="Min x" id="input_min1">
+            </div>
+            <div class="col-1">
+                <label class="sr-only" for="input_min2">Minimum value 2</label>
+                <input type="text" class="form-control" name="min2"
+                       placeholder="Min y" id="input_min2">
+            </div>
+            <div class="col-1">
+                <label class="sr-only" for="input_max1">Maximum value</label>
+                <input type="text" class="form-control" name="max"
+                       placeholder="Max x" id="input_max1">
+            </div>
+            <div class="col-1">
+                <label class="sr-only" for="input_max2">Maximum value 2</label>
+                <input type="text" class="form-control" name="max2"
+                       placeholder="Max y" id="input_max2">
+            </div>
+            <div class="col-1">
+                <label class="sr-only" for="input_def1">Default value</label>
+                <input type="text" class="form-control" name="def"
+                       placeholder="Def x" id="input_def1">
+            </div>
+            <div class="col-1">
+                <label class="sr-only" for="input_def2">Default value 2</label>
+                <input type="text" class="form-control" name="def2"
+                       placeholder="Def y" id="input_def2">
+            </div>
+            <div class="col-2">
+                <label class="sr-only" for="input_slider_name1">Slider
+                    name:</label>
+                <input type="text" class="form-control" id="input_slider_name1"
+                       placeholder="Slider name x" name="name">
+            </div>
+            <div class="col-2">
+                <label class="sr-only" for="input_slider_name2">Slider
+                    name:</label>
+                <input type="text" class="form-control" id="input_slider_name2"
+                       placeholder="Slider name y" name="name2">
+            </div>
+            <button type="submit" id="add_button3"
+                    class="btn btn-primary">Add
+            </button>
+        </div>
+    </form>
+    <br><br>
+    <hr>
+</div>
+
+<div class="container">
+    <h4>Database</h4>
     <form action="/change_db" , method="post">
         <div class="form-group-row">
             <label for="selectdb_type"
@@ -110,10 +294,12 @@
                 running!)</span>
         </div>
     </form>
+    <br><br>
     <hr>
 </div>
 
 <div class="container">
+    <h4>User instructions</h4>
     <div class="instructions_form">
         <div class="form-group">
 

@@ -6,7 +6,6 @@ It has only the webpages belonging to the researcher blueprint,
 i.e. those belonging to the researcher interface.
 """
 
-import json
 import pandas as pd
 from flask import render_template, flash, current_app, request, redirect, \
     url_for
@@ -16,23 +15,24 @@ from bokeh.models import HoverTool
 from bokeh.plotting import figure
 from bokeh.embed import components
 from bokeh.palettes import Spectral6
-from bokeh.layouts import row, gridplot
+from bokeh.layouts import gridplot
 from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    get_interpolators, get_videos, get_video_information, eucl
+    get_interpolators, get_videos, get_video_information, eucl, get_input_fields
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
 from scipy.interpolate import PchipInterpolator
 
 from tslearn.clustering import TimeSeriesKMeans
-from tslearn.datasets import CachedDatasets
-from tslearn.preprocessing import TimeSeriesScalerMeanVariance, \
-    TimeSeriesResampler
 
-from werkzeug.contrib.cache import SimpleCache
+# from tslearn.datasets import CachedDatasets
+# from tslearn.preprocessing import TimeSeriesScalerMeanVariance, \
+#     TimeSeriesResampler
+#
+# from werkzeug.contrib.cache import SimpleCache
 
 """from rpy2.robjects import DataFrame, FloatVector, IntVector, r
 from rpy2.robjects.packages import importr
@@ -52,8 +52,9 @@ def chart():
 
     # Get the data:
 
-    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information()
-    _, data = collect_mongodbobjects(cur_vid_id)
+    currentVideo, vid_dict, _ = get_video_information(
+        request.args.get('vid'), request.args.get('cluster'))
+    _, data = collect_mongodbobjects(currentVideo[0])
 
     if _ == False:
         return render_template("researcher/chart.html",
@@ -147,8 +148,9 @@ def clusters():
         """
     check_access_right(forbidden='user', redirect_url='control.index')
 
-    currentVideo, cur_vid_id, vid_dict, n_clusters = get_video_information()
-    _, data = collect_mongodbobjects(cur_vid_id)
+    currentVideo, vid_dict, n_clusters = get_video_information(
+        request.args.get('vid'), request.args.get('cluster'))
+    _, data = collect_mongodbobjects(currentVideo[0])
 
     ### set desired amount of clusters
     clustervals = np.arange(1, 10, 1)
@@ -266,13 +268,19 @@ def config():
 
     vid_dict, _ = get_videos()
 
+    field_list = get_input_fields()
+
+    oneDsliders = [x for x in field_list if x[0] == 'slider']
+    twoDsliders = [x for x in field_list if x[0] == '2dslider']
+
     with open(current_app.user_instructions_file, 'r') as f:
         instructions = f.read()
 
     return render_template("researcher/config.html", vid_dict=vid_dict,
                            dbs=current_app.dbs,
                            cur_db=current_app.config['DB'],
-                           instructions=instructions)
+                           instructions=instructions,
+                           oneDsliders=oneDsliders, twoDsliders=twoDsliders)
 
 
 @bp.route('/data')

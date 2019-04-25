@@ -55,9 +55,13 @@ def sort_df(df):
     :return: Sorted dataframe
     """
     try:
-        ordered_cols = ['videoid', 'username', 'timestamp', 'value', 'value2',
-                        'date']
-        col_types = ['str', 'str', 'float', 'int', 'int', 'str']
+        standard_data_cols = ['videoid', 'username', 'timestamp', 'date']
+        user_data_cols = [c for c in list(df.columns.values) if
+                          c not in standard_data_cols]
+        ordered_cols = standard_data_cols[:3] + user_data_cols + \
+                       standard_data_cols[-1:]
+        col_types = ['str', 'str', 'float'] + ['str'] * len(user_data_cols) + [
+            'int']
         df = df[ordered_cols]
         for t, c in zip(col_types, ordered_cols):
             df[c] = df[c].astype(t)
@@ -143,38 +147,60 @@ def get_videos():
     return vid_dict, first_vid
 
 
-def get_video_information():
+def get_video_information(cur_vid_id='', cur_cluster_num=''):
     """
-        Parse video information for nice form based on get_video() result and a request query parameter
-        :return: Current video, id of the current video and dictionary of available videos (described more detailly in get_videos() )
-        """
+    Parse information on what video and number of clusters should be shown,
+    based on available videos and possible input from the website (the input
+    parameters to this function)
+    :param cur_vid_id: The current video requested by the website
+    :param cur_cluster_num: The current cluster number requested by the website
+    :return: Current video, id of the current video and dictionary of
+    available videos (described more detailly in get_videos() )
+    """
     vid_dict, first_vid = get_videos()
-    cur_vid_id = request.args.get('vid')
-    currentCluster = request.args.get('cluster')
     if not cur_vid_id:
         currentVideo = first_vid
     else:
         currentVideo = [cur_vid_id, vid_dict[cur_vid_id]]
 
-    if not currentCluster:
+    if not cur_cluster_num:
         n_clusters = 3
     else:
-        n_clusters = int(currentCluster)
-    return currentVideo, cur_vid_id, vid_dict, n_clusters
+        n_clusters = int(cur_cluster_num)
+    return currentVideo, vid_dict, n_clusters
+
+
+def get_input_fields():
+    """
+    Find what sliders are required to be shown with the video.
+    NB: Only a maximum of 2 1d-sliders can be shown, because otherwise they
+    will not fit next to the video!
+    :return: List containing information on sliders. Each element in the list is
+    a list itself, containing [slider type, min_val, max_val, default_val,
+    slider name].
+    """
+    with open(current_app.input_fields, 'r') as f:
+        fields = f.readlines()
+    field_list = [x.strip() for x in fields if x.strip() if
+                  (x.strip()[0] is not '#')]
+    field_list = [i.split(':') for i in field_list]
+
+    return field_list
 
 
 def signal_data_modification(video_id):
     """
-            Signal cache that data of specified video id has changed. This causes re-calculating plots later.
-            """
+    Signal cache that data of specified video id has changed. This causes
+    re-calculating plots later.
+    """
     current_app.config['CACHE'].set(video_id + 'modified_correlations', True)
     current_app.config['CACHE'].set(video_id + 'modified_chart', True)
 
 
 def calculate_chart(currentVideo):
     """
-            Calculate bokeh chart of specific video and save it to cache 
-            """
+    Calculate bokeh chart of specific video and save it to cache
+    """
     _, data = collect_mongodbobjects(currentVideo)
 
     current_video_status = current_app.config['CACHE'].get(
@@ -234,7 +260,6 @@ def calculate_chart(currentVideo):
             ('Time', '@x'),
             ('Valence', '@y'),
             ('User', '$name')
-
         ]
 
         script, div = components(p)

@@ -1,0 +1,18 @@
+# List of the input fields the
+# user will be presented with
+# when watching the video.
+# So far slider and 2dslider are
+# supported. The input has to have
+# the form
+# 'field_type:min_val(:min_val2):max_val(:max_val2):default_val
+# (:default_val2):field_name(:field_name2)'
+# for example
+# 'slider:0:100:50:valence'
+# or
+# '2dslider:0:0:100:100:50:50:valence:valence2'
+# Valid field_types are currently 'slider' and '2dslider'.
+# Empty lines or lines starting with #
+# in this file are ignored.
+
+slider:0:100:50:value
+slider:0:100:50:value2

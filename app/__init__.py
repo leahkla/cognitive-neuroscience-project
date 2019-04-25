@@ -40,7 +40,10 @@ def create_app(conf=Config):
     app.d = DatabaseClient()
     # File where the videos are stored:
     app.vid_file = 'app/user/video_conf.txt'
+    # File where the user instructions are stored:
     app.user_instructions_file = 'app/user/user_instructions.txt'
+    # File where the input fields are stored:
+    app.input_fields = 'app/user/input_conf.txt'
     # All the databases that are available:
     app.dbs = {'prod': 'Production', 'dev': 'Development', 'local': 'Local'}
     # The default page for the researcher:

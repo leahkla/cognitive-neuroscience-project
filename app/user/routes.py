@@ -6,12 +6,11 @@ It has only the webpages belonging to the user blueprint,
 i.e. those belonging to the user interface.
 """
 
-from flask import render_template, flash, session, current_app, \
-    redirect, url_for
+from flask import render_template, flash, current_app, request
 
 from app.user import bp
-from app.functionalities import check_access_right, get_videos, \
-    get_video_information
+from app.functionalities import check_access_right, get_video_information, \
+    get_input_fields
 
 
 @bp.route('/user')
@@ -28,10 +27,25 @@ def user():
 
     check_access_right(forbidden='researcher', redirect_url='control.index')
 
-    currentVideo, cur_vid_id, vid_dict, placeholderclt = get_video_information()
+    currentVideo, vid_dict, _ = get_video_information(
+        cur_vid_id=request.args.get('vid'))
+
+    field_list = get_input_fields()
+
+    oneDsliders = [x for x in field_list if x[0]=='slider']
+    twoDsliders = [x for x in field_list if x[0]=='2dslider']
+
+    if len(oneDsliders) > 2:
+        oneDsliders = oneDsliders[:2]
+        flash('Currently, at most two one-dimensional sliders are supported.')
+    if len(twoDsliders) > 1:
+        twoDsliders = twoDsliders[:1]
+        flash('Currently, only one (or zero) two-dimensional sliders are '
+              'supported.')
 
     return render_template('user/user.html', vid_dict=vid_dict,
-                           currentVideo=currentVideo)
+                           currentVideo=currentVideo, oneDsliders=oneDsliders,
+                           twoDsliders=twoDsliders)
 
 
 @bp.route('/userinstructions')
