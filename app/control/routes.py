@@ -268,7 +268,10 @@ def add_slider():
             f.write(
                 '\n' + slider_type + ':' + min_val + ':' + min_val2 + ':' + max_val + ':' + max_val2 + ':' +
                 def_val + ':' + def_val2 + ':' + name + ':' + name2)
-        flash('Slider "' + name + '" was successfully added.')
+        flash('Slider "' + name + ':' +  name2 + '" was successfully added.')
+
+    else:
+        flash('Error, slider could not be added. Try reloading the page and trying again.')
 
     return (redirect(url_for('researcher.config')))
 
@@ -289,7 +292,7 @@ def remove_slider():
         lines = f.readlines()
     with open(current_app.input_fields, 'w') as f:
         for line in lines:
-            if slider_name not in line:
+            if (line[-len(slider_name):] != slider_name) and (line[-len(slider_name) - 1:] != slider_name + '\n'):
                 f.write(line)
             else:
                 removed = True
