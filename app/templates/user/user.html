@@ -38,7 +38,7 @@
                     aria-expanded="false" data-display="static">
                 Video
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div class="dropdown-menu" aria-labelledby="video_selector">
                 {% for id, v in vid_dict.items() %}
                 <a class="dropdown-item"
                    href="{{ url_for('user.user', vid=id) }}">{{ v }}</a>
@@ -75,7 +75,6 @@
                                    id="slider{{loop.index}}" min="{{sl[1]}}"
                                    max="{{sl[2]}}" value="{{sl[3]}}"
                                    name="{{sl[4]}}"
-                                   ondrag="slider_value{{loop.index}}.innerHTML = this.value;"
                                    onchange="storeValues({{loop.index}})">
                         </div>
                         <div class="sliderthumb"></div>
@@ -136,6 +135,7 @@
                     if (ticks < max) {
                         ticks++;
                         updateSlider(j - 1, ticks);
+                        document.getElementById('slider' + j).value = ticks;
                     }
                 }, 500/(max-min));
             }
@@ -143,8 +143,8 @@
         button.addEventListener("mouseup", e => {
             if (e.button == 0) {
                 console.log("button " + j + " up!");
-                storeValues(j);
                 clearInterval(clock);
+                storeValues(0);
                 ticks = min;
             }
         })
