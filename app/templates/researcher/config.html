@@ -132,8 +132,8 @@
 
     <form action="/add_slider" method="post" class="form-group-row">
         <div class="row">
-            <button class="invisible" name="slider_type"
-                    value="slider"></button>
+            <input type="hidden" name="slider_type"
+                    value="slider">
             <div class="col-1">
                 <label class="sr-only" for="input_min">Minimum value</label>
                 <input type="text" class="form-control" name="min"
@@ -219,8 +219,8 @@
 
     <form action="/add_slider" method="post" class="form-group-row">
         <div class="row">
-            <button class="invisible" name="slider_type"
-                    value="2dslider"></button>
+            <input type="hidden" name="slider_type"
+                    value="2dslider">
             <div class="col-1">
                 <label class="sr-only" for="input_min1">Minimum value</label>
                 <input type="text" class="form-control" name="min"
