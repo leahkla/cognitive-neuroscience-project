@@ -189,7 +189,7 @@ def add_video():
             vid_id = vid_id.split('/')[-1]
             if not vid_id.isdigit():
                 flash(
-                    'Error, the URL seems to be not of the write format. It '
+                    'Error, the URL seems to have the wrong format. It '
                     'should end in a number, like for example '
                     '"https://vimeo.com/65107797"')
                 return (redirect(url_for('researcher.config')))

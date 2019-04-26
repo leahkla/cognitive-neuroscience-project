@@ -14,5 +14,6 @@
 # Empty lines or lines starting with #
 # in this file are ignored.
 
-slider:0:100:50:value
-slider:0:100:50:value2
+
+slider:0:10:5:Valence
+slider:0:10:5:Intensity
