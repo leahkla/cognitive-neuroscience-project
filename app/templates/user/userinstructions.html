@@ -42,13 +42,17 @@
 
 {% block main_body %}
 
+<div id="content_box">
+
+
+{{ instructions|safe }}
+
 <div id="start_annotating">
     <a style="margin:20px;" href="/user"
        class="btn btn-primary btn-lg active" role="button" aria-pressed="true"
        id="start_annotating2">Start annotating!</a>
 </div>
 
-{{ instructions|safe }}
-
+</div>
 
 {% endblock %}

@@ -1,6 +1,6 @@
 /* content_box */
 #content_box {
-   position: relative;
+   //position: relative;
    width: 584px;
    margin: auto auto;
    font-family: Arial, Verdana, Helvetica, sans-serif;
@@ -15,9 +15,9 @@ p {
 
 /* subheader */
 .subheader {
-   background-color: #e5f5f2;
+   background-color: #0E62CC;
    border-left: 10px solid #7dcdbd;
-   color: #1c5684;
+   color: white;
    font-size: 1em;
    font-weight: bold;
    padding: 2px 10px;
@@ -26,12 +26,12 @@ p {
 
 /* header */
 .header {
-   background-color: #98caee;
+   background-color: #0E62CC;
    font-family: "arial", courier-new, sans-serif, sans;
    font-weight: normal;
    display: block;
    font-size: 24px;
-   color: #333;
+   color: white;
    margin: 0 0 10px 0;
    line-height: 110%;
    padding: 10px;
