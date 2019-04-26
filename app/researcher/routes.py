@@ -20,7 +20,7 @@ from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    get_interpolators, get_videos, get_video_information, eucl, get_input_fields
+    get_interpolators, get_videos, get_video_information, eucl, get_input_fields, make_variable_processing
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -56,17 +56,7 @@ def chart():
         request.args.get('vid'), request.args.get('cluster'))
     _, data = collect_mongodbobjects(currentVideo[0])
 
-    variable_dict = data.columns.values
-    other_columns = ['date', 'videoid', 'timestamp', 'username']
-    variable_dict = [x for x in variable_dict if x not in other_columns]
-
-    if request.args.get('variable'):
-        currentVariable = request.args.get('variable')
-    else:
-        currentVariable = variable_dict[0]
-
-    data = data.replace('nan', np.nan)
-    data = data[pd.notna(data[currentVariable])]
+    data, currentVariable, variable_dict = make_variable_processing(data, request.args.get('variable'))
 
     if _ == False or data.empty:
         return render_template("researcher/chart.html",
@@ -152,17 +142,7 @@ def clusters():
         request.args.get('vid'), request.args.get('cluster'))
     _, data = collect_mongodbobjects(currentVideo[0])
 
-    variable_dict = data.columns.values
-    other_columns = ['date', 'videoid', 'timestamp', 'username']
-    variable_dict =  [x for x in variable_dict if x not in other_columns]
-
-    if request.args.get('variable'):
-        currentVariable = request.args.get('variable')
-    else:
-        currentVariable = variable_dict[0]
-
-    data = data.replace('nan', np.nan)
-    data = data[pd.notna(data[currentVariable])]
+    data, currentVariable, variable_dict = make_variable_processing(data, request.args.get('variable'))
 
     ### set desired amount of clusters
     clustervals = np.arange(1, 10, 1)
