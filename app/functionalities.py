@@ -100,9 +100,6 @@ def check_access_right(forbidden, redirect_url, msg='default'):
 
 
 def get_interpolators(df, currentVariable):
-    df['timestamp'] = pd.to_numeric(df['timestamp'])
-    df[currentVariable] = pd.to_numeric(df[currentVariable])
-    df.sort_values(by=['timestamp'], inplace=True)
 
     # Group by username and extract timestamps and values for each user
     grouped_data = df.groupby('username')
@@ -117,13 +114,16 @@ def get_interpolators(df, currentVariable):
     # Make sure all data starts and ends at the same time for each user, if the
     # data doesn't suggest otherwise start and end value are 50.
     max_t = max([max(t) for t in ts])
+    total = np.sum([np.sum(v) for v in list(np.array(vals))])
+    avg = total / np.sum([len(v) for v in vals])
+    flash(avg)
     for i in range(len(ts)):
         if min(ts[i]) != 0:
             ts[i] = np.append([0], ts[i])
-            vals[i] = np.append([50], vals[i])
+            vals[i] = np.append([avg], vals[i])
         if max(ts[i]) != max_t:
             ts[i] = np.append(ts[i], [max_t])
-            vals[i] = np.append(vals[i], [50])
+            vals[i] = np.append(vals[i], [avg])
         # Round last timestamp up (for smoother display):
         ts[i] = np.append(ts[i][:-1], int(ts[i][-1]) + 1)
 

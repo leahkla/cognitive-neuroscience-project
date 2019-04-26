@@ -81,25 +81,21 @@ def chart():
              i in
              range(len(data_by_user)))]
 
-    # Make sure all data starts and ends at the same time for each user, if the
-    # data doesn't suggest otherwise start and end value are 50.
-    max_t = max([max(t) for t in ts])
-    for i in range(len(ts)):
-        if min(ts[i]) != 0:
-            ts[i] = np.append([0], ts[i])
-            vals[i] = np.append([50], vals[i])
-        if max(ts[i]) != max_t:
-            ts[i] = np.append(ts[i], [max_t])
-            vals[i] = np.append(vals[i], [50])
-        # Round last timestamp up (for smoother display):
-        ts[i] = np.append(ts[i][:-1], int(ts[i][-1]) + 1)
+    vals = [v for v in vals if len(v) > 1]
+    ts = [t for t in ts if len(t) > 1]
+
+    # # Make sure all data starts and ends at the same time for each user, if the
+    # # data doesn't suggest otherwise start and end value are 50.
+    max_ts = [max(t) for t in ts]
+    min_ts = [min(t) for t in ts]
 
     # Create the interpolation
-    xs = np.arange(0, int(max_t) + 1.5, 1)
+    xs = [np.linspace(min_ts[i], max_ts[i], int(max_ts[i] - min_ts[i])) for i in
+          range(len(max_ts))]
     interpolators = [PchipInterpolator(t, val) for (t, val) in
                      zip(ts, vals)]
-    user_timeseries = [[xs, interpolator(xs)] for interpolator in
-                       interpolators]
+    user_timeseries = [[xs[i], interpolator(xs[i])] for i, interpolator in
+                       enumerate(interpolators)]
 
     # Create the Bokeh plot
     TOOLS = 'save,pan,box_zoom,reset,wheel_zoom,hover'
@@ -170,7 +166,7 @@ def clusters():
     # Generate data
     user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
 
-    seed = np.random.randint(0, 100000, 1)[0]
+    seed = np.random.randint(0, int(1e5), 1)[0]
     np.random.seed(seed)
 
     # Set cluster count
