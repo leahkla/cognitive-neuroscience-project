@@ -96,40 +96,40 @@
 <script>
 
     //This handles the value recording via the button.
-    [...Array({{ oneDsliders| length }})].map((_,j) => {
-    let ticks = 0;
     let clock;
-    let time;
-    j = j+1;
-    console.log("buttons" + j);
-    let button = document.getElementById('button' + j);
-    //let button = document.getElementById('button'+(j+1));
-    button.addEventListener("mousedown", event => {
-        if (event.button == 0) {
-            console.log("button down");
+    [...Array({{ oneDsliders| length }})].map((_, j) => {
+        let ticks = 0;
+        j = j + 1;
+        console.log("buttons" + j);
+        
+        let button = document.getElementById('button' + j);
+        //let button = document.getElementById('button'+(j+1));
 
-            player.getCurrentTime().then(timestamp => {
-                time = timestamp;
-            });
-            clock = setInterval(() => {
-                if (ticks < 100) {
-                    ticks++;
-                    updateSlider(j-1, ticks);
-                }
-                slider_value1.innerHTML = ticks;
-            }, 10);
-        }
+        button.addEventListener("mouseup", event => {
+            if (event.button == 0) {
+                console.log("button up!");
+                //sendData2D(time, ticks, 50, {{ currentVideo.0 }});
+                storeValues(j);
+                clearInterval(clock);
+                ticks = 0;
+            }
+        });
+
+        button.addEventListener("mousedown", event => {
+            if (event.button == 0) {
+                console.log("button down");
+
+                clock = setInterval(() => {
+                    if (ticks < 100) {
+                        ticks++;
+                        updateSlider(j - 1, ticks);
+                    }
+                    slider_value1.innerHTML = ticks;
+                }, 10);
+            }
+        });
+
     });
-    button.addEventListener("mouseup", event => {
-        if (event.button == 0) {
-            console.log("button up!");
-            //sendData2D(time, ticks, 50, {{ currentVideo.0 }});
-            storeValues(j);
-            clearInterval(clock);
-            ticks = 0;
-		}
-    });
-});
 </script>
 
 <script>
