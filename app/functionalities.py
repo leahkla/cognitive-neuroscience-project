@@ -116,7 +116,6 @@ def get_interpolators(df, currentVariable):
     max_t = max([max(t) for t in ts])
     total = np.sum([np.sum(v) for v in list(np.array(vals))])
     avg = total / np.sum([len(v) for v in vals])
-    flash(avg)
     for i in range(len(ts)):
         if min(ts[i]) != 0:
             ts[i] = np.append([0], ts[i])
