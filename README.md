@@ -54,6 +54,21 @@ $ export DB=dev
 
 The production and development database are hosted online, which means that other people might access them and write data into them as well. The local one will be hosted on your local machine. This option requires MongoDB to be installed and running. [Here](https://docs.mongodb.com/manual/administration/install-community/) are further instructions. MongoDB should be accessible at its default port when running.
 
+## Features
+
+Important functionalities
+1. Adding and removing videos by Vimeo video id (Configure-page)
+2. Adding and removing input sliders (Configure-page)
+3. Changing the used database (Configure-page)
+4. Modifying instructions shown for the user in the beginning of the experiment (Configure-page)
+5. Seeing algorithmically retrieved insights of the collected data (Clusters & Chart -page)
+6. Exploring the collected raw data (Raw -page)
+7. Exporting the collected data (Raw -page)
+
+Limitations
+1. Slow loading with chart view: We use python interpreter cache (SimpleCache), but when the plot is not found from the cache, loading the chart may take time.
+2. Information security: Usernames and the data is saved as plain text to the database. As long as your database is in a safe space, everything should be fine.
+
 ## Authors
 * [Pihla Toivanen](https://github.com/UMTti)
 * [Lea K](https://github.com/xtabentun)
