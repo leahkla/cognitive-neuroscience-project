@@ -3,8 +3,8 @@
 {% block title %}<title>Video annotation - Researcher</title>{% endblock %}
 
 {% block head_extension %}
-    <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='css/navbar_divider.css') }}">
+<link rel="stylesheet" type="text/css"
+      href="{{ url_for('static', filename='css/navbar_divider.css') }}">
 {% endblock %}
 
 {% block navbar_extension %}
@@ -13,8 +13,8 @@
 <div class="collapse navbar-collapse justify-content-end"
      id="navbarMain">
     <div class="navbar-nav">
-		<a class="nav-item nav-link"
-            href="{{ url_for('researcher.instructions') }}">Instructions</a>
+        <a class="nav-item nav-link"
+           href="{{ url_for('researcher.instructions') }}">Instructions</a>
         <a class="nav-item nav-link"
            href="{{ url_for('researcher.config') }}">Configure</a>
         <a class="nav-item nav-link"
@@ -33,45 +33,54 @@
 {% block main_body %}
 
 <div class="container">
-	<div class="row">
-		<div class="dropdown col-md-auto">
-			<button class="btn btn-secondary dropdown-toggle" type="button"
-					id="video_selector" data-toggle="dropdown"
-					aria-haspopup="true" aria-expanded="false"
-					data-display="static">
-				Video
-			</button>
-			<div class="dropdown-menu" aria-labelledby="video_selector">
-				{% for id, v in vid_dict.items() %}
-				<a class="dropdown-item"
-				   href="{{ url_for('researcher.chart', vid=id, variable=currentVariable) }}">{{ v }}</a>
-				{% endfor %}
-			</div>
-		</div>
-		<div class="dropdown col-md-auto">
-                <button class="btn btn-secondary dropdown-toggle" type="button"
-                        id="cluster_selector" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false"
-                        data-display="static">
-                    Variable
-                </button>
-                <div class="dropdown-menu" aria-labelledby="cluster_selector">
-                    {% for var in variable_list %}
-                    <a class="dropdown-item"
-				   href="{{ url_for('researcher.chart', vid=id, variable=var) }}">{{ var }}</a>
-                    {% endfor %}
-                </div>
+    <div class="row">
+        <div class="dropdown col-md-auto">
+            <button class="btn btn-secondary dropdown-toggle" type="button"
+                    id="video_selector" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"
+                    data-display="static">
+                Video
+            </button>
+            <div class="dropdown-menu" aria-labelledby="video_selector">
+                {% for id, v in vid_dict.items() %}
+                <a class="dropdown-item"
+                   href="{{ url_for('researcher.chart', vid=id, variable=currentVariable) }}">{{
+                    v }}</a>
+                {% endfor %}
             </div>
-		<div class="py-2 col-md-auto">
+        </div>
+        <div class="dropdown col-md-auto">
+            <button class="btn btn-secondary dropdown-toggle" type="button"
+                    id="cluster_selector" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false"
+                    data-display="static">
+                Variable
+            </button>
+            <div class="dropdown-menu" aria-labelledby="cluster_selector">
+                {% for var in variable_list %}
+                <a class="dropdown-item"
+                   href="{{ url_for('researcher.chart', vid=id, variable=var) }}">{{
+                    var }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="py-2 col-md-auto">
 			<span>Currently shown data: video <b>{{currentVideo[1]}}</b>,
                 variable <b>
                 {{currentVariable}}</b> </span>
-		</div>
-	</div>
-	<hr>
+        </div>
+    </div>
+    <hr>
 </div>
 
 <div class="container">
+    <h3>Data charts</h3>
+
+    For better visualisation, the data has been interpolated (i.e. the dots
+    connected) using <a
+        href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.PchipInterpolator.html">monotonic
+    cubic interpolation</a>.
+    <p></p>
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css"
           rel="stylesheet" type="text/css">
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-1.0.4.min.css"

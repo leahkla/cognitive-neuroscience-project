@@ -95,7 +95,11 @@
     Observation cluster plots are calculated with the <a
         href="https://tslearn.readthedocs.io/en/latest/auto_examples/plot_kmeans.html#sphx-glr-auto-examples-plot-kmeans-py">K-means
     algorithm</a>, which groups similar observations. Strong blue lines are the
-    cluster centers.
+    cluster centers.<br>
+    For better visualisation, the data has been interpolated (i.e. the dots
+    connected) using <a
+        href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.PchipInterpolator.html">monotonic
+    cubic interpolation</a>.
     <p></p>
     <link href="https://cdn.pydata.org/bokeh/release/bokeh-1.0.4.min.css"
           rel="stylesheet" type="text/css">
