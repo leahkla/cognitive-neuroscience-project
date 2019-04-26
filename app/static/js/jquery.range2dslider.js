@@ -7,7 +7,7 @@
      if($(window).width() < 1000){
         width_variable = '300px';
     } else {
-        width_variable = '700px';
+        width_variable = '1000px';
     }
 	var ARROWLEFT = 37,
 		ARROWUP = 38,

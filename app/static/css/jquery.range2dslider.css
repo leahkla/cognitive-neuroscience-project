@@ -12,23 +12,46 @@
 -o-user-select: none;
 user-select: none;
 }
+
+@media screen and (min-width:0px) {
 .xdsoft_range2dslider{
 	position:relative;
+	width: 300px;
+	height: 200px;
+}
+}
+
+@media screen and (min-width:1000px) {
+.xdsoft_range2dslider{
+	position:relative;
+	width: 1000px;
+	height: 200px;
+}
 }
 
 .xdsoft_range2dslider.xdsoft_range2dslider_disabled{
 opacity:0.7;
 }
 
+@media screen and (min-width:0px) {
 .xdsoft_range2dslider_box{
 	border:1px solid #ccc;
 	height:100px;
-	width:auto;
+	width:300px;
 	position:relative;
 	cursor:pointer;
 }
+}
 
-
+@media screen and (min-width:1000px) {
+.xdsoft_range2dslider_box{
+	border:1px solid #ccc;
+	height:100px;
+	width:1000px;
+	position:relative;
+	cursor:pointer;
+}
+}
 
 .xdsoft_range2dslider_runner{
 	width:16px;
