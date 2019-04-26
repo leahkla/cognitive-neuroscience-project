@@ -152,109 +152,106 @@ def clusters():
         request.args.get('vid'), request.args.get('cluster'))
     _, data = collect_mongodbobjects(currentVideo[0])
 
+    variable_dict = data.columns.values
+    other_columns = ['date', 'videoid', 'timestamp', 'username']
+    variable_dict =  [x for x in variable_dict if x not in other_columns]
+    print(variable_dict)
+
+    if request.args.get('variable'):
+        currentVariable = request.args.get('variable')
+    else:
+        currentVariable = variable_dict[0]
+
+    data = data.replace('nan', np.nan)
+    data = data[pd.notna(data[currentVariable])]
+
     ### set desired amount of clusters
     clustervals = np.arange(1, 10, 1)
 
-    if _ == False:
+    if _ == False or data.empty:
         return render_template("researcher/clusters.html",
                                the_div="There is no data for this video!",
                                the_script="", vid_dict=vid_dict,
                                currentVideo=currentVideo,
                                currentCluster=n_clusters,
-                               clustervals=clustervals)
+                               clustervals=clustervals, currentVariable=currentVariable, variable_dict=variable_dict)
 
-    current_video_status = current_app.config['CACHE'].get(
-        currentVideo[0] + 'modified_correlations')
-    if current_video_status == True or current_video_status == None or n_clusters != 3:
-        # Get interpolators from functionalities.py
-        interpolators, max_t = get_interpolators(data)
-        xs = np.arange(0, int(max_t) + 1.5, 1)
 
-        # Generate data
-        user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
+    interpolators, max_t = get_interpolators(data)
+    xs = np.arange(0, int(max_t) + 1.5, 1)
 
-        seed = np.random.randint(0, 100000, 1)[0]
-        np.random.seed(seed)
+    # Generate data
+    user_timeseries = [[interpolator(xs)] for interpolator in interpolators]
 
-        # Set cluster count
-        # n_clusters = 3
-        if n_clusters > np.array(user_timeseries).shape[0]:
-            n_clusters = np.array(user_timeseries).shape[0]
+    seed = np.random.randint(0, 100000, 1)[0]
+    np.random.seed(seed)
 
-        # Euclidean k-means
-        km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True,
-                              random_state=seed)
-        y_pred = km.fit_predict(user_timeseries)
+    # Set cluster count
+    # n_clusters = 3
+    if n_clusters > np.array(user_timeseries).shape[0]:
+        n_clusters = np.array(user_timeseries).shape[0]
 
-        # Generate plots and calculate statistics
-        all_plots = ""
-        all_scripts = ""
-        plots = []
+    # Euclidean k-means
+    km = TimeSeriesKMeans(n_clusters=n_clusters, verbose=True,
+                          random_state=seed)
+    y_pred = km.fit_predict(user_timeseries)
 
-        ### TODO MAYBE: intra-cluster correlation with rpy2. Might not work with matrices
-        """    valmatrix = np.empty([24,151])
-        for iii in range(24):
-            valmatrix[iii, :] = user_timeseries[iii][0]
-        print(type(valmatrix), valmatrix.shape)
-        print(type(valmatrix[0]), len(valmatrix[0]))
-        print(type(valmatrix[0][0]))
-        r_icc = importr("ICC", lib_loc="C:/Users/Lauri Lode/Documents/R/win-library/3.4")
-        #m = r.matrix(FloatVector(valmatrix.flatten()), nrow=24)
-        df = DataFrame({"groups": IntVector(y_pred),
-            "values": FloatVector(valmatrix.flatten())})
+    # Generate plots and calculate statistics
+    all_plots = ""
+    all_scripts = ""
+    plots = []
 
-        icc_res = r_icc.ICCbare("groups", "values", data=df)
-        icc_val = icc_res[0]
-        print("ICC" + str(icc_val))"""
+    ### TODO MAYBE: intra-cluster correlation with rpy2. Might not work with matrices
+    """    valmatrix = np.empty([24,151])
+    for iii in range(24):
+        valmatrix[iii, :] = user_timeseries[iii][0]
+    print(type(valmatrix), valmatrix.shape)
+    print(type(valmatrix[0]), len(valmatrix[0]))
+    print(type(valmatrix[0][0]))
+    r_icc = importr("ICC", lib_loc="C:/Users/Lauri Lode/Documents/R/win-library/3.4")
+    #m = r.matrix(FloatVector(valmatrix.flatten()), nrow=24)
+    df = DataFrame({"groups": IntVector(y_pred),
+        "values": FloatVector(valmatrix.flatten())})
+    icc_res = r_icc.ICCbare("groups", "values", data=df)
+    icc_val = icc_res[0]
+    print("ICC" + str(icc_val))"""
 
-        for yi in range(n_clusters):
-            p = figure()
-            n = 0
-            values = km.cluster_centers_[yi].ravel()
-            centerMean = np.mean(km.cluster_centers_[yi].ravel())
-            varsum = 0
-            for xx in range(0, len(y_pred)):
-                if y_pred[xx] == yi:
-                    n = n + 1
-                    for iii in range(len(user_timeseries[xx][0])):
-                        varsum = varsum + eucl(user_timeseries[xx][0][iii],
-                                               values[iii]) / len(
-                            user_timeseries[xx][0])
+    for yi in range(n_clusters):
+        p = figure()
+        n = 0
+        values = km.cluster_centers_[yi].ravel()
+        centerMean = np.mean(km.cluster_centers_[yi].ravel())
+        varsum = 0
+        for xx in range(0, len(y_pred)):
+            if y_pred[xx] == yi:
+                n = n + 1
+                for iii in range(len(user_timeseries[xx][0])):
+                    varsum = varsum + eucl(user_timeseries[xx][0][iii],
+                                           values[iii]) / len(
+                        user_timeseries[xx][0])
 
-                    p.line(range(0, len(user_timeseries[xx][0])),
-                           user_timeseries[xx][0], line_width=0.3)
-            varsum = np.sqrt(varsum)
+                p.line(range(0, len(user_timeseries[xx][0])),
+                       user_timeseries[xx][0], line_width=0.3)
+        varsum = np.sqrt(varsum)
 
-            titleString = "C#" + str(yi + 1) + ", n: " + str(n) + ", μ: " + str(
-                np.round(centerMean, decimals=3)) + ", σ: " + str(
-                np.round(varsum, decimals=3)) + ", σ²: " + str(
-                np.round(varsum ** 2, decimals=3))
-            t = Title()
-            t.text = titleString
-            p.title = t
-            p.line(range(0, len(values)), values, line_width=2)
-            plots.append(p)
+        titleString = "C#" + str(yi + 1) + ", n: " + str(n) + ", μ: " + str(
+            np.round(centerMean, decimals=3)) + ", σ: " + str(
+            np.round(varsum, decimals=3)) + ", σ²: " + str(
+            np.round(varsum ** 2, decimals=3))
+        t = Title()
+        t.text = titleString
+        p.title = t
+        p.line(range(0, len(values)), values, line_width=2)
+        plots.append(p)
 
-        # Get plot codes
-        script, div = components(
-            gridplot(plots, ncols=3, plot_width=350, plot_height=300))
-        if n_clusters == 3:
-            current_app.config['CACHE'].set(
-                currentVideo[0] + 'div_correlations', div)
-            current_app.config['CACHE'].set(
-                currentVideo[0] + 'script_correlations', script)
-            current_app.config['CACHE'].set(
-                currentVideo[0] + 'modified_correlations', False)
-    else:
-        div = current_app.config['CACHE'].get(
-            currentVideo[0] + 'div_correlations')
-        script = current_app.config['CACHE'].get(
-            currentVideo[0] + 'script_correlations')
+    # Get plot codes
+    script, div = components(
+        gridplot(plots, ncols=3, plot_width=350, plot_height=300))
 
     return render_template("researcher/clusters.html", the_div=div,
                            the_script=script, vid_dict=vid_dict,
                            currentVideo=currentVideo,
-                           currentCluster=n_clusters, clustervals=clustervals)
+                           currentCluster=n_clusters, clustervals=clustervals, variable_dict=variable_dict, currentVariable=currentVariable)
 
 
 @bp.route('/config')
