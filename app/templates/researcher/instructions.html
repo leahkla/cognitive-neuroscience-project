@@ -79,10 +79,11 @@
 
 	 <h4 class="subheader"> Limitations</h4>
 
-	 <p>
-		<b>Slow loading with chart view:</b> The chart view loads in 4.9 seconds currently. This bug is linked to rendering the plot and calculating the values that the plot uses in server side. The amount of data points will probably affect by increasing the loading time of the chart view. Updated April 23rd 2019.
-		</p>
-
+	<ul>
+  		<li>Slow loading with chart view: We use python interpreter cache (SimpleCache), but when the plot is not found from the cache, loading the chart may take time.</li>
+  		<li>Information security: Usernames and the data is saved as plain text to the database. As long as your database is in a safe space, everything should be fine.
+	    </li>
+	 </ul>
 </div>
 
 {% endblock %}
