@@ -1,63 +1,40 @@
-{% extends "base.html" %}
-
-{% block title %}<title>Video annotation - User</title>{% endblock %}
-
-{% block head_extension %}
-<script type="text/javascript"
-        src="https://player.vimeo.com/api/player.js"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='js/slider.js') }}"></script>
-<script type="text/javascript"
-        src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script type="text/javascript"
-        src="{{ url_for('static', filename='js/jquery.js') }}"></script>
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='css/jquery.range2dslider.css') }}">
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='css/slider.css') }}">
-<script type="text/javascript"
-        src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
-<link rel="stylesheet" type="text/css"
-      href="{{ url_for('static', filename='css/navbar_divider.css') }}">
-{% endblock %}
-
-
-{% block navbar_extension %}
-<div class="collapse navbar-collapse justify-content-end"
-     id="navbarMain">
+{% extends "base.html" %} {% block title %}
+<title>Video annotation - User</title>{% endblock %} {% block head_extension %}
+<script type="text/javascript" src="https://player.vimeo.com/api/player.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/slider.js') }}"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/jquery.range2dslider.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/slider.css') }}">
+<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.range2dslider.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/navbar_divider.css') }}"> {% endblock %} {% block navbar_extension %}
+<div class="collapse navbar-collapse justify-content-end" id="navbarMain">
     <div class="navbar-nav">
-        <a class="nav-item nav-link"
-           href="{{ url_for('user.userinstructions') }}">Welcome page</a>
+        <a class="nav-item nav-link" href="{{ url_for('user.userinstructions') }}">Welcome page</a>
         <div class="divider"></div>
-        <a class="nav-item nav-link"
-           href="{{ url_for('control.choose_role') }}">Change role</a>
+        <a class="nav-item nav-link" href="{{ url_for('control.choose_role') }}">Change role</a>
     </div>
 </div>
-{% endblock %}
-
-
-{% block main_body %}
+{% endblock %} {% block main_body %}
 
 <div class="container">
     <div class="row">
         <div class="dropdown col-md-auto">
-            <button class="btn btn-secondary dropdown-toggle" type="button"
-                    id="video_selector" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false"
-                    data-display="static">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="video_selector" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" data-display="static">
                 Video
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 {% for id, v in vid_dict.items() %}
-                <a class="dropdown-item"
-                   href="{{ url_for('user.user', vid=id) }}">{{ v }}</a>
+                <a class="dropdown-item" href="{{ url_for('user.user', vid=id) }}">{{ v }}</a>
                 {% endfor %}
             </div>
         </div>
         <div class="py-2 col-md-auto">
-            <span>Currently shown video: <b>{{currentVideo[1]}}</b></span>
+            <span>Currently shown video:
+                <b>{{currentVideo[1]}}</b>
+            </span>
         </div>
     </div>
     <hr>
@@ -68,9 +45,7 @@
     <div class="row">
         <div class="col-lg-{{11 - oneDsliders|length}} col-md-12">
             <div>
-                <div data-vimeo-id="{{ currentVideo[0] }}"
-                     data-vimeo-responsive="1"
-                     id="player"></div>
+                <div data-vimeo-id="{{ currentVideo[0] }}" data-vimeo-responsive="1" id="player"></div>
             </div>
         </div>
 
@@ -83,14 +58,8 @@
                 <form id="1dslider{{loop.index}}" class="rangepresenter">
                     <div class="rangewrapper">
                         <div class="sliderfill">
-                            <input class="customrange" type="range"
-                                   id="slider{{loop.index}}"
-                                   min="{{sl[1]}}"
-                                   max="{{sl[2]}}"
-                                   value="{{sl[3]}}"
-                                   name="{{sl[4]}}"
-                                   ondrag="slider_value{{loop.index}}.innerHTML = this.value;"
-                                   onchange="storeValues({{loop.index}})">
+                            <input class="customrange" type="range" id="slider{{loop.index}}" min="{{sl[1]}}" max="{{sl[2]}}" value="{{sl[3]}}" name="{{sl[4]}}"
+                                ondrag="slider_value{{loop.index}}.innerHTML = this.value;" onchange="storeValues({{loop.index}})">
                         </div>
                         <div class="sliderthumb"></div>
                         <center>
@@ -99,26 +68,22 @@
                     </div>
                 </form>
             </div>
-        </div>
 
-        <!--<div>-->
-        <!--<div id="buttonContainer">-->
-        <!--<button class="btn btn-dark" id="button-1">Press</button>-->
-        <!--</div>-->
-        <!--</div>-->
+            <div id="buttonContainer">
+                <button class="btn btn-dark" id="button{{loop.index}}">Press</button>
+            </div>
+        </div>
         {% endfor %}
     </div>
 
-    <br><br><br>
-    {% if twoDsliders|length == 1 %}
-    <div id="slider_value2" class="align-self-end"
-         style="position:relative;bottom:10px">
+    <br>
+    <br>
+    <br> {% if twoDsliders|length == 1 %}
+    <div id="slider_value2" class="align-self-end" style="position:relative;bottom:10px">
     </div>
     <div style="display:block;" id="slider_div">
 
-        <input id="slider" class="align-self-end" min="0" max="100"
-               ondrag="slider_value2.innerHTML = this.value;"
-               style="position:relative;bottom:10px">
+        <input id="slider" class="align-self-end" min="0" max="100" ondrag="slider_value2.innerHTML = this.value;" style="position:relative;bottom:10px">
 
     </div>
     {% endif %}
@@ -128,123 +93,126 @@
 
 <script>
 
-//This handles the value recording via the button.
-	let ticks = 0;
-	let clock;
-	let time;
-	let button = document.getElementById('button-1');
-	button.addEventListener("mousedown", event => {
-		if(event.button == 0){
-			console.log("button down");
+    //This handles the value recording via the button.
+    let clock;
+    let buttons = [];
+    [...Array({{ oneDsliders| length }})].map((_, j) => {
+        let ticks = 0;
+        j = j + 1;
+        console.log("buttons" + j);
 
-			player.getCurrentTime().then(timestamp => {
-				time = timestamp;
-			});
-			clock = setInterval(() => {
-				if(ticks < 100){
-					ticks++;
-					updateSlider(0, ticks);
-				}
-				slider_value1.innerHTML = ticks;
-			}, 10);
-		}
-	});
-	button.addEventListener("mouseup", event => {
-		if(event.button == 0){
-			console.log("button up!");
-			sendData2D(time, ticks, 50, {{ currentVideo.0 }})
-			clearInterval(clock);
-			ticks = 0;
-		}
-	});
+        let button = document.getElementById('button' + j);
+        console.log(button !== null);
+        //let button = document.getElementById('button'+(j+1));
+
+        button.addEventListener("mousedown", event => {
+            if (event.button == 0) {
+                console.log("button down");
+
+                clock = setInterval(() => {
+                    if (ticks < 100) {
+                        ticks++;
+                        updateSlider(j - 1, ticks);
+                    }
+                    slider_value1.innerHTML = ticks;
+                }, 10);
+            }
+        })
+        button.addEventListener("mouseup", e => {
+            if (e.button == 0) {
+                console.log("button " + j + " up!");
+                //sendData2D(time, ticks, 50, {{ currentVideo.0 }});
+                storeValues(j);
+                clearInterval(clock);
+                ticks = 0;
+            }
+        });
+
+
+    });
 </script>
 
 <script>
-	function twoDimensionalSliderOnChange(timestamp){
-			let valval = $('#slider')[0].value;
-			if (valval && valval !== "") {
-				console.log(valval);
-				let valval1 = valval.split("|")[0];
-				let valval2 = valval.split("|")[1];
-				sendData2D(timestamp, Math.round(parseFloat(valval1)), Math.round(parseFloat(valval2)), {{ currentVideo.0 }});
-			}
+    function twoDimensionalSliderOnChange(timestamp) {
+        let valval = $('#slider')[0].value;
+        if (valval && valval !== "") {
+            console.log(valval);
+            let valval1 = valval.split("|")[0];
+            let valval2 = valval.split("|")[1];
+            sendData2D(timestamp, Math.round(parseFloat(valval1)), Math.round(parseFloat(valval2)), {{ currentVideo.0 }});
+    }
 	}
 
-	function change2dSlider() {
-		player.getCurrentTime().then(timestamp => {
-			twoDimensionalSliderOnChange(timestamp);
-		});
-	}
-</script>
-
-{% if twoDsliders|length == 1%}
+    function change2dSlider() {
+        player.getCurrentTime().then(timestamp => {
+            twoDimensionalSliderOnChange(timestamp);
+        });
+    }
+</script> {% if twoDsliders|length == 1%}
 <script>
-window.onerror = function(msg, url, linenumber) {
-	  alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
-	  return true;
-  }
-$('#slider').range2DSlider({
-  grid:false,
-  axis:[[0,25,50,75,100],[0,25,50,75,100]],
-  projections:true,
-  showLegend:[1,1],
-  allowAxisMove:['both'],
-  printLabel:function( val ){
-	this.projections&&this.projections[0].find('.xdsoft_projection_value_x').text(val[1].toFixed(5));
-	return val[0].toFixed(5);
-  }
-})
-  .range2DSlider('value',[[50,50]]);
+    window.onerror = function (msg, url, linenumber) {
+        alert('Error message: ' + msg + '\nURL: ' + url + '\nLine Number: ' + linenumber);
+        return true;
+    }
+    $('#slider').range2DSlider({
+        grid: false,
+        axis: [[0, 25, 50, 75, 100], [0, 25, 50, 75, 100]],
+        projections: true,
+        showLegend: [1, 1],
+        allowAxisMove: ['both'],
+        printLabel: function (val) {
+            this.projections && this.projections[0].find('.xdsoft_projection_value_x').text(val[1].toFixed(5));
+            return val[0].toFixed(5);
+        }
+    })
+        .range2DSlider('value', [[50, 50]]);
 
-document.getElementById('slider_div').addEventListener("mouseup", event => {
-	if(event.button == 0){
-		console.log("Saving 2D values");
-		change2dSlider();
-	}
-})
+    document.getElementById('slider_div').addEventListener("mouseup", event => {
+        if (event.button == 0) {
+            console.log("Saving 2D values");
+            change2dSlider();
+        }
+    })
 
-$('#slider')
-  .range2DSlider();
-</script>
-{% endif %}
+    $('#slider')
+        .range2DSlider();
+</script> {% endif %}
 
 <script>
-var player = new Vimeo.Player('player', {
-width: '800'
-});
-player.on('play', function () {
-console.log('The video is playing, yay!');
-});
+    var player = new Vimeo.Player('player', {
+        width: '800'
+    });
+    player.on('play', function () {
+        console.log('The video is playing, yay!');
+    });
 </script>
 
 <script>
-console.log($(window).width());
-if($(window).width() > 992){
-$('.rangepresenter').addClass('verticalsliders');
-$('.rangewrapper').addClass('vertical');
-for (j = 0; j < {{oneDsliders|length}}; j++) {
-    $('#1dslider' + (j+1)).addClass('slider2');
-}
+    console.log($(window).width());
+    if ($(window).width() > 992) {
+        $('.rangepresenter').addClass('verticalsliders');
+        $('.rangewrapper').addClass('vertical');
+        for (j = 0; j < {{ oneDsliders| length }}; j++) {
+        $('#1dslider' + (j + 1)).addClass('slider2');
+    }
 } else {
-$('#1dslider-wrapper').css('display', 'block');
-for (j = 0; j < {{oneDsliders|length}}; j++) {
-    $('#1dslider' + (j+1)).css('margin', 'auto');
-}
-$('#buttonContainer').css('margin', 'auto');
+        $('#1dslider-wrapper').css('display', 'block');
+        for (j = 0; j < {{ oneDsliders| length }}; j++) {
+        $('#1dslider' + (j + 1)).css('margin', 'auto');
+    }
+    $('#buttonContainer').css('margin', 'auto');
 }
 </script>
 
 <script>
-function storeValues(i){
-    player.getCurrentTime().then(timestamp =>
-					   {let values = [...Array({{oneDsliders|length}})].map((_,
-					    j) => document.getElementById("slider" + (j+1))
-					    .value);
-					    let names = [...Array({{oneDsliders|length}})].map((_,
-					    j) => document.getElementById("slider" + (j+1))
-					    .name);
-					   sendData(timestamp, values, names, {{currentVideo[0]}});
+    function storeValues(i) {
+        player.getCurrentTime().then(timestamp => { let values = [...Array({{ oneDsliders| length }})].map((_,
+            j) => document.getElementById("slider" + (j + 1))
+                .value);
+        let names = [...Array({{ oneDsliders| length }})].map((_,
+            j) => document.getElementById("slider" + (j + 1))
+                .name);
+    sendData(timestamp, values, names, {{ currentVideo.0 }});
 					   });
 }
-</script>
-{% endblock %}
+</script> {% endblock %}
