@@ -44,7 +44,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {% for clt in clustervals %}
                     <a class="dropdown-item"
-                       href="{{ url_for('researcher.clusters', cluster=clt, vid=currentVideo[0]) }}">{{
+                       href="{{ url_for('researcher.clusters', cluster=clt, vid=currentVideo[0], variable=currentVariable) }}">{{
                         clt }}</a>
                     {% endfor %}
                 </div>
@@ -59,7 +59,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {% for id, v in vid_dict.items() %}
                     <a class="dropdown-item"
-                       href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=id) }}">{{
+                       href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=id, variable=currentVariable) }}">{{
                         v }}</a>
                     {% endfor %}
                 </div>
@@ -74,7 +74,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {% for var in variable_dict %}
                     <a class="dropdown-item"
-                       href="{{ url_for('researcher.clusters', cluster=clt, vid=currentVideo[0], variable=var) }}">{{
+                       href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=currentVideo[0], variable=var) }}">{{
                         var }}</a>
                     {% endfor %}
                 </div>

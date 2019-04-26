@@ -99,9 +99,9 @@ def check_access_right(forbidden, redirect_url, msg='default'):
         raise RequestRedirect(url_for(redirect_url))
 
 
-def get_interpolators(df):
+def get_interpolators(df, currentVariable):
     df['timestamp'] = pd.to_numeric(df['timestamp'])
-    df['value'] = pd.to_numeric(df['value'])
+    df[currentVariable] = pd.to_numeric(df[currentVariable])
     df.sort_values(by=['timestamp'], inplace=True)
 
     # Group by username and extract timestamps and values for each user
@@ -111,7 +111,7 @@ def get_interpolators(df):
           (data_by_user[i]['timestamp'].apply(lambda x: float(x)) for i in
            range(len(data_by_user)))]
     vals = [np.array(val) for val in
-            (data_by_user[i]['value'].apply(lambda x: float(x)) for i in
+            (data_by_user[i][currentVariable].apply(lambda x: float(x)) for i in
              range(len(data_by_user)))]
 
     # Make sure all data starts and ends at the same time for each user, if the

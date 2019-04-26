@@ -177,7 +177,7 @@ def clusters():
                                clustervals=clustervals, currentVariable=currentVariable, variable_dict=variable_dict)
 
 
-    interpolators, max_t = get_interpolators(data)
+    interpolators, max_t = get_interpolators(data, currentVariable)
     xs = np.arange(0, int(max_t) + 1.5, 1)
 
     # Generate data
