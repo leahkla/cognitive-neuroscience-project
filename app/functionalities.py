@@ -198,6 +198,10 @@ def signal_data_modification(video_id):
 
 
 def make_variable_processing(data, request_variable):
+    """
+       Process data to make it ready for plotting by variable. For example, remove rows where the specific variable is nan
+       :return: data, currentVariable (either first variable or variable given by user), list of all possible variables
+       """
     variable_dict = data.columns.values
     other_columns = ['date', 'videoid', 'timestamp', 'username']
     variable_dict = [x for x in variable_dict if x not in other_columns]
