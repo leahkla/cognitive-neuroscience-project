@@ -22,14 +22,14 @@ function updateSlider(fillindex,val){
   //sets the text display and location for each thumb and the slider fill
   let min = Number(sliders[fillindex].getAttribute("min"));
   let max = Number(sliders[fillindex].getAttribute("max"));
-  let pc = (val/(max-min)) * 100
-  setThumbText(slidervalues[fillindex],val,pc);
-  setThumb(thumbs[fillindex],pc);
-  setSliderFill(sliderfills[fillindex],pc);
+  let percent = ((val-min)/(max-min))* 100
+  setThumbText(slidervalues[fillindex],val,percent);
+  setThumb(thumbs[fillindex],percent);
+  setSliderFill(sliderfills[fillindex],percent);
 }
-function setThumbText(elem,val,pc){
+function setThumbText(elem,val,percent){
   let size = getComputedStyle(elem).getPropertyValue("--thumbsize");
-  let newx = `calc(${pc}% - ${parseInt(size)/2}px)`;
+  let newx = `calc(${percent}% - ${parseInt(size)/2}px)`;
   elem.style.left = newx;
   elem.innerHTML = val;
 }
@@ -39,8 +39,6 @@ function setThumb(elem,val){
   elem.style.left = newx;
   let max = 100;
   let degrees = 360 * (val/max);
-  let rotation = `rotate(${degrees}deg)`;
-	elem.style.transform = rotation;
 }
 function setSliderFill(elem,val){
   let fillcolor = getComputedStyle(elem).getPropertyValue("--accentcolor");

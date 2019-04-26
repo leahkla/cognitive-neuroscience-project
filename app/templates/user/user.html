@@ -97,8 +97,12 @@
     let clock;
     let buttons = [];
     [...Array({{ oneDsliders| length }})].map((_, j) => {
-        let ticks = 0;
         j = j + 1;
+
+        let min = document.getElementById("slider" + j).min
+        let max = document.getElementById("slider" + j).max
+
+        let ticks = min;
         console.log("buttons" + j);
 
         let button = document.getElementById('button' + j);
@@ -110,12 +114,12 @@
                 console.log("button down");
 
                 clock = setInterval(() => {
-                    if (ticks < 100) {
+                    if (ticks < max) {
                         ticks++;
                         updateSlider(j - 1, ticks);
                     }
                     slider_value1.innerHTML = ticks;
-                }, 10);
+                }, 500/(max-min));
             }
         })
         button.addEventListener("mouseup", e => {
@@ -124,7 +128,7 @@
                 //sendData2D(time, ticks, 50, {{ currentVideo.0 }});
                 storeValues(j);
                 clearInterval(clock);
-                ticks = 0;
+                ticks = min;
             }
         });
 
