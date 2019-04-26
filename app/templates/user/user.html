@@ -66,10 +66,8 @@
 
         {% for sl in oneDsliders %}
         <div class="col-lg-1 col-md-0 text-center">
-            <div id="slider_value{{loop.index}}" class="invisible">
-            </div>
 
-            <div id="1dslider-wrapper">
+            <div id="1dslider-wrapper{{loop.index}}">
                 <form id="1dslider{{loop.index}}" class="rangepresenter">
                     <div class="rangewrapper">
                         <div class="sliderfill">
@@ -88,11 +86,9 @@
                 </form>
             </div>
 
-            <div id="buttonContainer">
-                <button class="btn btn-dark"
-                        id="button{{loop.index}}">{{sl[4]}}
-                </button>
-            </div>
+            <button class="btn btn-dark"
+                    id="button{{loop.index}}">{{sl[4]}}
+            </button>
         </div>
         {% endfor %}
     </div>
@@ -134,14 +130,13 @@
 
         button.addEventListener("mousedown", event => {
             if (event.button == 0) {
-                console.log("button down");
+                console.log("button " + j + " down!");
 
                 clock = setInterval(() => {
                     if (ticks < max) {
                         ticks++;
                         updateSlider(j - 1, ticks);
                     }
-                    slider_value1.innerHTML = ticks;
                 }, 500/(max-min));
             }
         })
@@ -152,6 +147,11 @@
                 clearInterval(clock);
                 ticks = min;
             }
+        })
+        button.addEventListener("mouseleave", e => {
+        clearInterval(clock);
+
+        console.log("Mouse is no longer on element!");
         });
     });
 </script>
@@ -222,9 +222,9 @@
         $('#1dslider' + (j + 1)).addClass('slider2');
     }
 } else {
-        $('#1dslider-wrapper').css('display', 'block');
         for (j = 0; j < {{ oneDsliders| length }}; j++) {
         $('#1dslider' + (j + 1)).css('margin', 'auto');
+        $('#1dslider-wrapper' + (j + 1)).css('display', 'block');
     }
     $('#buttonContainer').css('margin', 'auto');
 }
@@ -238,7 +238,7 @@
         let names = [...Array({{ oneDsliders| length }})].map((_,
             j) => document.getElementById("slider" + (j + 1))
                 .name);
-    sendData(timestamp, values, names, {{ currentVideo.0 }});
+        sendData(timestamp, values, names, {{ currentVideo.0 }});
 					   });
 }
 </script> {% endblock %}
