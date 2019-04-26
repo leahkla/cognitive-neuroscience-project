@@ -1,7 +1,9 @@
 # Video Annotation Tool
 This is a web app for measuring and analysing emotional reactions to videos.
 
-While watching videos, people can indicate their emotional valence or alternatively, emotional valence and the intensity of the emotion simultaneously. In a seperate view for researchers, the answers people give can be analysed.
+While watching videos, people can indicate their emotional valence or any other
+variable using one or more sliders. In a seperate view for researchers, the
+answers people give can be analysed and exported.
 
 This software was written as part of the course _Data Science Project_ at the University of Helsinki in spring 2019.
 
@@ -45,7 +47,10 @@ $ export FLASK_DEBUG=true
 (replace ``true`` with ``false`` to switch off debugging)
 
 -----------------
-By default the app will connect to and use a database that is hosted online. There is no need to care about this. But if you want another database, set this environment variable:
+By default the app will connect to and use a database that is hosted online.
+There is no need to care about this. But if you want another database, you
+can set this environment variable (or, alternatively, do the change conveniently
+ on the configuration webpage when the program has loaded):
 ```
 $ export DB=dev
 ```
@@ -57,17 +62,19 @@ The production and development database are hosted online, which means that othe
 ## Features
 
 Important functionalities
-1. Adding and removing videos by Vimeo video id (Configure-page)
-2. Adding and removing input sliders (Configure-page)
-3. Changing the used database (Configure-page)
-4. Modifying instructions shown for the user in the beginning of the experiment (Configure-page)
-5. Seeing algorithmically retrieved insights of the collected data (Clusters & Chart -page)
-6. Exploring the collected raw data (Raw -page)
-7. Exporting the collected data (Raw -page)
+* Adding and removing videos from Vimeo
+* Adding and removing input sliders
+* Changing the database the program is connected to
+* Modifying instructions shown to the user in the beginning of the experiment
+* Seeing algorithmically retrieved insights of the collected data (clusters &
+charts)
+* Exploring the collected raw data
+* Exporting the collected data
 
 Limitations
-1. Slow loading with chart view
-2. Information security: Usernames and the data is saved as plain text to the database. As long as your database is in a safe space, everything should be fine.
+* Slow loading of chart page
+* Information security: Usernames and the data is saved as plain text to the
+ database. As long as your database is in a safe space, everything should be fine.
 
 ## Authors
 * [Pihla Toivanen](https://github.com/UMTti)
