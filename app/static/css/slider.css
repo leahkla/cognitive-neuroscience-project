@@ -78,7 +78,7 @@
   transform: rotate(-90deg);
   position:absolute;
   top:calc( (var(--tracksize)/2) + 30px);
-  left:-50%;
+  left:-75%;
   margin:0;
 }
 .sliderfill {
