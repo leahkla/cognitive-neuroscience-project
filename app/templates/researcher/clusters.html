@@ -44,7 +44,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {% for clt in clustervals %}
                     <a class="dropdown-item"
-                       href="{{ url_for('researcher.clusters', cluster=clt, vid=currentVideo[0]) }}">{{
+                       href="{{ url_for('researcher.clusters', cluster=clt, vid=currentVideo[0], variable=currentVariable) }}">{{
                         clt }}</a>
                     {% endfor %}
                 </div>
@@ -59,14 +59,30 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     {% for id, v in vid_dict.items() %}
                     <a class="dropdown-item"
-                       href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=id) }}">{{
+                       href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=id, variable=currentVariable) }}">{{
                         v }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="dropdown col-md-auto">
+                <button class="btn btn-secondary dropdown-toggle" type="button"
+                        id="cluster_selector" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"
+                        data-display="static">
+                    Variable to make a plot
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {% for var in variable_dict %}
+                    <a class="dropdown-item"
+                       href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=currentVideo[0], variable=var) }}">{{
+                        var }}</a>
                     {% endfor %}
                 </div>
             </div>
             <div class="py-2 col-md-auto">
 			<span>Currently shown: Video <b>{{currentVideo[1]}}</b>, <b>
-                {{currentCluster}}</b> clusters </span>
+                {{currentCluster}}</b> clusters, made from variable <b>
+                {{currentVariable}}</b>  </span>
             </div>
         </div>
     </div>
