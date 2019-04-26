@@ -4,8 +4,6 @@
 
 :root {
     --maincolor: #333;
-    --accentcolor: rgb(200,200,200);
-    --accentcoloralpha: rgba(54,128,255,0.3);
     --maxwidth: 800px;
     --lineheight: 1.3;
     --thumbsize: 40px;
@@ -55,11 +53,15 @@
 .rangepresenter {
   width:var(--tracksize);
   height:auto;
+  --accentcolor: rgb(200,200,200);
+  --accentcoloralpha: rgba(54,128,255,0.3);
 }
 .rangepresenter.verticalsliders {
     max-width:calc(var(--tracksize)/2);
     min-height:calc(var(--tracksize) + 60px);
     position:relative;
+    --accentcolor: rgb(200,200,200);
+    --accentcoloralpha: rgba(54,128,255,0.3);
  }
 .rangewrapper {
   line-height:var(--lineheight);
