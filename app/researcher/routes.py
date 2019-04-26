@@ -20,7 +20,8 @@ from bokeh.models.annotations import Title
 
 from app.researcher import bp
 from app.functionalities import collect_mongodbobjects, check_access_right, \
-    get_interpolators, get_videos, get_video_information, eucl, get_input_fields, make_variable_processing
+    get_interpolators, get_videos, get_video_information, eucl, \
+    get_input_fields, extract_variable
 
 # PChipInterpolator finds monotonic interpolations, which we need to make
 # sure that our interpolated values don't go below 0 or above 100.
@@ -52,21 +53,22 @@ def chart():
 
     # Get the data:
 
-    currentVideo, vid_dict, _ = get_video_information(
-        request.args.get('vid'), request.args.get('cluster'))
+    currentVideo, vid_dict, _ = get_video_information(request.args.get('vid'),
+                                                      request.args.get(
+                                                          'cluster'))
     _, data = collect_mongodbobjects(currentVideo[0])
-
-    data, currentVariable, variable_dict = make_variable_processing(data, request.args.get('variable'))
 
     if _ == False or data.empty:
         return render_template("researcher/chart.html",
                                the_div="There are no observations for this video!",
                                the_script="", vid_dict=vid_dict,
-                               currentVideo=currentVideo)
+                               currentVideo=currentVideo,
+                               currentVariable='-',
+                               variable_list=[])
 
-    data['timestamp'] = pd.to_numeric(data['timestamp'])
-    data['value'] = pd.to_numeric(data['value'])
-    data.sort_values(by=['timestamp'], inplace=True)
+    data, currentVariable, variable_list = extract_variable(data,
+                                                            request.args.get(
+                                                                'variable'))
 
     # Group by username and extract timestamps and values for each user
     grouped_data = data.groupby('username')
@@ -75,7 +77,8 @@ def chart():
           (data_by_user[i]['timestamp'].apply(lambda x: float(x)) for i in
            range(len(data_by_user)))]
     vals = [np.array(val) for val in
-            (data_by_user[i]['value'].apply(lambda x: float(x)) for i in
+            (data_by_user[i][currentVariable].apply(lambda x: float(x)) for
+             i in
              range(len(data_by_user)))]
 
     # Make sure all data starts and ends at the same time for each user, if the
@@ -125,7 +128,9 @@ def chart():
 
     return render_template("researcher/chart.html", the_div=div,
                            the_script=script, vid_dict=vid_dict,
-                           currentVideo=currentVideo, variable_dict=variable_dict, currentVariable=currentVariable)
+                           currentVideo=currentVideo,
+                           variable_list=variable_list,
+                           currentVariable=currentVariable)
 
 
 @bp.route('/clusters', methods=['GET'])
@@ -142,8 +147,6 @@ def clusters():
         request.args.get('vid'), request.args.get('cluster'))
     _, data = collect_mongodbobjects(currentVideo[0])
 
-    data, currentVariable, variable_dict = make_variable_processing(data, request.args.get('variable'))
-
     ### set desired amount of clusters
     clustervals = np.arange(1, 10, 1)
 
@@ -153,8 +156,13 @@ def clusters():
                                the_script="", vid_dict=vid_dict,
                                currentVideo=currentVideo,
                                currentCluster=n_clusters,
-                               clustervals=clustervals, currentVariable=currentVariable, variable_dict=variable_dict)
+                               clustervals=clustervals,
+                               currentVariable='-',
+                               variable_list=[])
 
+    data, currentVariable, variable_list = extract_variable(data,
+                                                            request.args.get(
+                                                                'variable'))
 
     interpolators, max_t = get_interpolators(data, currentVariable)
     xs = np.arange(0, int(max_t) + 1.5, 1)
@@ -230,7 +238,9 @@ def clusters():
     return render_template("researcher/clusters.html", the_div=div,
                            the_script=script, vid_dict=vid_dict,
                            currentVideo=currentVideo,
-                           currentCluster=n_clusters, clustervals=clustervals, variable_dict=variable_dict, currentVariable=currentVariable)
+                           currentCluster=n_clusters, clustervals=clustervals,
+                           variable_list=variable_list,
+                           currentVariable=currentVariable)
 
 
 @bp.route('/config')

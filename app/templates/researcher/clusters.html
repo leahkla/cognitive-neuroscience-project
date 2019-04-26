@@ -41,7 +41,7 @@
                         data-display="static">
                     # of clusters
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu" aria-labelledby="cluster_selector">
                     {% for clt in clustervals %}
                     <a class="dropdown-item"
                        href="{{ url_for('researcher.clusters', cluster=clt, vid=currentVideo[0], variable=currentVariable) }}">{{
@@ -56,7 +56,7 @@
                         data-display="static">
                     Video
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu" aria-labelledby="video_selector">
                     {% for id, v in vid_dict.items() %}
                     <a class="dropdown-item"
                        href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=id, variable=currentVariable) }}">{{
@@ -66,13 +66,13 @@
             </div>
             <div class="dropdown col-md-auto">
                 <button class="btn btn-secondary dropdown-toggle" type="button"
-                        id="cluster_selector" data-toggle="dropdown"
+                        id="variable_selector" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false"
                         data-display="static">
-                    Variable to make a plot
+                    Variable
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {% for var in variable_dict %}
+                <div class="dropdown-menu" aria-labelledby="variable_selector">
+                    {% for var in variable_list %}
                     <a class="dropdown-item"
                        href="{{ url_for('researcher.clusters', cluster=currentCluster, vid=currentVideo[0], variable=var) }}">{{
                         var }}</a>
@@ -81,7 +81,7 @@
             </div>
             <div class="py-2 col-md-auto">
 			<span>Currently shown: Video <b>{{currentVideo[1]}}</b>, <b>
-                {{currentCluster}}</b> clusters, made from variable <b>
+                {{currentCluster}}</b> clusters, variable <b>
                 {{currentVariable}}</b>  </span>
             </div>
         </div>

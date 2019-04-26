@@ -41,7 +41,7 @@
 					data-display="static">
 				Video
 			</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			<div class="dropdown-menu" aria-labelledby="video_selector">
 				{% for id, v in vid_dict.items() %}
 				<a class="dropdown-item"
 				   href="{{ url_for('researcher.chart', vid=id, variable=currentVariable) }}">{{ v }}</a>
@@ -53,17 +53,18 @@
                         id="cluster_selector" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false"
                         data-display="static">
-                    Variable to make a plot
+                    Variable
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    {% for var in variable_dict %}
+                <div class="dropdown-menu" aria-labelledby="cluster_selector">
+                    {% for var in variable_list %}
                     <a class="dropdown-item"
 				   href="{{ url_for('researcher.chart', vid=id, variable=var) }}">{{ var }}</a>
                     {% endfor %}
                 </div>
             </div>
 		<div class="py-2 col-md-auto">
-			<span>Currently shown data: video <b>{{currentVideo[1]}}</b>, made from variable <b>
+			<span>Currently shown data: video <b>{{currentVideo[1]}}</b>,
+                variable <b>
                 {{currentVariable}}</b> </span>
 		</div>
 	</div>

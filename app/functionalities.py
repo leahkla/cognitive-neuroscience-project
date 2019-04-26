@@ -60,8 +60,8 @@ def sort_df(df):
                           c not in standard_data_cols]
         ordered_cols = standard_data_cols[:3] + user_data_cols + \
                        standard_data_cols[-1:]
-        col_types = ['str', 'str', 'float'] + ['str'] * len(user_data_cols) + [
-            'int']
+        col_types = ['str', 'str', 'float'] + ['float'] * len(user_data_cols) \
+                    + ['int']
         df = df[ordered_cols]
         for t, c in zip(col_types, ordered_cols):
             df[c] = df[c].astype(t)
@@ -197,20 +197,26 @@ def signal_data_modification(video_id):
     current_app.config['CACHE'].set(video_id + 'modified_chart', True)
 
 
-def make_variable_processing(data, request_variable):
+def extract_variable(data, request_variable):
     """
-       Process data to make it ready for plotting by variable. For example, remove rows where the specific variable is nan
-       :return: data, currentVariable (either first variable or variable given by user), list of all possible variables
-       """
-    variable_dict = data.columns.values
-    other_columns = ['date', 'videoid', 'timestamp', 'username']
-    variable_dict = [x for x in variable_dict if x not in other_columns]
+   Process data to make it ready for plotting by variable. For example,
+   remove rows where the specific variable is nan.
 
-    if request.args.get('variable'):
+   If the requested variable is not found in the dataframe, it picks another
+   variable.
+   :param data: Pandas dataframe containing the data
+   :param request_variable: The name of the column in the dataframe
+   :return: data, currentVariable, list of all possible variables
+   """
+    columns = data.columns.values
+    other_columns = ['date', 'videoid', 'timestamp', 'username']
+    variable_list = [x for x in columns if x not in other_columns]
+
+    if request_variable in variable_list:
         currentVariable = request_variable
     else:
-        currentVariable = variable_dict[0]
+        currentVariable = variable_list[0]
 
     data = data.replace('nan', np.nan)
     data = data[pd.notna(data[currentVariable])]
-    return data, currentVariable, variable_dict
+    return data, currentVariable, variable_list
