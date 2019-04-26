@@ -59,7 +59,7 @@
             <div class="dropdown-menu" aria-labelledby="cluster_selector">
                 {% for var in variable_list %}
                 <a class="dropdown-item"
-                   href="{{ url_for('researcher.chart', vid=id, variable=var) }}">{{
+                   href="{{ url_for('researcher.chart', vid=currentVideo[0], variable=var) }}">{{
                     var }}</a>
                 {% endfor %}
             </div>
