@@ -66,7 +66,7 @@ Important functionalities
 7. Exporting the collected data (Raw -page)
 
 Limitations
-1. Slow loading with chart view: We use python interpreter cache (SimpleCache), but when the plot is not found from the cache, loading the chart may take time.
+1. Slow loading with chart view
 2. Information security: Usernames and the data is saved as plain text to the database. As long as your database is in a safe space, everything should be fine.
 
 ## Authors
