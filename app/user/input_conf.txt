@@ -15,5 +15,4 @@
 # in this file are ignored.
 
 
-slider:0:10:5:Valence
-slider:0:10:5:Intensity
+slider:-50:50:0:Valence
